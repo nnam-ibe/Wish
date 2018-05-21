@@ -1,6 +1,7 @@
 const express = require('express');
 const admin = require('firebase-admin');
 const _ = require('lodash');
+var bodyParser = require('body-parser');
 
 const serviceAccount = require('/Users/nnamdi/Downloads/wish-9d5fa-firebase-adminsdk-hy8fy-213c498d11.json');
 
@@ -11,19 +12,35 @@ admin.initializeApp({
 
 const app = express();
 const port = process.env.PORT || 5000;
+const jsonParser = bodyParser.json();
+const firestore = admin.firestore();
 
-app.get('/api/hello', (req, res) => {
-	res.send({ express: 'Hello From Express' });
+app.post('/api/create_account', jsonParser, (req, res) => {
+	var body = req.body;
+	if (!_.has(body, 'uid')) {
+		res.status(400).send({ message: 'No uid provided' });
+		return;
+	}
+
+	firestore.doc(`users/${body.uid}`).set({
+		addTaxes: true,
+		defaultList: 'Main',
+		tax: 13,
+		username: body.username
+	}).then(() => {
+		res.send(['all good']);
+	}).catch((err) => {
+		console.log(err);
+	})
 });
 
-app.get('/api/firebase', (req, res) => {
-	let firestore = admin.firestore();
-	firestore.collection('test').get().then(snapshot => {
-		var result = _.map(snapshot.docs, (doc) => {
-			return doc.data();
-		});
-		res.send(result[0]);
-	});
+app.post('/api/logger', jsonParser, (req, res) => {
+	var body = req.body;
+	if (!_.has(body, 'message')) {
+		return res.status(400).send({ message: 'No message provided'});
+	}
+
+	res.send(['all good']);
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

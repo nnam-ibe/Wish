@@ -26,3 +26,27 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/*  WISH CSS  */
+.pull-right {
+  left: 90%;
+  right: auto;
+}
+
+.no-a-style {
+  color: inherit;
+  text-decoration: none;
+}
+/*--------------- AUTH PAGES ---------------*/
+.auth-component {
+  width: 392px;
+  margin: 40px auto;
+}
+
+.auth-paper {
+  padding: 20px;
+}
+
+.auth-paper a {
+  text-decoration-line: none;
+}
