@@ -1,8 +1,8 @@
 import './App.css';
 import React, { Component } from 'react';
-import {Route} from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import Navbar from '../navigation/Navbar.jsx';
-import {BrowserRouter} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import Login from '../auth/Login.jsx';
 import CreateAccount from '../auth/CreateAccount.jsx';
 // import * as firebase from 'firebase';
