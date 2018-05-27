@@ -3,10 +3,11 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import _ from 'lodash';
 import firebaseUtil from '../../utils/firebaseUtil.js';
 import fetchUtil from '../../utils/fetchUtil.js';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import inputValidation from '../../utils/inputValidation.js';
 
 const validField = { error: false, helperText: '' };
 
@@ -69,7 +70,7 @@ class CreateAccount extends Component {
 		.then((response) => {
 			this.setState({ showProgressBar: false });
 
-			if (response.status === 200 && firebaseUtil.isLoggedIn()) {
+			if (response.status === 200 && firebaseUtil.getCurrentUser()) {
 				this.props.history.push('/');
 			}
 		})
@@ -138,61 +139,84 @@ class CreateAccount extends Component {
 	}
 
 	_validateInputs = (args) => {
-		let fields = {};
-		let username = _.trim(args.username.value);
-		if (_.size(username) <= 0 || _.size(username) > 16 || !args.username.checkValidity() ) {
-			fields.username = {
-				error: true,
-				helperText: 'Username must be between 1 & 16 characters'
-			};
-		}
+		let validationResult = _.merge(
+			inputValidation.validateUsername(args.username),
+			inputValidation.validateEmail(args.email),
+			inputValidation.validatePasswordsAreEqual(args.password, args.confirmPassword),
+			inputValidation.validatePassword(args.password)
+		);
 
-		if (!args.email.checkValidity()) {
-			fields.email = {
-				error: true,
-				helperText: 'Enter a valid email'
-			}
-		}
-
-		if(!args.password.checkValidity()) {
-			const passState = {
-				error:  true,
-				helperText: args.password.validationMessage
-			};
-			_.set(fields, 'password', passState);
-		}
-
-		if(!args.confirmPassword.checkValidity()) {
-			const passState = {
-				error:  true,
-				helperText: args.confirmPassword.validationMessage
-			};
-			_.set(fields, 'confirmPassword', passState);
-		}
-
-		if (args.password.value !== args.confirmPassword.value) {
-			const passState = {
-				error:  true,
-				helperText: 'Passwords don\'t match'
-			};
-
-			_.set(fields, 'password', passState);
-			_.set(fields, 'confirmPassword', passState);
-		}
 
 		let currentFields = this.state.fields;
 
 		let newFieldsState = _.reduce(currentFields, function(acc, fieldValue, fieldKey) {
-				if (fields[fieldKey]) {
-					acc[fieldKey] = fields[fieldKey];
+				if (validationResult[fieldKey]) {
+					acc[fieldKey] = validationResult[fieldKey];
 				} else {
 					acc[fieldKey] = validField;
 				}
 				return acc;
 			}, {});
 		this.setState({ fields: newFieldsState });
-		return _.size(fields) === 0;
+		return _.size(validationResult) === 0;
 	}
+
+	// _validateInputs = (args) => {
+	// 	let fields = {};
+	// 	let username = _.trim(args.username.value);
+	// 	if (_.size(username) <= 0 || _.size(username) > 16 || !args.username.checkValidity() ) {
+	// 		fields.username = {
+	// 			error: true,
+	// 			helperText: 'Username must be between 1 & 16 characters'
+	// 		};
+	// 	}
+
+	// 	if (!args.email.checkValidity()) {
+	// 		fields.email = {
+	// 			error: true,
+	// 			helperText: 'Enter a valid email'
+	// 		}
+	// 	}
+
+	// 	if(!args.password.checkValidity()) {
+	// 		const passState = {
+	// 			error:  true,
+	// 			helperText: args.password.validationMessage
+	// 		};
+	// 		_.set(fields, 'password', passState);
+	// 	}
+
+	// 	if(!args.confirmPassword.checkValidity()) {
+	// 		const passState = {
+	// 			error:  true,
+	// 			helperText: args.confirmPassword.validationMessage
+	// 		};
+	// 		_.set(fields, 'confirmPassword', passState);
+	// 	}
+
+	// 	if (args.password.value !== args.confirmPassword.value) {
+	// 		const passState = {
+	// 			error:  true,
+	// 			helperText: 'Passwords don\'t match'
+	// 		};
+
+	// 		_.set(fields, 'password', passState);
+	// 		_.set(fields, 'confirmPassword', passState);
+	// 	}
+
+	// 	let currentFields = this.state.fields;
+
+	// 	let newFieldsState = _.reduce(currentFields, function(acc, fieldValue, fieldKey) {
+	// 			if (fields[fieldKey]) {
+	// 				acc[fieldKey] = fields[fieldKey];
+	// 			} else {
+	// 				acc[fieldKey] = validField;
+	// 			}
+	// 			return acc;
+	// 		}, {});
+	// 	this.setState({ fields: newFieldsState });
+	// 	return _.size(fields) === 0;
+	// }
 };
 
 export default CreateAccount;

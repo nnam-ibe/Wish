@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import firebaseUtil from '../../utils/firebaseUtil.js';
 import _ from 'lodash';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import inputValidation from '../../utils/inputValidation.js';
 
 const validField = { error: false, helperText: '' };
 
@@ -61,7 +62,7 @@ class Login extends Component {
 					this.setState({ fields });
 				}
 			});
-	};
+	}
 
 	render() {
 		let fields = this.state.fields;
@@ -96,6 +97,26 @@ class Login extends Component {
 				</Paper>
 			</div>
 		);
+	}
+
+	_validateInputs = (args) => {
+		let validationResult = _.merge(
+			inputValidation.validateEmail(args.email),
+			inputValidation.validatePassword(args.password)
+		);
+
+		let currentFields = this.state.fields;
+
+		let newFieldsState = _.reduce(currentFields, function(acc, fieldValue, fieldKey) {
+				if (validationResult[fieldKey]) {
+					acc[fieldKey] = validationResult[fieldKey];
+				} else {
+					acc[fieldKey] = validField;
+				}
+				return acc;
+			}, {});
+		this.setState({ fields: newFieldsState });
+		return _.size(validationResult) === 0;
 	}
 
 	_validateInputs = (args) => {

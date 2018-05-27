@@ -13,7 +13,8 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.2",
     "firebase-admin": "^5.12.1",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "nodemon": "^1.17.5"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"

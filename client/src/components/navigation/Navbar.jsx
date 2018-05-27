@@ -11,12 +11,12 @@ class Navbar extends Component {
 		super(props);
 		var buttonLabel = 'Login';
 
-		if (firebaseUtil.isLoggedIn()) buttonLabel = 'Logout';
+		if (firebaseUtil.getCurrentUser()) buttonLabel = 'Logout';
 
 		this.state = {
 			buttonLabel: buttonLabel
 		};
-	};
+	}
 
 	componentDidMount() {
 		firebaseUtil.onAuthStateChanged((user) => {
@@ -29,7 +29,7 @@ class Navbar extends Component {
 	}
 
 	onClickLogin = () => {
-		if (firebaseUtil.isLoggedIn()) {
+		if (firebaseUtil.getCurrentUser()) {
 			firebaseUtil.logout().then(() => {
 				this.setState({ buttonLabel: 'Login' });
 				this.props.history.push('/login');
@@ -37,14 +37,14 @@ class Navbar extends Component {
 		} else if (this.props.location.pathname !== '/login') {
 			this.props.history.push('/login');
 		}
-	};
+	}
 
 	render() {
 		let buttonLabel = this.state.buttonLabel;
 
 		return (
 			<div className='Navbar'>
-				<AppBar position='static' color='default'>
+				<AppBar position='fixed' color='default'>
 					<Toolbar>
 						<Typography variant='title' color='inherit'>
 							<a href='/' className='no-a-style'>Title</a>
@@ -55,6 +55,6 @@ class Navbar extends Component {
 			</div>
 		);
 	}
-};
+}
 
 export default Navbar;

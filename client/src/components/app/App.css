@@ -27,7 +27,7 @@
   to { transform: rotate(360deg); }
 }
 
-/*  WISH CSS  */
+/*------------------WISH CSS------------------*/
 .pull-right {
   left: 90%;
   right: auto;
@@ -37,7 +37,12 @@
   color: inherit;
   text-decoration: none;
 }
-/*--------------- AUTH PAGES ---------------*/
+
+.content {
+  padding-left: 251px;
+  padding-top: 65px;
+}
+/*------------------AUTH PAGES------------------*/
 .auth-component {
   width: 392px;
   margin: 40px auto;
@@ -49,4 +54,19 @@
 
 .auth-paper a {
   text-decoration-line: none;
+}
+
+/*------------------NAVIGATION ELEMENTS------------------*/
+
+.side-bar {
+  top: 60px !important;
+  padding-top: 20px;
+  z-index: 1000 !important;
+  width: 250px;
+}
+
+.list-item h3 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

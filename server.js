@@ -16,26 +16,29 @@ const jsonParser = bodyParser.json();
 const firestore = admin.firestore();
 
 app.post('/api/create_account', jsonParser, (req, res) => {
-	var body = req.body;
+	let body = req.body;
 	if (!_.has(body, 'uid')) {
 		res.status(400).send({ message: 'No uid provided' });
 		return;
 	}
 
-	firestore.doc(`users/${body.uid}`).set({
+	let uid = body.uid;
+
+	firestore.doc(`users/${uid}`).set({
 		addTaxes: true,
 		defaultList: 'Main',
 		tax: 13,
-		username: body.username
+		username: body.username,
+		activeLists: ['Main']
 	}).then(() => {
 		res.send(['all good']);
 	}).catch((err) => {
 		console.log(err);
-	})
+	});
 });
 
 app.post('/api/logger', jsonParser, (req, res) => {
-	var body = req.body;
+	let body = req.body;
 	if (!_.has(body, 'message')) {
 		return res.status(400).send({ message: 'No message provided'});
 	}

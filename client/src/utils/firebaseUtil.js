@@ -12,10 +12,16 @@ firebase.initializeApp(config);
 require('firebase/firestore');
 require('firebase/auth');
 
-// const db = firebase.firestore();
+const db = firebase.firestore();
+const settings = { timestampsInSnapshots: true };
+db.settings(settings);
+const localKey = 'WISH_LIST_KEY';
 const auth = firebase.auth();
 
 module.exports = {
+	db: db,
+	localKey: localKey,
+
 	createAccount: (options) => {
 		return new Promise((resolve, reject) => {
 			auth.createUserWithEmailAndPassword(options.email, options.password)
@@ -54,13 +60,27 @@ module.exports = {
 		return Promise.resolve(auth.signOut());
 	},
 
-	isLoggedIn: () => {
+	getCurrentUser: () => {
 		return auth.currentUser;
 	},
 
 	onAuthStateChanged: (callback) => {
 		auth.onAuthStateChanged(callback);
+	},
+
+	// Local Storage
+	getLocalUID: () => {
+		return localStorage.getItem(localKey);
+	},
+
+	setLocalUID: (uid) => {
+		localStorage.setItem(localKey, uid);
+	},
+
+	removeLocalUID: () => {
+		localStorage.removeItem(localKey);
 	}
+
 };
 
 
