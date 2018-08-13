@@ -59,9 +59,9 @@ class ListPage extends Component {
 						<Paper className='list-new-item-paper'>
 							<div className='list-new-item-paper-title display-flex'>
 								<div className='list-item-title-text'>
-									<Typography>Add New Item</Typography>
+									<Typography color='inherit'>Add New Item</Typography>
 								</div>
-								<CloseIcon />
+								<CloseIcon onClick={this.toggleNewItemForm}/>
 							</div>
 							<Divider />
 							<div className='list-new-item-paper-body'>
@@ -122,7 +122,7 @@ class ListPage extends Component {
 					</div>
 				)}
 				<div>
-					<Button variant='fab' color='primary' className='list-fab' onClick={this.handleFabClick}>
+					<Button variant='fab' color='primary' className='list-fab' onClick={this.toggleNewItemForm}>
 						<AddIcon />
 					</Button>
 				</div>
@@ -144,7 +144,7 @@ class ListPage extends Component {
 		})
 	}
 
-	handleFabClick = () => {
+	toggleNewItemForm = () => {
 		this.setState({
 			showNewItemForm: !this.state.showNewItemForm
 		})
