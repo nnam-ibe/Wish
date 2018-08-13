@@ -51,6 +51,10 @@
   display: inline !important;
 }
 
+.display-flex {
+  display: flex;
+}
+
 .text-align-right {
   text-align: right;
 }
@@ -93,10 +97,13 @@
 
 
 /*----------------------LIST ITEMS----------------------*/
-
-.list-item-header {
+.list-new-item-paper-title {
   padding: 10px 20px 10px 20px;
+}
+
+.list-item-title-text {
   text-align: left !important;
+  flex-grow: 1;
 }
 
 .list-fab {

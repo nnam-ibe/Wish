@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -56,10 +57,11 @@ class ListPage extends Component {
 				{this.state.showNewItemForm && (
 					<div className='list-new-item'>
 						<Paper className='list-new-item-paper'>
-							<div className='list-new-item-paper-title'>
-								<div className='list-item-header'>
-									<Typography>New Item</Typography>
+							<div className='list-new-item-paper-title display-flex'>
+								<div className='list-item-title-text'>
+									<Typography>Add New Item</Typography>
 								</div>
+								<CloseIcon />
 							</div>
 							<Divider />
 							<div className='list-new-item-paper-body'>
