@@ -14,20 +14,19 @@ class Sidebar extends Component {
 		this.state = {
 			activeLists: null,
 			listElements: null,
-			uid: this.props.uid
+			activeItem: null
 		};
 	}
 
-	componentDidMount() {
-		if (!this.state.uid) return;
-		this._getLists(this.state.uid);
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
+	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.uid === this.props.uid) return;
 
 		this._getLists(this.props.uid);
-		this.setState({ uid: this.props.uid });
+	}
+
+	itemClicked = page => () => {
+		this.props.history.push(`/lists/${page}`);
+		this._setListElements(this.state.activeLists, page);
 	}
 
 	render() {
@@ -43,20 +42,41 @@ class Sidebar extends Component {
 	}
 
 	_getLists = (uid) => {
+		if (!uid) {
+			this.setState({ activeLists: null, listElements: null });
+			return;
+		}
+
 		db.doc(`users/${uid}`).onSnapshot((snapShot) => {
 			if (!snapShot.exists) return;
 
 			let activeLists = snapShot.data().activeLists;
-			let listElements = _.map(activeLists, (listName) => {
-				return (
-					<ListItem button key={listName}>
-						<ListItemText primary={listName} classes={{root: 'list-item'}}/>
-					</ListItem>
-				);
-			});
+			let defaultList = snapShot.data().defaultList;
 
-			this.setState({ activeLists, listElements });
+			this.setState({ activeLists });
+			this._setListElements(activeLists, this._getActiveItem(defaultList));
 		});
+	}
+
+	_setListElements = (activeLists, activeItem) => {
+		let listElements = _.map(activeLists, (listName) => {
+			let classes = { root: 'list-item' };
+			if (listName === activeItem) classes.root += ' sb-active-item';
+
+			return (
+				<ListItem button key={listName} onClick={this.itemClicked(listName)}>
+					<ListItemText primary={listName} classes={classes}/>
+				</ListItem>
+			);
+		});
+
+		this.setState({ listElements });
+	}
+
+	_getActiveItem = (defaultList) => {
+		const item = this.state.activeItem ? this.state.activeItem : defaultList;
+		this.setState({ activeItem: item });
+		return item;
 	}
 }
 

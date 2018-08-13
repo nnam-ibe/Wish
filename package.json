@@ -10,11 +10,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@material-ui/core": "^1.4.3",
+    "@material-ui/icons": "^2.0.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.2",
     "firebase-admin": "^5.12.1",
     "lodash": "^4.17.10",
-    "nodemon": "^1.17.5"
+    "nodemon": "^1.17.5",
+    "react-number-format": "^3.5.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"

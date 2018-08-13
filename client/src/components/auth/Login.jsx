@@ -23,7 +23,8 @@ class Login extends Component {
 		};
 	};
 
-	login = () => {
+	login = (e) => {
+		e.preventDefault();
 		this.setState({ showProgressBar: true });
 
 		let args = {
@@ -73,26 +74,37 @@ class Login extends Component {
 				<Paper>
 					{ this.state.showProgressBar && progessBar }
 					<div className='auth-paper'>
-						<TextField
-							margin='dense'
-							id='email'
-							label='Email Address'
-							type='email'
-							error={fields.email.error}
-							helperText={fields.email.helperText}
-							fullWidth
-						/>
-						<TextField
-							margin='dense'
-							id='password'
-							label='Password'
-							type='password'
-							error={fields.password.error}
-							helperText={fields.password.helperText}
-							fullWidth
-						/>
-						<Button fullWidth color='inherit' onClick={this.login}>Login</Button>
-						<Typography>Not registered? <a href='/create_account'>Create an account</a></Typography>
+						<form>
+							<TextField
+								margin='dense'
+								id='email'
+								label='Email Address'
+								type='email'
+								error={fields.email.error}
+								helperText={fields.email.helperText}
+								fullWidth
+							/>
+							<TextField
+								margin='dense'
+								id='password'
+								label='Password'
+								type='password'
+								error={fields.password.error}
+								helperText={fields.password.helperText}
+								fullWidth
+							/>
+							<Button
+								fullWidth
+								type='submit'
+								color='inherit'
+								onClick={this.login}>
+								Login
+							</Button>
+						</form>
+						<Typography>
+							Not registered?
+							<a href='/create_account'>Create an account</a>
+						</Typography>
 					</div>
 				</Paper>
 			</div>
@@ -117,38 +129,6 @@ class Login extends Component {
 			}, {});
 		this.setState({ fields: newFieldsState });
 		return _.size(validationResult) === 0;
-	}
-
-	_validateInputs = (args) => {
-		let fields = {};
-
-		if (!args.email.checkValidity()) {
-			fields.email = {
-				error: true,
-				helperText: 'Enter a valid email'
-			}
-		}
-
-		if(!args.password.checkValidity()) {
-			const passState = {
-				error:  true,
-				helperText: args.password.validationMessage
-			};
-			_.set(fields, 'password', passState);
-		}
-
-		let currentFields = this.state.fields;
-
-		let newFieldsState = _.reduce(currentFields, function(acc, fieldValue, fieldKey) {
-				if (fields[fieldKey]) {
-					acc[fieldKey] = fields[fieldKey];
-				} else {
-					acc[fieldKey] = validField;
-				}
-				return acc;
-			}, {});
-		this.setState({ fields: newFieldsState });
-		return _.size(fields) === 0;
 	}
 };
 

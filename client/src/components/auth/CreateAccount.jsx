@@ -27,7 +27,8 @@ class CreateAccount extends Component {
 		};
 	};
 
-	createAccount = async () => {
+	createAccount = (e) => {
+		e.preventDefault();
 		this.setState({ showProgressBar: true });
 		let args = {
 			username: document.getElementById('username'),
@@ -90,48 +91,56 @@ class CreateAccount extends Component {
 				<Paper>
 					{ this.state.showProgressBar && progessBar }
 					<div className='auth-paper'>
-						<Typography variant='title'>Create your Account</Typography>
-						<TextField
-							margin='dense'
-							id='username'
-							label='Username'
-							type='username'
-							error={fields.username.error}
-							helperText={fields.username.helperText}
-							fullWidth
-							required
-						/>
-						<TextField
-							margin='dense'
-							id='email'
-							label='Email Address'
-							type='email'
-							error={fields.email.error}
-							helperText={fields.email.helperText}
-							fullWidth
-							required
-						/>
-						<TextField
-							margin='dense'
-							id='password'
-							label='Password'
-							type='password'
-							error={fields.password.error}
-							helperText={fields.password.helperText}
-							fullWidth
-							required
-						/>
-						<TextField
-							margin='dense'
-							id='confirmPassword'
-							label='Confirm Password'
-							type='password'
-							error={fields.confirmPassword.error}
-							helperText={fields.confirmPassword.helperText}
-							fullWidth
-							required
-						/>
-						<Button fullWidth color='inherit' onClick={this.createAccount}>Create Account</Button>
+						<form>
+							<Typography variant='title'>Create your Account</Typography>
+							<TextField
+								margin='dense'
+								id='username'
+								label='Username'
+								type='username'
+								error={fields.username.error}
+								helperText={fields.username.helperText}
+								fullWidth
+								required
+							/>
+							<TextField
+								margin='dense'
+								id='email'
+								label='Email Address'
+								type='email'
+								error={fields.email.error}
+								helperText={fields.email.helperText}
+								fullWidth
+								required
+							/>
+							<TextField
+								margin='dense'
+								id='password'
+								label='Password'
+								type='password'
+								error={fields.password.error}
+								helperText={fields.password.helperText}
+								fullWidth
+								required
+							/>
+							<TextField
+								margin='dense'
+								id='confirmPassword'
+								label='Confirm Password'
+								type='password'
+								error={fields.confirmPassword.error}
+								helperText={fields.confirmPassword.helperText}
+								fullWidth
+								required
+							/>
+							<Button
+								fullWidth
+								type='submit'
+								color='inherit'
+								onClick={this.createAccount}>
+								Create Account
+							</Button>
+						</form>
 					</div>
 				</Paper>
 			</div>
@@ -160,63 +169,6 @@ class CreateAccount extends Component {
 		this.setState({ fields: newFieldsState });
 		return _.size(validationResult) === 0;
 	}
-
-	// _validateInputs = (args) => {
-	// 	let fields = {};
-	// 	let username = _.trim(args.username.value);
-	// 	if (_.size(username) <= 0 || _.size(username) > 16 || !args.username.checkValidity() ) {
-	// 		fields.username = {
-	// 			error: true,
-	// 			helperText: 'Username must be between 1 & 16 characters'
-	// 		};
-	// 	}
-
-	// 	if (!args.email.checkValidity()) {
-	// 		fields.email = {
-	// 			error: true,
-	// 			helperText: 'Enter a valid email'
-	// 		}
-	// 	}
-
-	// 	if(!args.password.checkValidity()) {
-	// 		const passState = {
-	// 			error:  true,
-	// 			helperText: args.password.validationMessage
-	// 		};
-	// 		_.set(fields, 'password', passState);
-	// 	}
-
-	// 	if(!args.confirmPassword.checkValidity()) {
-	// 		const passState = {
-	// 			error:  true,
-	// 			helperText: args.confirmPassword.validationMessage
-	// 		};
-	// 		_.set(fields, 'confirmPassword', passState);
-	// 	}
-
-	// 	if (args.password.value !== args.confirmPassword.value) {
-	// 		const passState = {
-	// 			error:  true,
-	// 			helperText: 'Passwords don\'t match'
-	// 		};
-
-	// 		_.set(fields, 'password', passState);
-	// 		_.set(fields, 'confirmPassword', passState);
-	// 	}
-
-	// 	let currentFields = this.state.fields;
-
-	// 	let newFieldsState = _.reduce(currentFields, function(acc, fieldValue, fieldKey) {
-	// 			if (fields[fieldKey]) {
-	// 				acc[fieldKey] = fields[fieldKey];
-	// 			} else {
-	// 				acc[fieldKey] = validField;
-	// 			}
-	// 			return acc;
-	// 		}, {});
-	// 	this.setState({ fields: newFieldsState });
-	// 	return _.size(fields) === 0;
-	// }
 };
 
 export default CreateAccount;
