@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import firebaseUtil from '../../utils/firebaseUtil.js';
 import _ from 'lodash';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import inputValidation from '../../utils/inputValidation.js';
+import InputValidation from '../../utils/InputValidation.js';
 
 const validField = { error: false, helperText: '' };
 
@@ -113,8 +113,8 @@ class Login extends Component {
 
 	_validateInputs = (args) => {
 		let validationResult = _.merge(
-			inputValidation.validateEmail(args.email),
-			inputValidation.validatePassword(args.password)
+			InputValidation.validateEmail(args.email),
+			InputValidation.validatePassword(args.password)
 		);
 
 		let currentFields = this.state.fields;

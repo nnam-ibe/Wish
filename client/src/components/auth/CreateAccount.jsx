@@ -7,7 +7,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import _ from 'lodash';
 import firebaseUtil from '../../utils/firebaseUtil.js';
 import fetchUtil from '../../utils/fetchUtil.js';
-import inputValidation from '../../utils/inputValidation.js';
+import InputValidation from '../../utils/InputValidation.js';
 
 const validField = { error: false, helperText: '' };
 
@@ -149,10 +149,10 @@ class CreateAccount extends Component {
 
 	_validateInputs = (args) => {
 		let validationResult = _.merge(
-			inputValidation.validateUsername(args.username),
-			inputValidation.validateEmail(args.email),
-			inputValidation.validatePasswordsAreEqual(args.password, args.confirmPassword),
-			inputValidation.validatePassword(args.password)
+			InputValidation.validateUsername(args.username),
+			InputValidation.validateEmail(args.email),
+			InputValidation.validatePasswordsAreEqual(args.password, args.confirmPassword),
+			InputValidation.validatePassword(args.password)
 		);
 
 

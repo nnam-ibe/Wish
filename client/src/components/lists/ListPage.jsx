@@ -15,16 +15,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Item from './Item.jsx';
 import NumberFormat from 'react-number-format';
 import { db } from '../../utils/firebaseUtil.js';
+import InputValidation from '../../utils/InputValidation.js';
 import _ from 'lodash';
-
-
-const newItemDefault = {
-	name: '',
-	price: '',
-	saved: '',
-	increment: '200',
-	addTaxes: false
-};
 
 class ListPage extends Component {
 
@@ -47,6 +39,8 @@ class ListPage extends Component {
 	}
 
 	render() {
+		var { name, price, saved, increment, addTaxes } = this.state.newItem;
+
 		return (
 			<div>
 				This is indeed a page of lists.<br/>
@@ -67,55 +61,63 @@ class ListPage extends Component {
 							<div className='list-new-item-paper-body'>
 								<TextField
 									id='new-item-name'
-									label='Name'
-									value={this.state.newItem.name}
+									label={name.label}
+									value={name.value}
 									onChange={this.handleChange('name')}
 									margin='dense'
 									autoFocus={true}
+									error={name.error}
+									helperText={name.helperText}
 									fullWidth
 								/>
 								<div>
 									<TextField
 										id='new-item-price'
-										label='Price'
-										value={this.state.newItem.price}
+										label={price.label}
+										value={price.value}
 										onChange={this.handleChange('price')}
 										margin='dense'
 										InputProps={{ inputComponent: CurrencyFormat }}
 										className='new-item-price'
+										error={price.error}
+										helperText={price.helperText}
 									/>
 									<TextField
 										id='new-item-saved'
-										label='Already Saved'
-										value={this.state.newItem.saved}
+										label={saved.label}
+										value={saved.value}
 										onChange={this.handleChange('saved')}
 										margin='dense'
 										InputProps={{ inputComponent: CurrencyFormat }}
 										className='new-item-saved'
+										error={saved.error}
+										helperText={saved.helperText}
 									/>
 								</div>
 								<div className='new-item-third-row'>
 									<TextField
 										id='new-item-increment'
-										label='Increment Amount'
-										value={this.state.newItem.increment}
+										label={increment.label}
+										value={increment.value}
 										onChange={this.handleChange('increment')}
 										margin='dense'
 										InputProps={{ inputComponent: CurrencyFormat }}
 										className='new-item-increment'
+										error={increment.error}
+										helperText={increment.helperText}
 									/>
 									<div className='display-inline new-item-add-taxes'>
-										<label htmlFor='new-item-add-taxes-switch'>Add Taxes</label>
+										<label htmlFor='new-item-add-taxes-switch'>{addTaxes.label}</label>
 										<Switch
 											id='new-item-add-taxes-switch'
-											checked={this.state.newItem.addTaxes}
+											checked={addTaxes.checked}
 											onChange={this.handleChange('addTaxes')}
-											value='addTaxes'
+											value={addTaxes.value}
 										/>
 									</div>
 								</div>
 								<div className='new-item-fourth-row'>
-									<Button color='primary' variant='raised'>Add Item</Button>
+									<Button color='primary' variant='raised' onClick={this.addNewItem}>Add Item</Button>
 								</div>
 							</div>
 						</Paper>
@@ -134,9 +136,9 @@ class ListPage extends Component {
 		let newItem = this.state.newItem;
 
 		if (name === 'addTaxes') {
-			newItem[name] = event.target.checked;
+			newItem[name].checked = event.target.checked;
 		} else {
-			newItem[name] = event.target.value;
+			newItem[name].value = event.target.value;
 		}
 
 		this.setState({
@@ -148,6 +150,10 @@ class ListPage extends Component {
 		this.setState({
 			showNewItemForm: !this.state.showNewItemForm
 		})
+	}
+
+	addNewItem = () => {
+		this._validateNewItem(this.state.newItem);
 	}
 
 	_getList = (uid) => {
@@ -179,24 +185,86 @@ class ListPage extends Component {
 
 		this.setState({ listItems });
 	}
-}
 
-	function CurrencyFormat (props) {
-		const { inputRef, onChange, ...other } = props;
+	_validateNewItem(newItem) {
+		var { name, price, saved, increment } = this.state.newItem;
 
-		return (
-			<NumberFormat
-				{...other}
-				ref={inputRef}
-				onValueChange={values => {
-					onChange({
-						target: { value: values.value }
-					})
-				}}
-				thousandSeparator
-				prefix='$'
-			/>
+		let validationResult = _.merge(
+			InputValidation.validateString(name.value, 'name', name.label ),
+			InputValidation.validateAmount(price.value, 'price', price.label),
+			InputValidation.validateAmount(increment.value, 'increment', increment.label)
 		);
+
+		let updatedItem = this.state.newItem;
+		_.forEach(validationResult, (value, key) => {
+			_.assign(updatedItem[key], value);
+		});
+
+		_.forEach(updatedItem, (value, key) => {
+			if (validationResult[key]) {
+				_.assign(updatedItem[key], validationResult[key]);
+			} else {
+				_.assign(updatedItem[key], validField);
+			}
+		});
+
+		this.setState({ newItem: updatedItem });
+		return _.isEmpty(validationResult);
 	}
 
+	// _validateName
+}
+
 export default ListPage;
+
+function CurrencyFormat (props) {
+	const { inputRef, onChange, ...other } = props;
+
+	return (
+		<NumberFormat
+			{...other}
+			ref={inputRef}
+			onValueChange={values => {
+				onChange({
+					target: { value: values.value }
+				})
+			}}
+			thousandSeparator
+			prefix='$'
+		/>
+	);
+}
+
+const validField = { helperText: '', error: false };
+
+const newItemDefault = {
+	name: {
+		error: false,
+		helperText: '',
+		label: 'Name',
+		value: ''
+	},
+	price: {
+		error: false,
+		helperText: '',
+		label: 'Price',
+		value: ''
+	},
+	saved: {
+		error: false,
+		helperText: '',
+		label: 'Saved',
+		value: ''
+	},
+	increment: {
+		error: false,
+		helperText: '',
+		label: 'Increment',
+		value: 200
+	},
+	addTaxes: {
+		checked: false,
+		label: 'Add Taxes',
+		value: 'addTaxes'
+	}
+};

@@ -57,5 +57,31 @@ module.exports = {
 			_.set(result, 'confirmPassword', passResult);
 		}
 		return result;
+	},
+
+	validateString: (value, fieldName, caption) => {
+		let result = {};
+
+		if (_.isEmpty(_.trim(value))) {
+			result[fieldName] = {
+				error: true,
+				helperText: `${caption} cannot be empty`
+			};
+		}
+
+		return result;
+	},
+
+	validateAmount: (amount, fieldName, caption) => {
+		let result = {};
+
+		if(_.isEmpty(_.trim(amount))) {
+			result[fieldName] = {
+				error: true,
+				helperText: `${caption} cannot be empty`
+			};
+		}
+
+		return result;
 	}
 };
