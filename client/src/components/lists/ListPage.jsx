@@ -21,7 +21,7 @@ class ListPage extends Component {
 		this.state = {
 			list: null,
 			listItems: null,
-			newItem: newItemDefault,
+			newItem: _.cloneDeep(newItemDefault),
 			showNewItemForm: false
 		};
 	}
@@ -165,6 +165,8 @@ class ListPage extends Component {
 		};
 
 		saveNewItem(`users/${this.props.uid}/active/${this.props.match.params.page}`, item);
+		this.toggleNewItemForm();
+		this.setState({ newItem: _.cloneDeep(newItemDefault) });
 	}
 
 	_getList = (uid) => {
@@ -222,8 +224,6 @@ class ListPage extends Component {
 		this.setState({ newItem: updatedItem });
 		return _.isEmpty(validationResult);
 	}
-
-	// _validateName
 }
 
 export default ListPage;
@@ -253,7 +253,7 @@ const newItemDefault = {
 		error: false,
 		helperText: '',
 		label: 'Increment',
-		value: 200
+		value: '200'
 	},
 	addTaxes: {
 		checked: false,
