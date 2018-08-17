@@ -9,7 +9,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import Item from './Item.jsx';
 import NumberFormat from 'react-number-format';
-import { db, generateUUID, saveNewItem } from '../../utils/firebaseUtil.js';
+import FirebaseUtil from '../../utils/firebaseUtil.js';
 import InputValidation from '../../utils/InputValidation.js';
 import NumberFormatter from '../../utils/NumberFormatter.js';
 import _ from 'lodash';
@@ -156,7 +156,7 @@ class ListPage extends Component {
 
 
 		let item = {
-			id: generateUUID(),
+			id: FirebaseUtil.generateUUID(),
 			name: name.value,
 			price: NumberFormatter.formatMoney(price.value),
 			saved: NumberFormatter.formatMoney(saved.value),
@@ -164,9 +164,13 @@ class ListPage extends Component {
 			addTaxes: addTaxes.checked
 		};
 
-		saveNewItem(`users/${this.props.uid}/active/${this.props.match.params.page}`, item);
+		FirebaseUtil.saveNewItem(this._getPagePath(), item);
 		this.toggleNewItemForm();
 		this.setState({ newItem: _.cloneDeep(newItemDefault) });
+	}
+
+	_updateItem = (item) => {
+		FirebaseUtil.updateItem(this._getPagePath(), item);
 	}
 
 	_getList = (uid) => {
@@ -175,7 +179,7 @@ class ListPage extends Component {
 			return;
 		}
 
-		db.doc(`users/${uid}/active/${this.props.match.params.page}`).onSnapshot((snapShot) => {
+		FirebaseUtil.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
 			if (!snapShot.exists) {
 				this.setState({ lists: null });
 				this.setState({ listItems: null });
@@ -188,12 +192,13 @@ class ListPage extends Component {
 		});
 	}
 
+	_getPagePath = () => {
+		return `users/${this.props.uid}/active/${this.props.match.params.page}`;
+	}
+
 	_setListElements = (list) => {
 		let listItems = _.map(list, (item) => {
-			item.key = item.id;
-			return (
-				<Item {...item}/>
-			);
+			return ( <Item {...item} key={item.id} updateItem={this._updateItem}/> );
 		});
 
 		this.setState({ listItems });

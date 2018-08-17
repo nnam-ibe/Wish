@@ -136,6 +136,15 @@ class Item extends Component {
 			difference,
 			formattedDifference
 		});
+
+		this.props.updateItem({
+			addTaxes: this.props.addTaxes,
+			increment: this.props.increment,
+			id: this.props.id,
+			name: this.props.name,
+			price,
+			saved
+		});
 	}
 }
 
