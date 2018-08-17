@@ -109,7 +109,10 @@ function _getItems (path) {
 	return new Promise((resolve, reject) => {
 		db.doc(path).get()
 			.then((doc) => {
-				if (!doc.exists) reject(null);
+				if (!doc.exists) {
+					resolve([]);
+					return;
+				}
 
 				resolve(doc.data().items);
 			});
