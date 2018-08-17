@@ -17,6 +17,8 @@ const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 const localKey = 'WISH_LIST_KEY';
 const auth = firebase.auth();
+const uuidv4 = require('uuid/v4');
+let _ = require('lodash');
 
 module.exports = {
 	db: db,
@@ -60,6 +62,22 @@ module.exports = {
 		return Promise.resolve(auth.signOut());
 	},
 
+	saveNewItem: (path, data) => {
+		_getItems(path).then((items) => {
+			items.push(data);
+			db.doc(path).set({ items }, { merge: true });
+		});
+	},
+
+	updateItem: (path, item) => {
+		_getItems(path).then((items) => {
+			let index = _.findIndex(items, { id: item.id });
+
+			items[index] = item;
+			db.doc(path).set({ items }, { merge: true });
+		});
+	},
+
 	getCurrentUser: () => {
 		return auth.currentUser;
 	},
@@ -79,10 +97,24 @@ module.exports = {
 
 	removeLocalUID: () => {
 		localStorage.removeItem(localKey);
+	},
+
+	generateUUID: () => {
+		return uuidv4();
 	}
 
 };
 
+function _getItems (path) {
+	return new Promise((resolve, reject) => {
+		db.doc(path).get()
+			.then((doc) => {
+				if (!doc.exists) reject(null);
+
+				resolve(doc.data().items);
+			});
+	});
+}
 
 function _getErrorMessage (errorCode) {
 	var result;

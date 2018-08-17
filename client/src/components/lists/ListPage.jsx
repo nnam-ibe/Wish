@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
@@ -14,8 +9,9 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import Item from './Item.jsx';
 import NumberFormat from 'react-number-format';
-import { db } from '../../utils/firebaseUtil.js';
+import { db, generateUUID, saveNewItem } from '../../utils/firebaseUtil.js';
 import InputValidation from '../../utils/InputValidation.js';
+import NumberFormatter from '../../utils/NumberFormatter.js';
 import _ from 'lodash';
 
 class ListPage extends Component {
@@ -39,7 +35,7 @@ class ListPage extends Component {
 	}
 
 	render() {
-		var { name, price, saved, increment, addTaxes } = this.state.newItem;
+		let { name, price, saved, increment, addTaxes } = this.state.newItem;
 
 		return (
 			<div>
@@ -153,7 +149,22 @@ class ListPage extends Component {
 	}
 
 	addNewItem = () => {
-		this._validateNewItem(this.state.newItem);
+		var valid = this._validateNewItem(this.state.newItem);
+		if (!valid) return;
+
+		let { name, price, saved, increment, addTaxes } = this.state.newItem;
+
+
+		let item = {
+			id: generateUUID(),
+			name: name.value,
+			price: NumberFormatter.formatMoney(price.value),
+			saved: NumberFormatter.formatMoney(saved.value),
+			increment: NumberFormatter.formatMoney(increment.value),
+			addTaxes: addTaxes.checked
+		};
+
+		saveNewItem(`users/${this.props.uid}/active/${this.props.match.params.page}`, item);
 	}
 
 	_getList = (uid) => {
@@ -187,7 +198,7 @@ class ListPage extends Component {
 	}
 
 	_validateNewItem(newItem) {
-		var { name, price, saved, increment } = this.state.newItem;
+		let { name, price, increment } = this.state.newItem;
 
 		let validationResult = _.merge(
 			InputValidation.validateString(name.value, 'name', name.label ),
@@ -216,24 +227,6 @@ class ListPage extends Component {
 }
 
 export default ListPage;
-
-function CurrencyFormat (props) {
-	const { inputRef, onChange, ...other } = props;
-
-	return (
-		<NumberFormat
-			{...other}
-			ref={inputRef}
-			onValueChange={values => {
-				onChange({
-					target: { value: values.value }
-				})
-			}}
-			thousandSeparator
-			prefix='$'
-		/>
-	);
-}
 
 const validField = { helperText: '', error: false };
 
@@ -268,3 +261,23 @@ const newItemDefault = {
 		value: 'addTaxes'
 	}
 };
+
+function CurrencyFormat (props) {
+	const { inputRef, onChange, ...other } = props;
+
+	return (
+		<NumberFormat
+			{...other}
+			ref={inputRef}
+			onValueChange={values => {
+				onChange({
+					target: { value: values.value }
+				})
+			}}
+			thousandSeparator
+			decimalScale={2}
+			allowNegative={false}
+			prefix='$'
+		/>
+	);
+}
