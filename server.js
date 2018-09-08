@@ -33,7 +33,7 @@ app.post('/api/create_account', jsonParser, (req, res) => {
 	}).then(() => {
 		res.send(['all good']);
 	}).catch((err) => {
-		console.log(err);
+		console.error(err);
 	});
 });
 
