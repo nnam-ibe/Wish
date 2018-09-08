@@ -16,34 +16,47 @@ class Item extends Component {
 
 	constructor(props) {
 		super(props);
-		let difference = this._calculateDifference(props.price, props.saved);
-		let progress = this._calculateProgress(props.price, props.saved);
-
-		let formattedSaved = this._getFormattedAmount(props.saved);
-		let formattedDifference = this._getFormattedAmount(difference);
-		let formattedPrice = this._getFormattedAmount(props.price);
+		let calculatedValues = this._getCalculatedValues(props.price, props.saved);
 
 		this.state = {
 			name: props.name,
 			increment: props.increment,
 			saved: props.saved,
-			difference: difference,
 			price: props.price,
-			formattedSaved: formattedSaved,
-			formattedDifference: formattedDifference,
-			formattedPrice: formattedPrice,
-			progress: progress
+			...calculatedValues
 		};
 
 	}
 
-	// componentDidUpdate(prevProps, prevState) {
-	// 	let samePage = prevProps.match.params.page === this.props.match.params.page;
-	// 	let sameProps = this.props.uid === prevProps.uid
-	// 	if (samePage && sameProps) return;
+	componentDidUpdate(prevProps, prevState) {
+		let newState = {};
+		let calculatedValuesChanged = false;
 
-	// 	this._getList(this.props.uid);
-	// }
+		if (prevProps.name !== this.props.name) {
+			newState.name = this.props.name;
+		}
+
+		if (prevProps.increment !== this.props.increment) {
+			newState.increment = this.props.increment;
+		}
+
+		if (prevProps.saved !== this.props.saved) {
+			calculatedValuesChanged = true;
+			newState.saved = this.props.saved;
+		}
+
+		if (prevProps.price !== this.props.price) {
+			calculatedValuesChanged = true;
+			newState.price = this.props.price;
+		}
+
+		if (calculatedValuesChanged) {
+			_.assign(newState, this._getCalculatedValues(this.props.price, this.props.saved));
+		}
+
+		if (!_.isEmpty(newState)) this.setState({ ...newState });
+
+	}
 
 	render() {
 		return (
@@ -92,6 +105,18 @@ class Item extends Component {
 				<LinearProgress variant="determinate" value={this.state.progress} />
 			</div>
 		);
+	}
+
+	_getCalculatedValues = (price, saved) => {
+		let difference = this._calculateDifference(price, saved);
+
+		return {
+			difference,
+			progress: this._calculateProgress(price, saved),
+			formattedSaved: this._getFormattedAmount(saved),
+			formattedDifference: this._getFormattedAmount(difference),
+			formattedPrice: this._getFormattedAmount(price)
+		};
 	}
 
 	_calculateDifference = (price, saved) => {

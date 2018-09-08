@@ -19,7 +19,6 @@ class ListPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			list: null,
 			listItems: null,
 			newItem: _.cloneDeep(newItemDefault),
 			showNewItemForm: false
@@ -39,8 +38,6 @@ class ListPage extends Component {
 
 		return (
 			<div>
-				This is indeed a page of lists.<br/>
-				From your {this.props.match.params.page} list.
 				<div>
 					{this.state.listItems}
 				</div>
@@ -175,19 +172,17 @@ class ListPage extends Component {
 
 	_getList = (uid) => {
 		if (!uid) {
-			this.setState({ list: null });
+			this.setState({ listItems: null });
 			return;
 		}
 
 		FirebaseUtil.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
 			if (!snapShot.exists) {
-				this.setState({ lists: null });
 				this.setState({ listItems: null });
 				return;
 			}
 
 			var list = snapShot.data().items;
-			this.setState({ list });
 			this._setListElements(list);
 		});
 	}
