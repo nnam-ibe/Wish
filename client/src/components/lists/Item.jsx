@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
-// import { db } from '../../utils/firebaseUtil.js';
+import ExpandIcon from '@material-ui/icons/ExpandMore';
 import _ from 'lodash';
 
 class Item extends Component {
@@ -62,8 +62,15 @@ class Item extends Component {
 		return (
 			<div className='item-margin'>
 				<Paper className='auth-paper'>
-					<div>
-						<Typography variant='title'>{this.state.name}</Typography>
+					<div className='display-flex text-align-left ml-36'>
+						<div className='flex-grow-1'>
+							<Typography variant='title'>{this.state.name}</Typography>
+						</div>
+						<div>
+							<IconButton onClick={this._editItem}>
+								<ExpandIcon />
+							</IconButton>
+						</div>
 					</div>
 					<div>
 						<Table>
@@ -170,6 +177,10 @@ class Item extends Component {
 			price,
 			saved
 		});
+	}
+
+	_editItem = () => {
+		this.props.editItem(this.props.id);
 	}
 }
 

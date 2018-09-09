@@ -19,6 +19,7 @@ class ListPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			list: null,
 			listItems: null,
 			newItem: _.cloneDeep(newItemDefault),
 			showNewItemForm: false
@@ -170,15 +171,23 @@ class ListPage extends Component {
 		FirebaseUtil.updateItem(this._getPagePath(), item);
 	}
 
+	_editItem = (id) => {
+		let item = _.find(this.state.list, { id: id });
+		if (!item) return null;
+
+		// Setup new item form to take args.
+		// Also maybe move new item to it's own component
+	}
+
 	_getList = (uid) => {
 		if (!uid) {
-			this.setState({ listItems: null });
+			this.setState({ list: null, listItems: null });
 			return;
 		}
 
 		FirebaseUtil.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
 			if (!snapShot.exists) {
-				this.setState({ listItems: null });
+				this.setState({ list: null, listItems: null });
 				return;
 			}
 
@@ -193,10 +202,10 @@ class ListPage extends Component {
 
 	_setListElements = (list) => {
 		let listItems = _.map(list, (item) => {
-			return ( <Item {...item} key={item.id} updateItem={this._updateItem}/> );
+			return ( <Item {...item} key={item.id} updateItem={this._updateItem} editItem={this._editItem}/> );
 		});
 
-		this.setState({ listItems });
+		this.setState({ list, listItems });
 	}
 
 	_validateNewItem(newItem) {
