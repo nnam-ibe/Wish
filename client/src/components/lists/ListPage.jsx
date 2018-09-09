@@ -43,7 +43,7 @@ class ListPage extends Component {
 				</div>
 				{this.state.showNewItemForm && (
 					<div className='list-new-item'>
-						<Paper className='list-new-item-paper'>
+						<Paper>
 							<div className='list-new-item-paper-title display-flex'>
 								<div className='list-item-title-text'>
 									<Typography color='inherit'>Add New Item</Typography>
