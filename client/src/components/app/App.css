@@ -32,9 +32,25 @@
 }
 
 /*------------------WISH CSS------------------*/
-.pull-right {
-  left: 90%;
-  right: auto;
+.content {
+  padding-left: 251px;
+  padding-top: 65px;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.display-inline {
+  display: inline !important;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.ml-36 {
+  margin-left: 36px;
 }
 
 .no-a-style {
@@ -42,26 +58,23 @@
   text-decoration: none;
 }
 
-.content {
-  padding-left: 251px;
-  padding-top: 65px;
+.pb-10 {
+  padding-bottom: 10px;
 }
 
-.display-inline {
-  display: inline !important;
+.pull-right {
+  left: 90%;
+  right: auto;
 }
 
-.display-flex {
-  display: flex;
+.text-align-left {
+  text-align: left;
 }
 
 .text-align-right {
   text-align: right;
 }
 
-.pb-10 {
-  padding-bottom: 10px;
-}
 /*------------------AUTH PAGES------------------*/
 .auth-component {
   width: 392px;
@@ -77,14 +90,6 @@
 }
 
 /*------------------NAVIGATION ELEMENTS------------------*/
-
-.side-bar {
-  top: 60px !important;
-  padding-top: 20px;
-  z-index: 1000 !important;
-  width: 250px;
-}
-
 .list-item h3 {
   overflow: hidden;
   white-space: nowrap;
@@ -95,21 +100,16 @@
   color: var(--accent-color);
 }
 
+.side-bar {
+  top: 60px !important;
+  padding-top: 20px;
+  z-index: 1000 !important;
+  width: 250px;
+}
 
 /*----------------------LIST ITEMS----------------------*/
-.list-new-item-paper-title {
-  padding: 10px 20px 10px 20px;
-  background-color: var(--accent-color);
-  color: #FFFFFF;
-}
-
-.list-new-item-paper-title svg:hover {
-  color: #adafba;
-}
-
-.list-item-title-text {
-  text-align: left !important;
-  flex-grow: 1;
+.item-margin {
+  margin: 10px 10px;
 }
 
 .list-fab {
@@ -117,6 +117,16 @@
   bottom: 0 !important;
   right: 0 !important;
   margin: 20px !important;
+}
+
+.list-item-increment {
+  width: 45%;
+  margin-right: 20px !important;
+}
+
+.list-item-title-text {
+  text-align: left !important;
+  flex-grow: 1;
 }
 
 .list-new-item {
@@ -130,6 +140,26 @@
   width: 400px;
 }
 
+.list-new-item-paper-title {
+  padding: 10px 20px 10px 20px;
+  background-color: var(--accent-color);
+  color: #FFFFFF;
+}
+
+.list-new-item-paper-title svg:hover {
+  color: #adafba;
+}
+
+.new-item-add-taxes {
+  width: 45%;
+  margin-left: 20px !important;
+}
+
+.new-item-increment {
+  width: 45%;
+  margin-right: 20px !important;
+}
+
 .new-item-price {
   width: 45%;
   margin-right: 20px !important;
@@ -140,33 +170,14 @@
   margin-left: 20px !important;
 }
 
-.new-item-increment {
-  width: 45%;
-  margin-right: 20px !important;
-}
-
-.new-item-add-taxes {
-  width: 45%;
-  margin-left: 20px !important;
-}
-
 .new-item-third-row {
   text-align: left;
 }
 
-.list-item-increment {
-  width: 45%;
-  margin-right: 20px !important;
-}
-
-.item-margin {
-  margin: 10px 10px;
+td svg {
+  color: rgba(0,0,0,0.54);
 }
 
 tr td {
   border-bottom: none !important;
-}
-
-td svg {
-  color: rgba(0,0,0,0.54);
 }
