@@ -3,7 +3,6 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Item from './Item.jsx';
 import FirebaseUtil from '../../utils/firebaseUtil.js';
-import InputValidation from '../../utils/InputValidation.js';
 import ListItemForm from './ListItemForm.jsx';
 import _ from 'lodash';
 
@@ -103,38 +102,4 @@ class ListPage extends Component {
 }
 
 export default ListPage;
-
-const validField = { helperText: '', error: false };
-
-const newItemDefault = {
-	name: {
-		error: false,
-		helperText: '',
-		label: 'Name',
-		value: ''
-	},
-	price: {
-		error: false,
-		helperText: '',
-		label: 'Price',
-		value: ''
-	},
-	saved: {
-		error: false,
-		helperText: '',
-		label: 'Saved',
-		value: ''
-	},
-	increment: {
-		error: false,
-		helperText: '',
-		label: 'Increment',
-		value: '200'
-	},
-	addTaxes: {
-		checked: false,
-		label: 'Add Taxes',
-		value: 'addTaxes'
-	}
-};
 
