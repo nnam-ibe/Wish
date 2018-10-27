@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandIcon from '@material-ui/icons/ExpandMore';
+import NumberFormatter from '../../utils/NumberFormatter.js';
 import _ from 'lodash';
 
 class Item extends Component {
@@ -130,7 +131,7 @@ class Item extends Component {
 		let result = price - saved;
 		if (result < 0) result = 0;
 
-		return result;
+		return NumberFormatter.formatMoney(result);
 	}
 
 	_calculateProgress = (price, saved) => {
