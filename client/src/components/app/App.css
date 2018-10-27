@@ -112,66 +112,61 @@
   margin: 10px 10px;
 }
 
-.list-fab {
-  position: fixed !important;
-  bottom: 0 !important;
-  right: 0 !important;
-  margin: 20px !important;
-}
-
-.list-item-increment {
-  width: 45%;
-  margin-right: 20px !important;
-}
-
-.list-item-title-text {
-  text-align: left !important;
-  flex-grow: 1;
-}
-
-.list-new-item {
+.item-form {
   position: fixed !important;
   bottom: 0 !important;
   right: 100px !important;
 }
 
-.list-new-item-paper-body {
+.item-form-add-taxes {
+  width: 45%;
+  margin-left: 20px !important;
+}
+
+.item-form-increment {
+  width: 45%;
+  margin-right: 20px !important;
+}
+
+.item-form-paper-body {
   padding: 0 20px 20px 20px;
   width: 400px;
 }
 
-.list-new-item-paper-title {
+.item-form-paper-title {
   padding: 10px 20px 10px 20px;
   background-color: var(--accent-color);
   color: #FFFFFF;
 }
 
-.list-new-item-paper-title svg:hover {
+.item-form-paper-title svg:hover {
   color: #adafba;
 }
 
-.new-item-add-taxes {
-  width: 45%;
-  margin-left: 20px !important;
+.item-form-paper-title-text {
+  text-align: left !important;
+  flex-grow: 1;
 }
 
-.new-item-increment {
-  width: 45%;
-  margin-right: 20px !important;
-}
-
-.new-item-price {
+.item-form-price {
   width: 45%;
   margin-right: 20px !important;
 }
 
-.new-item-saved {
+.item-form-saved {
   width: 45%;
   margin-left: 20px !important;
 }
 
-.new-item-third-row {
+.item-form-third-row {
   text-align: left;
+}
+
+.list-fab {
+  position: fixed !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  margin: 20px !important;
 }
 
 td svg {

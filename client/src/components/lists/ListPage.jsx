@@ -43,18 +43,18 @@ class ListPage extends Component {
 					{this.state.listItems}
 				</div>
 				{this.state.showNewItemForm && (
-					<div className='list-new-item'>
+					<div className='item-form'>
 						<Paper>
-							<div className='list-new-item-paper-title display-flex'>
-								<div className='list-item-title-text'>
+							<div className='item-form-paper-title display-flex'>
+								<div className='item-form-paper-title-text'>
 									<Typography color='inherit'>Add New Item</Typography>
 								</div>
 								<CloseIcon onClick={this.toggleNewItemForm}/>
 							</div>
 							<Divider />
-							<div className='list-new-item-paper-body'>
+							<div className='item-form-paper-body'>
 								<TextField
-									id='new-item-name'
+									id='item-form-name'
 									label={name.label}
 									value={name.value}
 									onChange={this.handleChange('name')}
@@ -66,51 +66,51 @@ class ListPage extends Component {
 								/>
 								<div>
 									<TextField
-										id='new-item-price'
+										id='item-form-price'
 										label={price.label}
 										value={price.value}
 										onChange={this.handleChange('price')}
 										margin='dense'
 										InputProps={{ inputComponent: CurrencyFormat }}
-										className='new-item-price'
+										className='item-form-price'
 										error={price.error}
 										helperText={price.helperText}
 									/>
 									<TextField
-										id='new-item-saved'
+										id='item-form-saved'
 										label={saved.label}
 										value={saved.value}
 										onChange={this.handleChange('saved')}
 										margin='dense'
 										InputProps={{ inputComponent: CurrencyFormat }}
-										className='new-item-saved'
+										className='item-form-saved'
 										error={saved.error}
 										helperText={saved.helperText}
 									/>
 								</div>
-								<div className='new-item-third-row'>
+								<div className='item-form-third-row'>
 									<TextField
-										id='new-item-increment'
+										id='item-form-increment'
 										label={increment.label}
 										value={increment.value}
 										onChange={this.handleChange('increment')}
 										margin='dense'
 										InputProps={{ inputComponent: CurrencyFormat }}
-										className='new-item-increment'
+										className='item-form-increment'
 										error={increment.error}
 										helperText={increment.helperText}
 									/>
-									<div className='display-inline new-item-add-taxes'>
-										<label htmlFor='new-item-add-taxes-switch'>{addTaxes.label}</label>
+									<div className='display-inline item-form-add-taxes'>
+										<label htmlFor='item-form-add-taxes-switch'>{addTaxes.label}</label>
 										<Switch
-											id='new-item-add-taxes-switch'
+											id='item-form-add-taxes-switch'
 											checked={addTaxes.checked}
 											onChange={this.handleChange('addTaxes')}
 											value={addTaxes.value}
 										/>
 									</div>
 								</div>
-								<div className='new-item-fourth-row'>
+								<div className='item-form-fourth-row'>
 									<Button color='primary' variant='raised' onClick={this.addNewItem}>Add Item</Button>
 								</div>
 							</div>
