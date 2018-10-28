@@ -22,6 +22,10 @@ class App extends Component {
 			if (user) {
 				firebaseUtil.setLocalUID(user.uid);
 				this.setState({ uid: user.uid });
+
+				if (this.props.location.pathname === '/') {
+					this.props.history.push('/lists/Main');
+				}
 			} else {
 				firebaseUtil.removeLocalUID();
 				this.setState({ uid: null });

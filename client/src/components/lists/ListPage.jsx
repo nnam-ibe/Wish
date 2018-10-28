@@ -22,6 +22,10 @@ class ListPage extends Component {
 		};
 	}
 
+	componentDidMount() {
+		this._getList(this.props.uid);
+	}
+
 	componentDidUpdate(prevProps, prevState) {
 		let samePage = prevProps.match.params.page === this.props.match.params.page;
 		let sameProps = this.props.uid === prevProps.uid
