@@ -13,8 +13,12 @@ class ListPage extends Component {
 		this.state = {
 			list: null,
 			listItems: null,
-			formItem: _.cloneDeep(formItemDefaults),
-			itemFormIsOpen: false
+
+			// Input Form State
+			formItem: this._getFormItemDefault(),
+			itemFormIsOpen: false,
+			isNewFormItem: true,
+			formItemId: null
 		};
 	}
 
@@ -39,7 +43,9 @@ class ListPage extends Component {
 						getPagePath={this._getPagePath}
 						item={this.state.formItem}
 						handleChange={this.handleFormItemChange}
-						setItem={this.setFormItem}
+						resetItem={this.resetFormItem}
+						isNewItem={this.state.isNewFormItem}
+						itemId={this.state.formItemId}
 					/>
 				</div>
 				<div>
@@ -52,12 +58,16 @@ class ListPage extends Component {
 	}
 
 	openItemForm = () => {
+		if (this.state.itemFormIsOpen) return;
+
 		this.setState({
 			itemFormIsOpen: true
 		})
 	}
 
 	closeItemForm = () => {
+		if (!this.state.isNewFormItem) this.resetFormItem();
+
 		this.setState({
 			itemFormIsOpen: false
 		})
@@ -75,8 +85,12 @@ class ListPage extends Component {
 		this.setState({ formItem: item });
 	}
 
-	setFormItem = (item = _.cloneDeep(formItemDefaults)) => {
-		this.setState({ formItem: item });
+	resetFormItem = () => {
+		this.setState({
+			formItem:  this._getFormItemDefault(),
+			isNewFormItem: true,
+			formItemId: null
+		});
 	}
 
 	_updateItem = (item) => {
@@ -87,10 +101,23 @@ class ListPage extends Component {
 		let item = _.find(this.state.list, { id: id });
 		if (!item) return null;
 
-		console.log(item);
+		let itemToEdit = this._getFormItemDefault();
 
-		_.forEach(item, (key) = {
+		_.forEach(item, (value, key) => {
+			if (key === 'id') return;
+			if (key === 'addTaxes') {
+				itemToEdit[key].checked = item[key];
+				return;
+			}
 
+			itemToEdit[key].value = item[key];
+		});
+
+		this.setState({
+			itemFormIsOpen: true,
+			formItem: itemToEdit,
+			isNewFormItem: false,
+			formItemId: id
 		});
 	}
 
@@ -122,6 +149,8 @@ class ListPage extends Component {
 
 		this.setState({ list, listItems });
 	}
+
+	_getFormItemDefault = () => _.cloneDeep(formItemDefaults)
 }
 
 export default ListPage;

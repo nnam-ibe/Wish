@@ -78,6 +78,15 @@ module.exports = {
 		});
 	},
 
+	deleteItem: (path, itemId) => {
+		_getItems(path).then((items) => {
+			let index = _.findIndex(items, { id: itemId });
+
+			items.splice(index, 1);
+			db.doc(path).set({ items }, { merge: true });
+		});
+	},
+
 	getCurrentUser: () => {
 		return auth.currentUser;
 	},

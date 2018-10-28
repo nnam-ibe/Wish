@@ -21,6 +21,7 @@ class ListItemForm extends Component {
 
 	render() {
 		let { name, price, saved, increment, addTaxes } = this.props.item;
+		let formTitleText = this.props.isNewItem ? 'Add New Item' : 'Update Item'
 
 		return	(
 			<div className='item-form'>
@@ -28,7 +29,7 @@ class ListItemForm extends Component {
 					<Paper>
 						<div className='item-form-paper-title display-flex'>
 							<div className='item-form-paper-title-text'>
-								<Typography color='inherit'>Add New Item</Typography>
+								<Typography color='inherit'>{formTitleText}</Typography>
 							</div>
 							<CloseIcon onClick={this.props.closeForm}/>
 						</div>
@@ -92,7 +93,16 @@ class ListItemForm extends Component {
 								</div>
 							</div>
 							<div className='item-form-fourth-row'>
-								<Button color='primary' variant='raised' onClick={this.addNewItem}>Add Item</Button>
+								{
+									this.props.isNewItem ? (
+										<Button color='primary' variant='raised' onClick={this.saveItem}>Add Item</Button>
+									) : (
+										<div>
+											<Button color='primary' variant='raised' onClick={this.saveItem} className="mr-10">Save Item</Button>
+											<Button color='secondary' variant='raised' onClick={this.deleteItem}>Delete Item</Button>
+										</div>
+									)
+								}
 							</div>
 						</div>
 					</Paper>
@@ -101,15 +111,13 @@ class ListItemForm extends Component {
 		)
 	}
 
-	addNewItem = () => {
+	saveItem = () => {
 		let valid = this._validateItem(this.props.item);
 		if (!valid) return;
 
 		let { name, price, saved, increment, addTaxes } = this.props.item;
 
-
 		let item = {
-			id: FirebaseUtil.generateUUID(),
 			name: name.value,
 			price: NumberFormatter.formatMoney(price.value),
 			saved: NumberFormatter.formatMoney(saved.value),
@@ -117,9 +125,22 @@ class ListItemForm extends Component {
 			addTaxes: addTaxes.checked
 		};
 
-		FirebaseUtil.saveNewItem(this.props.getPagePath(), item);
+		if (this.props.isNewItem) {
+			item.id = FirebaseUtil.generateUUID();
+			FirebaseUtil.saveNewItem(this.props.getPagePath(), item);
+		} else {
+			item.id = this.props.itemId;
+			FirebaseUtil.updateItem(this.props.getPagePath(), item);
+		}
+
 		this.props.closeForm();
-		this.props.setItem();
+		this.props.resetItem();
+	}
+
+	deleteItem = () => {
+		FirebaseUtil.deleteItem(this.props.getPagePath(), this.props.itemId);
+		this.props.closeForm();
+		this.props.resetItem();
 	}
 
 	_validateItem(item) {
