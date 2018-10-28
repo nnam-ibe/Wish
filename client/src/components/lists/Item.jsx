@@ -154,6 +154,8 @@ class Item extends Component {
 	}
 
 	_updateValues = (price, saved) => {
+		saved = NumberFormatter.formatMoney(saved);
+		price = NumberFormatter.formatMoney(price);
 		let formattedSaved = this._getFormattedAmount(saved);
 		let formattedPrice = this._getFormattedAmount(price);
 		let progress = this._calculateProgress(price, saved);
