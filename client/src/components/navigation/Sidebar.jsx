@@ -17,11 +17,9 @@ class Sidebar extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		console.log('Component Updated');
 		let isEqual = _.isEqual(prevProps.userPrefs.activeLists, this.props.userPrefs.activeLists);
 		if (isEqual) return;
 
-		console.log('And its different');
 		let defaultList = this.props.userPrefs.defaultList;
 		this._setListElements(this.props.userPrefs.activeLists, this._getActiveItem(defaultList));
 	}
