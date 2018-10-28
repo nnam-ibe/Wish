@@ -16,13 +16,11 @@ class ListItemForm extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {
-			item: _.cloneDeep(itemDefaults)
-		};
+		this.state = {};
 	}
 
 	render() {
-		let { name, price, saved, increment, addTaxes } = this.state.item;
+		let { name, price, saved, increment, addTaxes } = this.props.item;
 
 		return	(
 			<div className='item-form'>
@@ -40,7 +38,7 @@ class ListItemForm extends Component {
 								id='item-form-name'
 								label={name.label}
 								value={name.value}
-								onChange={this.handleChange('name')}
+								onChange={this.props.handleChange('name')}
 								margin='dense'
 								autoFocus={true}
 								error={name.error}
@@ -52,7 +50,7 @@ class ListItemForm extends Component {
 									id='item-form-price'
 									label={price.label}
 									value={price.value}
-									onChange={this.handleChange('price')}
+									onChange={this.props.handleChange('price')}
 									margin='dense'
 									InputProps={{ inputComponent: CurrencyFormat }}
 									className='item-form-price'
@@ -63,7 +61,7 @@ class ListItemForm extends Component {
 									id='item-form-saved'
 									label={saved.label}
 									value={saved.value}
-									onChange={this.handleChange('saved')}
+									onChange={this.props.handleChange('saved')}
 									margin='dense'
 									InputProps={{ inputComponent: CurrencyFormat }}
 									className='item-form-saved'
@@ -76,7 +74,7 @@ class ListItemForm extends Component {
 									id='item-form-increment'
 									label={increment.label}
 									value={increment.value}
-									onChange={this.handleChange('increment')}
+									onChange={this.props.handleChange('increment')}
 									margin='dense'
 									InputProps={{ inputComponent: CurrencyFormat }}
 									className='item-form-increment'
@@ -88,7 +86,7 @@ class ListItemForm extends Component {
 									<Switch
 										id='item-form-add-taxes-switch'
 										checked={addTaxes.checked}
-										onChange={this.handleChange('addTaxes')}
+										onChange={this.props.handleChange('addTaxes')}
 										value={addTaxes.value}
 									/>
 								</div>
@@ -103,26 +101,11 @@ class ListItemForm extends Component {
 		)
 	}
 
-
-	handleChange = name => event => {
-		let item = this.state.item;
-
-		if (name === 'addTaxes') {
-			item[name].checked = event.target.checked;
-		} else {
-			item[name].value = event.target.value;
-		}
-
-		this.setState({
-			item: item
-		})
-	}
-
 	addNewItem = () => {
-		var valid = this._validateItem(this.state.item);
+		var valid = this._validateItem(this.props.item);
 		if (!valid) return;
 
-		let { name, price, saved, increment, addTaxes } = this.state.item;
+		let { name, price, saved, increment, addTaxes } = this.props.item;
 
 
 		let item = {
@@ -136,11 +119,11 @@ class ListItemForm extends Component {
 
 		FirebaseUtil.saveNewItem(this.props.getPagePath(), item);
 		this.props.closeForm();
-		this.setState({ item: _.cloneDeep(itemDefaults) });
+		this.props.setItem();
 	}
 
 	_validateItem(item) {
-		let { name, price, increment } = this.state.item;
+		let { name, price, increment } = this.props.item;
 
 		let validationResult = _.merge(
 			InputValidation.validateString(name.value, 'name', name.label ),
@@ -148,7 +131,7 @@ class ListItemForm extends Component {
 			InputValidation.validateAmount(increment.value, 'increment', increment.label)
 		);
 
-		let updatedItem = this.state.item;
+		let updatedItem = this.props.item;
 		_.forEach(validationResult, (value, key) => {
 			_.assign(updatedItem[key], value);
 		});
@@ -167,38 +150,6 @@ class ListItemForm extends Component {
 }
 
 const validField = { helperText: '', error: false };
-
-const itemDefaults = {
-	name: {
-		error: false,
-		helperText: '',
-		label: 'Name',
-		value: ''
-	},
-	price: {
-		error: false,
-		helperText: '',
-		label: 'Price',
-		value: ''
-	},
-	saved: {
-		error: false,
-		helperText: '',
-		label: 'Saved',
-		value: ''
-	},
-	increment: {
-		error: false,
-		helperText: '',
-		label: 'Increment',
-		value: '200'
-	},
-	addTaxes: {
-		checked: false,
-		label: 'Add Taxes',
-		value: 'addTaxes'
-	}
-};
 
 export default ListItemForm;
 

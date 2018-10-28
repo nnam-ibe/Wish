@@ -13,6 +13,7 @@ class ListPage extends Component {
 		this.state = {
 			list: null,
 			listItems: null,
+			formItem: _.cloneDeep(formItemDefaults),
 			itemFormIsOpen: false
 		};
 	}
@@ -36,6 +37,9 @@ class ListPage extends Component {
 						isOpen={this.state.itemFormIsOpen}
 						closeForm={this.closeItemForm}
 						getPagePath={this._getPagePath}
+						item={this.state.formItem}
+						handleChange={this.handleFormItemChange}
+						setItem={this.setFormItem}
 					/>
 				</div>
 				<div>
@@ -59,6 +63,22 @@ class ListPage extends Component {
 		})
 	}
 
+	handleFormItemChange = name => event => {
+		let item = this.state.formItem;
+
+		if (name === 'addTaxes') {
+			item[name].checked = event.target.checked;
+		} else {
+			item[name].value = event.target.value;
+		}
+
+		this.setState({ formItem: item });
+	}
+
+	setFormItem = (item = _.cloneDeep(formItemDefaults)) => {
+		this.setState({ formItem: item });
+	}
+
 	_updateItem = (item) => {
 		FirebaseUtil.updateItem(this._getPagePath(), item);
 	}
@@ -66,9 +86,6 @@ class ListPage extends Component {
 	_editItem = (id) => {
 		let item = _.find(this.state.list, { id: id });
 		if (!item) return null;
-
-		// Setup new item form to take args.
-		// Also maybe move new item to it's own component
 	}
 
 	_getList = (uid) => {
@@ -103,3 +120,34 @@ class ListPage extends Component {
 
 export default ListPage;
 
+const formItemDefaults = {
+	name: {
+		error: false,
+		helperText: '',
+		label: 'Name',
+		value: ''
+	},
+	price: {
+		error: false,
+		helperText: '',
+		label: 'Price',
+		value: ''
+	},
+	saved: {
+		error: false,
+		helperText: '',
+		label: 'Saved',
+		value: ''
+	},
+	increment: {
+		error: false,
+		helperText: '',
+		label: 'Increment',
+		value: '200'
+	},
+	addTaxes: {
+		checked: false,
+		label: 'Add Taxes',
+		value: 'addTaxes'
+	}
+};
