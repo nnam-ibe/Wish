@@ -6,28 +6,32 @@ import Login from '../auth/Login.jsx';
 import CreateAccount from '../auth/CreateAccount.jsx';
 import Sidebar from '../navigation/Sidebar.jsx';
 import ListPage from '../lists/ListPage.jsx';
-import firebaseUtil from '../../utils/firebaseUtil.js';
+import FirebaseUtil from '../../utils/firebaseUtil.js';
 
 class App extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			uid: null
+			uid: null,
+			userPrefs: {}
 		}
 	}
 
 	componentDidMount() {
-		firebaseUtil.onAuthStateChanged((user) => {
+		FirebaseUtil.onAuthStateChanged((user) => {
 			if (user) {
-				firebaseUtil.setLocalUID(user.uid);
+				FirebaseUtil.setLocalUID(user.uid);
 				this.setState({ uid: user.uid });
 
 				if (this.props.location.pathname === '/') {
 					this.props.history.push('/lists/Main');
 				}
+
+				this._getUserPres(user.uid);
+
 			} else {
-				firebaseUtil.removeLocalUID();
+				FirebaseUtil.removeLocalUID();
 				this.setState({ uid: null });
 				this.props.history.push('/');
 			}
@@ -36,18 +40,18 @@ class App extends Component {
 
 	render() {
 		const uid = this.state.uid;
-		const defaultList = this.state.defaultList;
+		const userPrefs = this.state.userPrefs;
 
 		return (
 			<div className='App'>
 				<Route path='/' component={Navbar}/>
 				<Route path='/' render={(props) => {
-					const sideProps = {...props, uid, defaultList};
+					const sideProps = {...props, uid, userPrefs};
 					return (<Sidebar {...sideProps}/>);
 				}}/>
 				<div className='content'>
 					<Route exact path='/lists/:page' render={(props) => {
-						const listProps = {...props, uid};
+						const listProps = {...props, uid, userPrefs};
 						return (<ListPage {...listProps}/>);
 					}}/>
 					<Route exact path='/login' component={Login}/>
@@ -55,6 +59,14 @@ class App extends Component {
 				</div>
 			</div>
 		);
+	}
+
+	_getUserPres = (uid) => {
+		FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
+			if (!snapshot.exists) return;
+
+			this.setState({ userPrefs: snapshot.data() });
+		});
 	}
 }
 

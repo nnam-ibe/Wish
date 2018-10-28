@@ -117,6 +117,10 @@ class ListItemForm extends Component {
 
 		let { name, price, saved, increment, addTaxes } = this.props.item;
 
+		if (addTaxes.checked) {
+			price.value = this._calculateTaxes(price.value, this.props.tax);
+		}
+
 		let item = {
 			name: name.value,
 			price: NumberFormatter.formatMoney(price.value),
@@ -143,7 +147,7 @@ class ListItemForm extends Component {
 		this.props.resetItem();
 	}
 
-	_validateItem(item) {
+	_validateItem = (item) => {
 		let { name, price, increment } = this.props.item;
 
 		let validationResult = _.merge(
@@ -167,6 +171,10 @@ class ListItemForm extends Component {
 
 		this.setState({ item: updatedItem });
 		return _.isEmpty(validationResult);
+	}
+
+	_calculateTaxes = (price, tax) => {
+		return (1 + (tax/100)) * price;
 	}
 }
 
