@@ -3,7 +3,6 @@ import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { db } from '../../utils/firebaseUtil.js';
 import _ from 'lodash';
 
 class Sidebar extends Component {
@@ -12,21 +11,24 @@ class Sidebar extends Component {
 		super(props);
 
 		this.state = {
-			activeLists: null,
 			listElements: null,
 			activeItem: null
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevProps.uid === this.props.uid) return;
+		console.log('Component Updated');
+		let isEqual = _.isEqual(prevProps.userPrefs.activeLists, this.props.userPrefs.activeLists);
+		if (isEqual) return;
 
-		this._getLists(this.props.uid);
+		console.log('And its different');
+		let defaultList = this.props.userPrefs.defaultList;
+		this._setListElements(this.props.userPrefs.activeLists, this._getActiveItem(defaultList));
 	}
 
 	itemClicked = page => () => {
 		this.props.history.push(`/lists/${page}`);
-		this._setListElements(this.state.activeLists, page);
+		this._setListElements(this.props.userPrefs.activeLists, page);
 	}
 
 	render() {
@@ -39,23 +41,6 @@ class Sidebar extends Component {
 				</div>
 			</Drawer>
 		);
-	}
-
-	_getLists = (uid) => {
-		if (!uid) {
-			this.setState({ activeLists: null, listElements: null });
-			return;
-		}
-
-		db.doc(`users/${uid}`).onSnapshot((snapShot) => {
-			if (!snapShot.exists) return;
-
-			let activeLists = snapShot.data().activeLists;
-			let defaultList = snapShot.data().defaultList;
-
-			this.setState({ activeLists });
-			this._setListElements(activeLists, this._getActiveItem(defaultList));
-		});
 	}
 
 	_setListElements = (activeLists, activeItem) => {

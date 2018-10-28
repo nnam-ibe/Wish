@@ -28,7 +28,7 @@ class App extends Component {
 					this.props.history.push('/lists/Main');
 				}
 
-				this._getUserPres(user.uid);
+				this._getUserPrefs(user.uid);
 
 			} else {
 				FirebaseUtil.removeLocalUID();
@@ -61,7 +61,7 @@ class App extends Component {
 		);
 	}
 
-	_getUserPres = (uid) => {
+	_getUserPrefs = (uid) => {
 		FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
 			if (!snapshot.exists) return;
 
