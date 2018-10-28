@@ -120,7 +120,7 @@ function _getItems (path) {
 }
 
 function _getErrorMessage (errorCode) {
-	var result;
+	let result;
 	switch (errorCode) {
 		case 'auth/email-already-in-use':
 			result = 'Email is already in use';

@@ -102,7 +102,7 @@ class ListItemForm extends Component {
 	}
 
 	addNewItem = () => {
-		var valid = this._validateItem(this.props.item);
+		let valid = this._validateItem(this.props.item);
 		if (!valid) return;
 
 		let { name, price, saved, increment, addTaxes } = this.props.item;

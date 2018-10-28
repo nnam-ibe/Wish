@@ -86,6 +86,12 @@ class ListPage extends Component {
 	_editItem = (id) => {
 		let item = _.find(this.state.list, { id: id });
 		if (!item) return null;
+
+		console.log(item);
+
+		_.forEach(item, (key) = {
+
+		});
 	}
 
 	_getList = (uid) => {
@@ -100,7 +106,7 @@ class ListPage extends Component {
 				return;
 			}
 
-			var list = snapShot.data().items;
+			let list = snapShot.data().items;
 			this._setListElements(list);
 		});
 	}

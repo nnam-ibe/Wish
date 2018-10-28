@@ -9,7 +9,7 @@ class Navbar extends Component {
 
 	constructor(props) {
 		super(props);
-		var buttonLabel = 'Login';
+		let buttonLabel = 'Login';
 
 		if (firebaseUtil.getCurrentUser()) buttonLabel = 'Logout';
 
