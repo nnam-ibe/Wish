@@ -14,7 +14,7 @@ class App extends Component {
 		super(props);
 		this.state = {
 			uid: null,
-			userPrefs: {}
+			userPrefs: null
 		}
 	}
 
@@ -47,10 +47,14 @@ class App extends Component {
 				<Route path='/' component={Navbar}/>
 				<Route path='/' render={(props) => {
 					const sideProps = {...props, uid, userPrefs};
+					if (!this.state.userPrefs) return (<div></div>);
+
 					return (<Sidebar {...sideProps}/>);
 				}}/>
 				<div className='content'>
 					<Route exact path='/lists/:page' render={(props) => {
+						if (!this.state.userPrefs) return (<div></div>);
+
 						const listProps = {...props, uid, userPrefs};
 						return (<ListPage {...listProps}/>);
 					}}/>

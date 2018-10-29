@@ -17,7 +17,7 @@ class Item extends Component {
 
 	constructor(props) {
 		super(props);
-		let calculatedValues = this._getCalculatedValues(props.price, props.saved);
+		let calculatedValues = this._getCalculatedValues(props.price, props.saved, props.addTaxes);
 
 		this.state = {
 			name: props.name,
@@ -51,8 +51,12 @@ class Item extends Component {
 			newState.price = this.props.price;
 		}
 
+		if (prevProps.addTaxes !== this.props.addTaxes) {
+			calculatedValuesChanged = true;
+		}
+
 		if (calculatedValuesChanged) {
-			_.assign(newState, this._getCalculatedValues(this.props.price, this.props.saved));
+			_.assign(newState, this._getCalculatedValues(this.props.price, this.props.saved, this.props.addTaxes));
 		}
 
 		if (!_.isEmpty(newState)) this.setState({ ...newState });
@@ -115,8 +119,12 @@ class Item extends Component {
 		);
 	}
 
-	_getCalculatedValues = (price, saved) => {
+	_getCalculatedValues = (price, saved, addTaxes) => {
 		let difference = this._calculateDifference(price, saved);
+		if (addTaxes) {
+			price = NumberFormatter.calculateTax(price, this.props.tax);
+			price = NumberFormatter.formatMoney(price);
+		}
 
 		return {
 			difference,

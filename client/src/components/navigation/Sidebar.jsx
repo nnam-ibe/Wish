@@ -16,6 +16,11 @@ class Sidebar extends Component {
 		};
 	}
 
+	componentDidMount() {
+		let defaultList = this.props.userPrefs.defaultList;
+		this._setListElements(this.props.userPrefs.activeLists, this._getActiveItem(defaultList));
+	}
+
 	componentDidUpdate(prevProps, prevState) {
 		let isEqual = _.isEqual(prevProps.userPrefs.activeLists, this.props.userPrefs.activeLists);
 		if (isEqual) return;

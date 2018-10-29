@@ -50,7 +50,6 @@ class ListPage extends Component {
 						resetItem={this.resetFormItem}
 						isNewItem={this.state.isNewFormItem}
 						itemId={this.state.formItemId}
-						tax={this.props.userPrefs.tax}
 					/>
 				</div>
 				<div>
@@ -107,9 +106,14 @@ class ListPage extends Component {
 		if (!item) return null;
 
 		let itemToEdit = this._getFormItemDefault();
-		let values = ['increment', 'name', 'price', 'saved'];
+		let values = ['addTaxes', 'increment', 'name', 'price', 'saved'];
 
 		_.forEach(values, (key) => {
+			if (key === 'addTaxes') {
+				itemToEdit[key].checked = item[key];
+				return;
+			}
+
 			itemToEdit[key].value = item[key];
 		});
 
@@ -144,7 +148,7 @@ class ListPage extends Component {
 
 	_setListElements = (list) => {
 		let listItems = _.map(list, (item) => {
-			return ( <Item {...item} key={item.id} updateItem={this._updateItem} editItem={this._editItem}/> );
+			return ( <Item {...item} key={item.id} updateItem={this._updateItem} editItem={this._editItem} tax={this.props.userPrefs.tax}/> );
 		});
 
 		this.setState({ list, listItems });

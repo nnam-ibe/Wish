@@ -8,5 +8,12 @@ module.exports = {
 		if (amount < 0) return 0;
 
 		return _.round(amount, 2);
+	},
+
+	/*
+	* @param taxRate should be in percentage
+	*/
+	calculateTax: (amount, taxRate) => {
+		return (1 + (taxRate/100)) * amount;
 	}
 };
