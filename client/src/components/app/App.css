@@ -94,7 +94,7 @@
 }
 
 /*------------------NAVIGATION ELEMENTS------------------*/
-.list-item h3 {
+.list-item span {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

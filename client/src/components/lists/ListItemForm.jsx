@@ -95,11 +95,11 @@ class ListItemForm extends Component {
 							<div className='item-form-fourth-row'>
 								{
 									this.props.isNewItem ? (
-										<Button color='primary' variant='raised' onClick={this.saveItem}>Add Item</Button>
+										<Button color='primary' variant='contained' onClick={this.saveItem}>Add Item</Button>
 									) : (
 										<div>
-											<Button color='primary' variant='raised' onClick={this.saveItem} className="mr-10">Save Item</Button>
-											<Button color='secondary' variant='raised' onClick={this.deleteItem}>Delete Item</Button>
+											<Button color='primary' variant='contained' onClick={this.saveItem} className="mr-10">Save Item</Button>
+											<Button color='secondary' variant='contained' onClick={this.deleteItem}>Delete Item</Button>
 										</div>
 									)
 								}
