@@ -79,6 +79,10 @@
   text-align: right;
 }
 
+.width-100 {
+  width: 100%;
+}
+
 /*------------------AUTH PAGES------------------*/
 .auth-component {
   width: 392px;
