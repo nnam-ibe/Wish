@@ -60,14 +60,28 @@ class Navbar extends Component {
 							<div>
 								{
 									this.state.isLoggedIn && (
-										<IconButton onClick={this._openUserMenu}>
-											<AccountCircle />
-											<UserMenu
+										<div className='display-inline'>
+											<IconButton onClick={this._openUserMenu}>
+												<AccountCircle />
+											</IconButton>
+											<Menu
+												id="menu-appbar"
 												anchorEl={this.state.userMenuAnchor}
-												open={this.state.userMenuOpen}
-												onClose={this._closeUserMenu}
-											/>
-										</IconButton>
+												anchorOrigin={{
+													vertical: 'top',
+													horizontal: 'right',
+												}}
+												transformOrigin={{
+													vertical: 'top',
+													horizontal: 'right',
+												}}
+												open={Boolean(this.state.userMenuAnchor)}
+												onClose={this.closeUserMenu}
+											>
+												<MenuItem onClick={this.closeUserMenu}>Profile</MenuItem>
+												<MenuItem onClick={this.closeUserMenu}>My account</MenuItem>
+											</Menu>
+										</div>
 									)
 								}
 								<Button color='inherit' className='display-flex' onClick={this.onClickLogin}>{buttonLabel}</Button>
@@ -79,9 +93,13 @@ class Navbar extends Component {
 		);
 	}
 
-	setLoggedInState = () => this.setState({ buttonLabel: 'Logout', isLoggedIn: true });
+	setLoggedInState = () => {
+		this.setState({ buttonLabel: 'Logout', isLoggedIn: true });
+	}
 
-	setLoggedOutState = () => this.setState({ buttonLabel: 'Login', isLoggedIn: false });
+	setLoggedOutState = () => {
+		this.setState({ buttonLabel: 'Login', isLoggedIn: false });
+	}
 
 	_openUserMenu = (event) => {
 		this.setState({
@@ -91,35 +109,11 @@ class Navbar extends Component {
 	}
 
 	// State is not being set here for some reason
-	_closeUserMenu = () => {
+	closeUserMenu = () => {
 		this.setState({
-			userMenuAnchor: null,
-			userMenuOpen: false
+			userMenuAnchor: null
 		});
 	}
 }
 
 export default Navbar;
-
-function UserMenu (props) {
-	return (
-		<Menu
-			id="menu-appbar"
-			anchorEl={props.anchorEl}
-			anchorOrigin={{
-				vertical: 'top',
-				horizontal: 'right',
-			}}
-			transformOrigin={{
-				vertical: 'top',
-				horizontal: 'right',
-			}}
-			open={props.open}
-			onClose={props.onClose}
-		>
-			<MenuItem onClick={props.onClose}>Profile</MenuItem>
-			<MenuItem onClick={props.onClose}>My account</MenuItem>
-		</Menu>
-
-	);
-}
