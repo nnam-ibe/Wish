@@ -78,7 +78,7 @@ class Navbar extends Component {
 												open={Boolean(this.state.userMenuAnchor)}
 												onClose={this.closeUserMenu}
 											>
-												<MenuItem onClick={this.closeUserMenu}>Profile</MenuItem>
+												<MenuItem onClick={this.navigateToSettings}>Settings</MenuItem>
 												<MenuItem onClick={this.closeUserMenu}>My account</MenuItem>
 											</Menu>
 										</div>
@@ -108,11 +108,15 @@ class Navbar extends Component {
 		})
 	}
 
-	// State is not being set here for some reason
 	closeUserMenu = () => {
 		this.setState({
 			userMenuAnchor: null
 		});
+	}
+
+	navigateToSettings = () => {
+		this.closeUserMenu();
+		this.props.history.push('/settings');
 	}
 }
 

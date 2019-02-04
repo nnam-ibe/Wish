@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import Navbar from '../navigation/Navbar.jsx';
 import Login from '../auth/Login.jsx';
 import CreateAccount from '../auth/CreateAccount.jsx';
+import Settings from '../user/Settings.jsx';
 import Sidebar from '../navigation/Sidebar.jsx';
 import ListPage from '../lists/ListPage.jsx';
 import FirebaseUtil from '../../utils/firebaseUtil.js';
@@ -60,6 +61,7 @@ class App extends Component {
 					}}/>
 					<Route exact path='/login' component={Login}/>
 					<Route exact path='/create_account' component={CreateAccount}/>
+					<Route exact path='/settings' component={Settings}/>
 				</div>
 			</div>
 		);
