@@ -32,7 +32,7 @@ class App extends Component {
 
 			} else {
 				FirebaseUtil.removeLocalUID();
-				this.setState({ uid: null });
+				this.setState({ uid: null, userPrefs: null });
 				this.props.history.push('/');
 			}
 		})
