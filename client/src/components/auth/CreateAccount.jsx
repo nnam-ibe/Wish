@@ -97,7 +97,6 @@ class CreateAccount extends Component {
 								margin='dense'
 								id='username'
 								label='Username'
-								type='username'
 								error={fields.username.error}
 								helperText={fields.username.helperText}
 								fullWidth
