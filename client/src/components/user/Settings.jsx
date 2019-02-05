@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
+import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Switch from '@material-ui/core/Switch';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import firebaseUtil from '../../utils/firebaseUtil.js';
+
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class Settings extends Component {
 
@@ -19,22 +25,78 @@ class Settings extends Component {
 				addTaxes: true,
 				defaultList: 'Main',
 				tax: 13,
-				username: ''
+				username: '',
+				showProgressBar: true
 			}
 		};
 	}
 
 	componentDidMount() {
 		var uid = firebaseUtil.getLocalUID();
-		console.log('This is your uid', uid);
 		this._getUserSettings(uid);
 	}
 
+	// Correct class names
+	// bind fields properly
+	// Wats up with hitting enter?
 	render() {
+		let progessBar = ( <LinearProgress/> );
+		let fields = this.state.fields;
 
 		return (
 			<div className='Settings'>
-				Putting Settings Form Here
+				<div className='auth-component'>
+					<Paper>
+						{ this.state.showProgressBar && progessBar }
+						<div className='auth-paper'>
+							<form>
+								<Typography variant='title'>Account Settings</Typography>
+								<TextField
+									margin='dense'
+									id='username'
+									label='Username'
+									value={fields.username}
+									fullWidth
+									required
+								/>
+								<TextField
+									margin='dense'
+									id='tax'
+									label='Sales Tax'
+									type='number'
+									value={fields.tax}
+									fullWidth
+									required
+								/>
+								<TextField
+									margin='dense'
+									id='default-list'
+									label='Default List'
+									value={fields.defaultList}
+									fullWidth
+									required
+								/>
+								<FormControlLabel
+									control={
+										<Switch
+											id='add-taxes'
+											checked={fields.addTaxes}
+											value='addTaxes'
+										/>
+									}
+									label='Add Taxes'
+								/>
+								<Button
+									fullWidth
+									type='submit'
+									color='inherit'
+									onClick={this.createAccount}>
+									Create Account
+								</Button>
+							</form>
+						</div>
+					</Paper>
+				</div>
 			</div>
 		);
 	}
@@ -52,12 +114,15 @@ class Settings extends Component {
 				return;
 			}
 
-			this.setState({
+			var fields = {
 				addTaxes: snapShot.data().addTaxes,
 				defaultList: snapShot.data().defaultList,
 				tax: snapShot.data().tax,
-				username: snapShot.data().username
-			})
+				username: snapShot.data().username,
+				showProgressBar: false
+			};
+
+			this.setState({ fields });
 		});
 	}
 }
