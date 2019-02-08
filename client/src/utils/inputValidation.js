@@ -1,7 +1,7 @@
 let _ = require('lodash');
 
 module.exports = {
-	validateUsername: (usernameElement) => {
+	validateUsernameElement: (usernameElement) => {
 		let result = {};
 		let username = _.trim(usernameElement.value);
 		if (_.size(username) <= 0 || _.size(username) > 16 || !usernameElement.checkValidity() ) {
@@ -13,7 +13,7 @@ module.exports = {
 		return result;
 	},
 
-	validateEmail: (emailElement) => {
+	validateEmailElement: (emailElement) => {
 		let result = {};
 		if (!emailElement.checkValidity()) {
 			result.email = {
@@ -24,7 +24,7 @@ module.exports = {
 		return result;
 	},
 
-	validatePassword: (passwordElement) => {
+	validatePasswordElement: (passwordElement) => {
 		let result = {};
 		let password = passwordElement.value;
 		if(!passwordElement.checkValidity()) {
@@ -42,7 +42,7 @@ module.exports = {
 		return result;
 	},
 
-	validatePasswordsAreEqual: (passwordElement, confirmElement) => {
+	validatePasswordElementsAreEqual: (passwordElement, confirmElement) => {
 		let result = {};
 		let password = passwordElement.value;
 		let confirm = confirmElement.value;
@@ -79,6 +79,33 @@ module.exports = {
 			result[fieldName] = {
 				error: true,
 				helperText: `${caption} cannot be empty`
+			};
+		}
+
+		return result;
+	},
+
+	validateTax: (amount, fieldName, caption) => {
+		let result = {};
+
+		if(_.isEmpty(_.trim(amount))) {
+			result[fieldName] = {
+				error: true,
+				helperText: `${caption} cannot be empty`
+			};
+		}
+
+		if (isNaN(amount)) {
+			result[fieldName] = {
+				error: true,
+				helperText: `${caption} must be a number`
+			};
+		}
+
+		if (Number(amount) < 0 || Number(amount) > 100) {
+			result[fieldName] = {
+				error: true,
+				helperText: `${caption} must be between 0 & 100`
 			};
 		}
 

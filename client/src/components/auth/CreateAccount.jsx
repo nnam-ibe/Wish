@@ -148,16 +148,16 @@ class CreateAccount extends Component {
 
 	_validateInputs = (args) => {
 		let validationResult = _.merge(
-			InputValidation.validateUsername(args.username),
-			InputValidation.validateEmail(args.email),
-			InputValidation.validatePasswordsAreEqual(args.password, args.confirmPassword),
-			InputValidation.validatePassword(args.password)
+			InputValidation.validateUsernameElement(args.username),
+			InputValidation.validateEmailElement(args.email),
+			InputValidation.validatePasswordElementsAreEqual(args.password, args.confirmPassword),
+			InputValidation.validatePasswordElement(args.password)
 		);
 
 
 		let currentFields = this.state.fields;
 
-		let newFieldsState = _.reduce(currentFields, function(acc, fieldValue, fieldKey) {
+		let newFieldsState = _.reduce(currentFields, (acc, fieldValue, fieldKey) => {
 				if (validationResult[fieldKey]) {
 					acc[fieldKey] = validationResult[fieldKey];
 				} else {
@@ -166,7 +166,7 @@ class CreateAccount extends Component {
 				return acc;
 			}, {});
 		this.setState({ fields: newFieldsState });
-		return _.size(validationResult) === 0;
+		return _.isEmpty(validationResult);
 	}
 };
 

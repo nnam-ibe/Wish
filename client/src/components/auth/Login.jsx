@@ -113,13 +113,13 @@ class Login extends Component {
 
 	_validateInputs = (args) => {
 		let validationResult = _.merge(
-			InputValidation.validateEmail(args.email),
-			InputValidation.validatePassword(args.password)
+			InputValidation.validateEmailElement(args.email),
+			InputValidation.validatePasswordElement(args.password)
 		);
 
 		let currentFields = this.state.fields;
 
-		let newFieldsState = _.reduce(currentFields, function(acc, fieldValue, fieldKey) {
+		let newFieldsState = _.reduce(currentFields, (acc, fieldValue, fieldKey) => {
 				if (validationResult[fieldKey]) {
 					acc[fieldKey] = validationResult[fieldKey];
 				} else {

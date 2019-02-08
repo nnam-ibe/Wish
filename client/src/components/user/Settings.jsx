@@ -11,8 +11,9 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import InputValidation from '../../utils/InputValidation.js';
 import firebaseUtil from '../../utils/firebaseUtil.js';
-
+import _ from 'lodash';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class Settings extends Component {
@@ -21,27 +22,28 @@ class Settings extends Component {
 		super(props);
 
 		this.state = {
-			fields: {
-				addTaxes: true,
-				defaultList: 'Main',
-				tax: 13,
-				username: '',
-				showProgressBar: true
-			}
+			showProgressBar: true,
+			fields: formItemDefaults,
+			valueFields: [
+				'username',
+				'tax',
+				'defaultList'
+			],
+			checkedFields: [
+				'addTaxes'
+			]
 		};
 	}
 
 	componentDidMount() {
-		var uid = firebaseUtil.getLocalUID();
-		this._getUserSettings(uid);
+		this._getUserSettings();
 	}
 
 	// Correct class names
-	// bind fields properly
-	// Wats up with hitting enter?
+	// Issue with controlled an uncontrolled stuff
 	render() {
 		let progessBar = ( <LinearProgress/> );
-		let fields = this.state.fields;
+		let { username, tax, defaultList, addTaxes } = this.state.fields;
 
 		return (
 			<div className='Settings'>
@@ -52,46 +54,55 @@ class Settings extends Component {
 							<form>
 								<Typography variant='title'>Account Settings</Typography>
 								<TextField
+									id='settings-form-username'
+									label={username.label}
+									value={username.value}
+									onChange={this.handleChange(username.id)}
+									helperText={username.helperText}
+									error={username.error}
 									margin='dense'
-									id='username'
-									label='Username'
-									value={fields.username}
 									fullWidth
 									required
 								/>
 								<TextField
-									margin='dense'
-									id='tax'
-									label='Sales Tax'
+									id='settings-form-tax'
+									label={tax.label}
 									type='number'
-									value={fields.tax}
+									value={tax.value}
+									onChange={this.handleChange(tax.id)}
+									helperText={tax.helperText}
+									error={tax.error}
+									margin='dense'
 									fullWidth
 									required
 								/>
 								<TextField
+									id='settings-form-default-list'
+									label={defaultList.label}
+									value={defaultList.value}
+									onChange={this.handleChange(defaultList.id)}
+									helperText={defaultList.helperText}
+									error={defaultList.error}
 									margin='dense'
-									id='default-list'
-									label='Default List'
-									value={fields.defaultList}
 									fullWidth
 									required
 								/>
 								<FormControlLabel
 									control={
 										<Switch
-											id='add-taxes'
-											checked={fields.addTaxes}
+											id='settings-form-add-taxes'
+											checked={addTaxes.checked}
+											onChange={this.handleChange(addTaxes.id)}
 											value='addTaxes'
 										/>
 									}
-									label='Add Taxes'
+									label={addTaxes.label}
 								/>
 								<Button
 									fullWidth
-									type='submit'
 									color='inherit'
-									onClick={this.createAccount}>
-									Create Account
+									onClick={this.saveSettings}>
+									Save Settings
 								</Button>
 							</form>
 						</div>
@@ -101,7 +112,60 @@ class Settings extends Component {
 		);
 	}
 
+	handleChange = name => event => {
+		let { fields, valueFields } = this.state;
+
+		if (_.includes(valueFields, name)) {
+			fields[name].value = event.target.value;
+		} else {
+			fields[name].checked = event.target.checked;
+		}
+
+		this.setState({ fields });
+	}
+
+	saveSettings = () => {
+		var uid = firebaseUtil.getLocalUID();
+		var path = `users/${uid}`;
+
+		if (!this._validateInput()) return;
+
+		var settings = _.reduce(this.state.fields, (acc, value, key) => {
+			if (_.includes(this.state.valueFields, key)) {
+				acc[key] = value.value;
+			} else {
+				acc[key] = value.checked;
+			}
+
+			return acc;
+		}, {});
+
+		firebaseUtil.db.doc(path).set(settings, { merge: true });
+	}
+
+	_validateInput = () => {
+		let { username, tax } = this.state.fields;
+		let validationResult = _.merge(
+			InputValidation.validateString(username.value, username.id, username.label),
+			InputValidation.validateTax(tax.value, tax.id, tax.label)
+		);
+
+		let newFieldsState = _.reduce(this.state.fields, (acc, value, key) => {
+			if (validationResult[key]) {
+				_.assign(acc[key], validationResult[key]);
+				console.log();
+			} else {
+				_.assign(acc[key], validField);
+			}
+			return acc;
+		}, this.state.fields);
+
+		this.setState({ field: newFieldsState });
+		return _.isEmpty(validationResult);
+	}
+
 	_getUserSettings = (uid) => {
+		var uid = firebaseUtil.getLocalUID();
 		if (!uid) {
 			this.props.history.push('/');
 			return;
@@ -114,17 +178,51 @@ class Settings extends Component {
 				return;
 			}
 
-			var fields = {
-				addTaxes: snapShot.data().addTaxes,
-				defaultList: snapShot.data().defaultList,
-				tax: snapShot.data().tax,
-				username: snapShot.data().username,
-				showProgressBar: false
-			};
+			let { fields, valueFields, checkedFields } = this.state;
 
-			this.setState({ fields });
+			_.forEach(valueFields, (field) => {
+				fields[field].value = snapShot.data()[field];
+			});
+
+			_.forEach(checkedFields, (field) => {
+				fields[field].checked = snapShot.data()[field];
+			});
+
+			this.setState({ fields, showProgressBar: false });
 		});
 	}
 }
+
+const validField = { helperText: '', error: false };
+
+const formItemDefaults = {
+	username: {
+		id: 'username',
+		error: false,
+		helperText: '',
+		label: 'Username',
+		value: ''
+	},
+	tax: {
+		id: 'tax',
+		error: false,
+		helperText: '',
+		label: 'Sales Tax',
+		value: ''
+	},
+	defaultList: {
+		id: 'defaultList',
+		error: false,
+		helperText: '',
+		label: 'Default List',
+		value: ''
+	},
+	addTaxes: {
+		id: 'addTaxes',
+		checked: false,
+		label: 'Add Taxes',
+		value: 'addTaxes'
+	}
+};
 
 export default Settings;
