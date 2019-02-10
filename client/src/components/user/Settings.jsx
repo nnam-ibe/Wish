@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-import AppBar from '@material-ui/core/AppBar';
 import Paper from '@material-ui/core/Paper';
-import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import InputValidation from '../../utils/InputValidation.js';
 import firebaseUtil from '../../utils/firebaseUtil.js';
 import _ from 'lodash';
@@ -40,7 +34,6 @@ class Settings extends Component {
 	}
 
 	// Correct class names
-	// Issue with controlled an uncontrolled stuff
 	render() {
 		let progessBar = ( <LinearProgress/> );
 		let { username, tax, defaultList, addTaxes } = this.state.fields;
@@ -100,8 +93,10 @@ class Settings extends Component {
 								/>
 								<Button
 									fullWidth
-									color='inherit'
-									onClick={this.saveSettings}>
+									color='primary'
+									variant='contained'
+									onClick={this.saveSettings}
+									disabled={this.state.showProgressBar}>
 									Save Settings
 								</Button>
 							</form>
@@ -125,6 +120,8 @@ class Settings extends Component {
 	}
 
 	saveSettings = () => {
+		this.setState({ showProgressBar: true });
+
 		var uid = firebaseUtil.getLocalUID();
 		var path = `users/${uid}`;
 
@@ -140,7 +137,11 @@ class Settings extends Component {
 			return acc;
 		}, {});
 
-		firebaseUtil.db.doc(path).set(settings, { merge: true });
+		firebaseUtil.db.doc(path).set(settings, { merge: true })
+			.then(() => {
+				this.setState({ showProgressBar: false });
+				console.log("Saved successfully!")
+			});
 	}
 
 	_validateInput = () => {
@@ -164,7 +165,7 @@ class Settings extends Component {
 		return _.isEmpty(validationResult);
 	}
 
-	_getUserSettings = (uid) => {
+	_getUserSettings = () => {
 		var uid = firebaseUtil.getLocalUID();
 		if (!uid) {
 			this.props.history.push('/');
