@@ -103,7 +103,7 @@ class Login extends Component {
 						</form>
 						<Typography>
 							Not registered?
-							<a href='/create_account'>Create an account</a>
+							<a href='/create_account'> Create an account</a>
 						</Typography>
 					</div>
 				</Paper>

@@ -32,6 +32,8 @@ class App extends Component {
 				this._getUserPrefs(user.uid);
 
 			} else {
+				if (!this.state.uid && !this.state.userPrefs) return;
+
 				FirebaseUtil.removeLocalUID();
 				this.setState({ uid: null, userPrefs: null });
 				this.props.history.push('/');
