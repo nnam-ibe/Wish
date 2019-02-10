@@ -154,7 +154,10 @@ class ListPage extends Component {
 		this.setState({ list, listItems });
 	}
 
-	_getFormItemDefault = () => _.cloneDeep(formItemDefaults)
+	_getFormItemDefault = () => {
+		let item = _.cloneDeep(formItemDefaults);
+		return _.set(item, 'increment.value', this.props.userPrefs.defaultIncrement);
+	}
 }
 
 export default ListPage;

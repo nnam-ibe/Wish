@@ -21,7 +21,8 @@ class Settings extends Component {
 			valueFields: [
 				'username',
 				'tax',
-				'defaultList'
+				'defaultList',
+				'defaultIncrement'
 			],
 			checkedFields: [
 				'addTaxes'
@@ -36,7 +37,7 @@ class Settings extends Component {
 	// Correct class names
 	render() {
 		let progessBar = ( <LinearProgress/> );
-		let { username, tax, defaultList, addTaxes } = this.state.fields;
+		let { username, tax, defaultList, defaultIncrement, addTaxes } = this.state.fields;
 
 		return (
 			<div className='Settings'>
@@ -65,6 +66,18 @@ class Settings extends Component {
 									onChange={this.handleChange(tax.id)}
 									helperText={tax.helperText}
 									error={tax.error}
+									margin='dense'
+									fullWidth
+									required
+								/>
+								<TextField
+									id='settings-form-default-increment'
+									label={defaultIncrement.label}
+									type='number'
+									value={defaultIncrement.value}
+									onChange={this.handleChange(defaultIncrement.id)}
+									helperText={defaultIncrement.helperText}
+									error={defaultIncrement.error}
 									margin='dense'
 									fullWidth
 									required
@@ -216,6 +229,13 @@ const formItemDefaults = {
 		error: false,
 		helperText: '',
 		label: 'Default List',
+		value: ''
+	},
+	defaultIncrement: {
+		id: 'defaultIncrement',
+		error: false,
+		helperText: '',
+		label: 'Default Increment',
 		value: ''
 	},
 	addTaxes: {
