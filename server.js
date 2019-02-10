@@ -27,6 +27,7 @@ app.post('/api/create_account', jsonParser, (req, res) => {
 	firestore.doc(`users/${uid}`).set({
 		addTaxes: true,
 		defaultList: 'Main',
+		defaultIncrement: 200,
 		tax: 13,
 		username: body.username,
 		activeLists: ['Main']
