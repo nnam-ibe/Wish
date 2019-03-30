@@ -4,6 +4,9 @@
 /node_modules
 */node_modules/*
 
+#firebase configuration
+firebase-config/
+
 # testing
 /coverage
 
