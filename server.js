@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 const _ = require('lodash');
 var bodyParser = require('body-parser');
 
-const serviceAccount = require('/Users/nnamdi/Downloads/wish-9d5fa-firebase-adminsdk-hy8fy-213c498d11.json');
+const serviceAccount = require('./firebase-config/admin-config.json');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
