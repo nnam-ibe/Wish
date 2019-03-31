@@ -1,6 +1,7 @@
 const express = require('express');
 const admin = require('firebase-admin');
 const _ = require('lodash');
+const path = require('path');
 var bodyParser = require('body-parser');
 
 const serviceAccount = require('./firebase-config/admin-config.json');
@@ -14,6 +15,8 @@ const app = express();
 const port = process.env.PORT || 5500;
 const jsonParser = bodyParser.json();
 const firestore = admin.firestore();
+const settings = { timestampsInSnapshots: true };
+firestore.settings(settings);
 
 app.post('/api/create_account', jsonParser, (req, res) => {
 	let body = req.body;
@@ -46,5 +49,12 @@ app.post('/api/logger', jsonParser, (req, res) => {
 
 	res.send(['all good']);
 });
+
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static('client/build'));
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+	});
+}
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

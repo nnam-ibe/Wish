@@ -10,6 +10,5 @@ RUN yarn install
 COPY . .
 
 EXPOSE 5500
-EXPOSE 3000
 
-CMD ["yarn", "dev"]
+CMD ["node", "server.js"]
