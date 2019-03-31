@@ -11,7 +11,7 @@ admin.initializeApp({
 });
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5500;
 const jsonParser = bodyParser.json();
 const firestore = admin.firestore();
 
