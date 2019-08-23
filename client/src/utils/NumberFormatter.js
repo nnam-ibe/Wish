@@ -15,8 +15,8 @@ NumberFormatter.formatMoney = (amount) => {
 * @param taxRate should be in percentage
 */
 NumberFormatter.calculateTax = (amount, taxRate) => {
-	if (taxRate < 0) return amount;
 	if (amount < 0) return 0;
+	if (taxRate < 0) return amount;
 	var rawValue = (1 + (taxRate/100)) * amount;
 	return NumberFormatter.formatMoney(rawValue);
 }
