@@ -15,8 +15,6 @@ const app = express();
 const port = process.env.PORT || 5500;
 const jsonParser = bodyParser.json();
 const firestore = admin.firestore();
-const settings = { timestampsInSnapshots: true };
-firestore.settings(settings);
 
 app.post('/api/create_account', jsonParser, (req, res) => {
 	let body = req.body;
