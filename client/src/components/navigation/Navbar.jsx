@@ -26,13 +26,19 @@ class Navbar extends Component {
 	}
 
 	componentDidMount() {
-		firebaseUtil.onAuthStateChanged((user) => {
+		this.unsubscribeAuthListner = firebaseUtil.onAuthStateChanged((user) => {
 			if (user) {
 				this.setLoggedInState();
 			} else {
 				this.setLoggedOutState();
 			}
 		});
+	}
+
+	componentWillUnmount() {
+		if (this.unsubscribeAuthListner) {
+			this.unsubscribeAuthListner();
+		}
 	}
 
 	onClickLogin = () => {

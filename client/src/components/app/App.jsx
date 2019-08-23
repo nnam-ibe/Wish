@@ -20,7 +20,7 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		FirebaseUtil.onAuthStateChanged((user) => {
+		this.unsubscribeAuthListner = FirebaseUtil.onAuthStateChanged((user) => {
 			if (user) {
 				FirebaseUtil.setLocalUID(user.uid);
 				this.setState({ uid: user.uid });
@@ -39,6 +39,12 @@ class App extends Component {
 				this.props.history.push('/');
 			}
 		})
+	}
+
+	componentWillUnmount() {
+		if (this.unsubscribeAuthListner) {
+			this.unsubscribeAuthListner();
+		}
 	}
 
 	render() {

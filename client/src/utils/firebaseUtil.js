@@ -90,7 +90,7 @@ module.exports = {
 	},
 
 	onAuthStateChanged: (callback) => {
-		auth.onAuthStateChanged(callback);
+		return auth.onAuthStateChanged(callback);
 	},
 
 	// Local Storage
