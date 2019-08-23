@@ -92,7 +92,7 @@ class CreateAccount extends Component {
 					{ this.state.showProgressBar && progessBar }
 					<div className='auth-paper'>
 						<form>
-							<Typography variant='title'>Create your Account</Typography>
+							<Typography variant='h6'>Create your Account</Typography>
 							<TextField
 								margin='dense'
 								id='username'

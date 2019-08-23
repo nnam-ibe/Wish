@@ -46,7 +46,7 @@ class Settings extends Component {
 						{ this.state.showProgressBar && progessBar }
 						<div className='auth-paper'>
 							<form>
-								<Typography variant='title'>Account Settings</Typography>
+								<Typography variant='h6'>Account Settings</Typography>
 								<TextField
 									id='settings-form-username'
 									label={username.label}

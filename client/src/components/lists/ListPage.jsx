@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Item from './Item.jsx';
 import FirebaseUtil from '../../utils/firebaseUtil.js';
@@ -53,9 +53,9 @@ class ListPage extends Component {
 					/>
 				</div>
 				<div>
-					<Button variant='fab' color='primary' className='list-fab' onClick={this.openItemForm}>
+					<Fab color='primary' className='list-fab' onClick={this.openItemForm}>
 						<AddIcon />
-					</Button>
+					</Fab>
 				</div>
 			</div>
 		)
