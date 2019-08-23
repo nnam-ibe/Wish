@@ -7,7 +7,7 @@
     "client": "cd client && yarn start",
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "test": "jest",
+    "test": "cd client && yarn test",
     "build": "cd client && yarn build",
     "compose": "yarn build && docker-compose up -d --build"
   },
