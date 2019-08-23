@@ -122,7 +122,6 @@ class Item extends Component {
 	_getCalculatedValues = (price, saved, addTaxes) => {
 		if (addTaxes) {
 			price = NumberFormatter.calculateTax(price, this.props.tax);
-			price = NumberFormatter.formatMoney(price);
 		}
 		let difference = this._calculateDifference(price, saved);
 
