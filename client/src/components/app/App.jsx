@@ -15,7 +15,8 @@ class App extends Component {
 		super(props);
 		this.state = {
 			uid: null,
-			userPrefs: null
+			userPrefs: null,
+			currentList: 'Main'
 		}
 	}
 
@@ -29,7 +30,7 @@ class App extends Component {
 					this.props.history.push('/lists/Main');
 				}
 
-				this._getUserPrefs(user.uid);
+				this.getUserPrefs(user.uid);
 
 			} else {
 				if (!this.state.uid && !this.state.userPrefs) return;
@@ -50,12 +51,24 @@ class App extends Component {
 	render() {
 		const uid = this.state.uid;
 		const userPrefs = this.state.userPrefs;
+		const currentList = this.state.currentList;
+		const updateCurrentList = this.updateCurrentList;
 
 		return (
 			<div className='App'>
-				<Route path='/' component={Navbar}/>
+				<Navbar
+					handleLoginClick={this.handleLoginClick}
+					title={currentList}
+					nav={this.navigateToRoute}
+					isLoggedIn={Boolean(this.state.uid)}
+				/>
+			{/*	<Route path='/' render={(props) => {
+					const navProps = {...props, currentList};
+					return (<Navbar {...navProps}/>);
+
+				}}/>*/}
 				<Route path='/' render={(props) => {
-					const sideProps = {...props, uid, userPrefs};
+					const sideProps = {...props, uid, userPrefs, updateCurrentList};
 					if (!this.state.userPrefs) return (<div></div>);
 
 					return (<Sidebar {...sideProps}/>);
@@ -75,12 +88,32 @@ class App extends Component {
 		);
 	}
 
-	_getUserPrefs = (uid) => {
+	handleLoginClick = () => {
+		if (this.state.uid) {
+			FirebaseUtil.logout().then(() => {
+				this.navigateToRoute('/login');
+			});
+		} else if (this.props.location.pathname !== '/login') {
+			this.navigateToRoute('/login');
+		}
+	}
+
+	navigateToRoute = (route) => {
+		this.props.history.push(route);
+	}
+
+
+
+	getUserPrefs = (uid) => {
 		FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
 			if (!snapshot.exists) return;
 
 			this.setState({ userPrefs: snapshot.data() });
 		});
+	}
+
+	updateCurrentList = (listName) => {
+		this.setState({ currentList: listName });
 	}
 }
 

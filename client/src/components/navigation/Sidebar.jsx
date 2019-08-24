@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -31,12 +32,16 @@ class Sidebar extends Component {
 
 	itemClicked = page => () => {
 		this.props.history.push(`/lists/${page}`);
+		this.props.updateCurrentList(page);
 		this._setListElements(this.props.userPrefs.activeLists, page);
 	}
 
 	render() {
 		return (
 			<Drawer variant='permanent' classes={{paper: 'side-bar'}}>
+				<div>
+					<Button color='primary' variant='outlined'>New List</Button>
+				</div>
 				<div>
 					<List>
 						{this.state.listElements}
