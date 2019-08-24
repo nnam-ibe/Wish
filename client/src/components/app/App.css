@@ -104,7 +104,7 @@
   text-overflow: ellipsis;
 }
 
-.sb-active-item h3 {
+.sb-active-item span {
   color: var(--accent-color);
 }
 
