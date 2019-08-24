@@ -62,11 +62,6 @@ class App extends Component {
 					nav={this.navigateToRoute}
 					isLoggedIn={Boolean(this.state.uid)}
 				/>
-			{/*	<Route path='/' render={(props) => {
-					const navProps = {...props, currentList};
-					return (<Navbar {...navProps}/>);
-
-				}}/>*/}
 				<Route path='/' render={(props) => {
 					const sideProps = {...props, uid, userPrefs, updateCurrentList};
 					if (!this.state.userPrefs) return (<div></div>);
