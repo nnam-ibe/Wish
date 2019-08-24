@@ -2,7 +2,8 @@ const express = require('express');
 const admin = require('firebase-admin');
 const _ = require('lodash');
 const path = require('path');
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+const InputValidation = require('./client/src/utils/InputValidation');
 
 const serviceAccount = require('./firebase-config/admin-config.json');
 
@@ -15,12 +16,13 @@ const app = express();
 const port = process.env.PORT || 5500;
 const jsonParser = bodyParser.json();
 const firestore = admin.firestore();
+const settings = { timestampsInSnapshots: true };
+firestore.settings(settings);
 
 app.post('/api/create_account', jsonParser, (req, res) => {
 	let body = req.body;
 	if (!_.has(body, 'uid')) {
-		res.status(400).send({ message: 'No uid provided' });
-		return;
+		return res.status(400).send({ error: 'No uid provided' });
 	}
 
 	let uid = body.uid;
@@ -39,13 +41,32 @@ app.post('/api/create_account', jsonParser, (req, res) => {
 	});
 });
 
-app.post('/api/logger', jsonParser, (req, res) => {
-	let body = req.body;
-	if (!_.has(body, 'message')) {
-		return res.status(400).send({ message: 'No message provided'});
+// TODO: Fix error handling mess
+app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
+	const { listName } = req.body;
+	try {
+		InputValidation.validateListName(listName);
+	} catch (err) {
+		return res.status(400).send({ error: 'Invalid name' });
 	}
 
-	res.send(['all good']);
+	var snapShot = await firestore.doc(`users/${req.params.uid}`).get();
+	const userInfo = snapShot.data();
+	if (!userInfo) {
+		return res.status(400).send({ error: 'User does not exist' });
+	}
+
+	if (userInfo.activeLists.includes(listName)) {
+		return res.status(400).send({ error: 'Name already exists' });
+	}
+
+	userInfo.activeLists.push(listName);
+	try {
+		await firestore.doc(`users/${req.params.uid}`).set(userInfo);
+	} catch (err) {
+		return res.status(500).send({ error: err.message });
+	}
+	res.send({ valid: true });
 });
 
 if (process.env.NODE_ENV === 'production') {

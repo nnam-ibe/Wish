@@ -77,7 +77,7 @@ class CreateAccount extends Component {
 		})
 		.catch((err) => {
 			this.setState({ showProgressBar: false });
-
+			// TODO: Fix this
 			console.error(err);
 		});
 	};

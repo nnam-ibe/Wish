@@ -5,6 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import _ from 'lodash';
+import ListNamePopover from '../lists/ListNamePopover';
 
 class Sidebar extends Component {
 
@@ -13,7 +14,8 @@ class Sidebar extends Component {
 
 		this.state = {
 			listElements: null,
-			activeItem: null
+			activeItem: null,
+			listNamePopoverAnchorEl: null
 		};
 	}
 
@@ -30,17 +32,18 @@ class Sidebar extends Component {
 		this._setListElements(this.props.userPrefs.activeLists, this._getActiveItem(defaultList));
 	}
 
-	itemClicked = page => () => {
-		this.props.history.push(`/lists/${page}`);
-		this.props.updateCurrentList(page);
-		this._setListElements(this.props.userPrefs.activeLists, page);
-	}
-
 	render() {
 		return (
 			<Drawer variant='permanent' classes={{paper: 'side-bar'}}>
+				<ListNamePopover
+					anchorEl={this.state.listNamePopoverAnchorEl}
+					popoverClose={() => this.setState({ listNamePopoverAnchorEl: null })}
+					uid={this.props.uid}
+				/>
 				<div>
-					<Button color='primary' variant='outlined'>New List</Button>
+					<Button color='primary' variant='outlined' onClick={this.newListClick}>
+						New List
+					</Button>
 				</div>
 				<div>
 					<List>
@@ -49,6 +52,16 @@ class Sidebar extends Component {
 				</div>
 			</Drawer>
 		);
+	}
+
+	itemClicked = page => () => {
+		this.props.history.push(`/lists/${page}`);
+		this.props.updateCurrentList(page);
+		this._setListElements(this.props.userPrefs.activeLists, page);
+	}
+
+	newListClick = (event) => {
+		this.setState({ listNamePopoverAnchorEl: event.currentTarget });
 	}
 
 	_setListElements = (activeLists, activeItem) => {
