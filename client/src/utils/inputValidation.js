@@ -110,5 +110,12 @@ module.exports = {
 		}
 
 		return result;
+	},
+
+	// Migrate validation to new format below
+	validateListName: (listName) => {
+		if (!listName) throw new Error('Name is invalid');
+		if (listName.length <= 0 ) throw new Error('Name cannot be empty');
+		if (listName.length > 36) throw new Error('Maximum of 36 characters allowed');
 	}
 };
