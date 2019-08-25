@@ -5,7 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import DeleteIcon from '@material-ui/icons/Delete';
 import _ from 'lodash';
 import ListNamePopover from '../lists/ListNamePopover';
 
@@ -18,6 +18,7 @@ class Sidebar extends Component {
 			listElements: null,
 			activeItem: null,
 			listNamePopoverAnchorEl: null,
+			listNamePopoverValue: '',
 			editMode: this.props.location.pathname === '/settings'
 		};
 	}
@@ -36,31 +37,24 @@ class Sidebar extends Component {
 				<ListNamePopover
 					anchorEl={this.state.listNamePopoverAnchorEl}
 					popoverClose={() => this.setState({ listNamePopoverAnchorEl: null })}
+					intialName={this.state.listNamePopoverValue}
 					uid={this.props.uid}
 				/>
 				<div>
-					<Button color='primary' variant='outlined' onClick={this.newListClick}>
+					<Button color='primary' variant='outlined' onClick={this.listnamePopoverClick('')}>
 						New List
 					</Button>
 				</div>
 				<div>
 					<List>
-						{ this._setListElements() }
+						{ this.getSidebarList() }
 					</List>
 				</div>
 			</Drawer>
 		);
 	}
 
-	itemClicked = page => () => {
-		this.props.history.push(`/lists/${page}`);
-	}
-
-	newListClick = (event) => {
-		this.setState({ listNamePopoverAnchorEl: event.currentTarget });
-	}
-
-	_setListElements = () => {
+	getSidebarList = () => {
 		const listpath = '/lists/';
 		let activeItem = '';
 		if (this.props.location.pathname.indexOf(listpath) === 0) {
@@ -75,12 +69,29 @@ class Sidebar extends Component {
 				<ListItem button key={listName} onClick={this.itemClicked(listName)}>
 					<ListItemText primary={listName} classes={classes}/>
 					{ this.state.editMode && (
-						<IconButton>
-							<MoreVertIcon />
+						<IconButton onClick={this.deleteList(listName)}>
+							<DeleteIcon />
 						</IconButton>
 					)}
 				</ListItem>
 			);
+		});
+	}
+
+	itemClicked = page => () => {
+		this.props.history.push(`/lists/${page}`);
+	}
+
+	listnamePopoverClick = (name, override) => (event) => {
+		this.setState({
+			listNamePopoverAnchorEl: event.currentTarget,
+			listNamePopoverValue: name
+		});
+	}
+
+	deleteList = name => async () => {
+		await fetch(`/delete/list/${name}/${this.props.uid}`, {
+			method: 'delete'
 		});
 	}
 }

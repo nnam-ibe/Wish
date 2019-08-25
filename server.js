@@ -50,11 +50,11 @@ app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 		return res.status(400).send({ error: 'Invalid name' });
 	}
 
-	var snapShot = await firestore.doc(`users/${req.params.uid}`).get();
-	const userInfo = snapShot.data();
-	if (!userInfo) {
+	const snapShot = await firestore.doc(`users/${req.params.uid}`).get();
+	if (!snapShot.exists) {
 		return res.status(400).send({ error: 'User does not exist' });
 	}
+	const userInfo = snapShot.data();
 
 	if (userInfo.activeLists.length > 25) {
 		return res.status(400).send({ error: 'Cannot create more than 25 lists' });
@@ -65,6 +65,28 @@ app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 	}
 
 	userInfo.activeLists.push(listName);
+	try {
+		await firestore.doc(`users/${req.params.uid}`).set(userInfo);
+	} catch (err) {
+		return res.status(500).send({ error: err.message });
+	}
+	res.send({ valid: true });
+});
+
+app.delete('/delete/list/:listName/:uid', jsonParser, async (req, res) => {
+	const snapShot = await firestore.doc(`users/${req.params.uid}`).get();
+	if (!snapShot.exists) {
+		return res.status(400).send({ error: 'User does not exist' });
+	}
+	const userInfo = snapShot.data();
+	if (req.params.listName === userInfo.defaultList) {
+		return res.status(400).send({ error: 'Cannot delete your default list' });
+	}
+	const listIndex = userInfo.activeLists.indexOf(req.params.listName);
+	if (listIndex === -1) {
+		return res.status(400).send({ error: 'Could not find list' });
+	}
+	userInfo.activeLists.splice(listIndex, 1);
 	try {
 		await firestore.doc(`users/${req.params.uid}`).set(userInfo);
 	} catch (err) {
