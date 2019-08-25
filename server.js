@@ -56,6 +56,10 @@ app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 		return res.status(400).send({ error: 'User does not exist' });
 	}
 
+	if (userInfo.activeLists.length > 25) {
+		return res.status(400).send({ error: 'Cannot create more than 25 lists' });
+	}
+
 	if (userInfo.activeLists.includes(listName)) {
 		return res.status(400).send({ error: 'Name already exists' });
 	}
