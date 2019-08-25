@@ -34,6 +34,10 @@ class ListPage extends Component {
 		this._getList(this.props.uid);
 	}
 
+	componentWillUnmount() {
+		this.onSnapshotUnsubscribe && this.onSnapshotUnsubscribe();
+	}
+
 	render() {
 		return (
 			<div>
@@ -131,7 +135,7 @@ class ListPage extends Component {
 			return;
 		}
 
-		FirebaseUtil.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
+		this.onSnapshotUnsubscribe = FirebaseUtil.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
 			if (!snapShot.exists) {
 				this.setState({ list: null, listItems: null });
 				return;

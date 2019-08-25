@@ -34,6 +34,10 @@ class Settings extends Component {
 		this._getUserSettings();
 	}
 
+	componentWillUnmount() {
+		this.onSnapshotUnsubscribe && this.onSnapshotUnsubscribe();
+	}
+
 	// Correct class names
 	render() {
 		let progessBar = ( <LinearProgress/> );
@@ -187,7 +191,7 @@ class Settings extends Component {
 
 		var path = `users/${uid}`;
 
-		firebaseUtil.db.doc(path).onSnapshot((snapShot) => {
+		this.onSnapshotUnsubscribe = firebaseUtil.db.doc(path).onSnapshot((snapShot) => {
 			if (!snapShot.exists) {
 				return;
 			}

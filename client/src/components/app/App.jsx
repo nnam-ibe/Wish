@@ -43,9 +43,8 @@ class App extends Component {
 	}
 
 	componentWillUnmount() {
-		if (this.unsubscribeAuthListner) {
-			this.unsubscribeAuthListner();
-		}
+		this.unsubscribeAuthListner && this.unsubscribeAuthListner();
+		this.onSnapshotUnsubscribe && this.onSnapshotUnsubscribe();
 	}
 
 	render() {
@@ -100,7 +99,7 @@ class App extends Component {
 
 
 	getUserPrefs = (uid) => {
-		FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
+		this.onSnapshotUnsubscribe = FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
 			if (!snapshot.exists) return;
 
 			this.setState({ userPrefs: snapshot.data() });
