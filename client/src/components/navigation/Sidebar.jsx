@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import _ from 'lodash';
 import ListNamePopover from '../lists/ListNamePopover';
 
@@ -15,21 +17,17 @@ class Sidebar extends Component {
 		this.state = {
 			listElements: null,
 			activeItem: null,
-			listNamePopoverAnchorEl: null
+			listNamePopoverAnchorEl: null,
+			editMode: this.props.location.pathname === '/settings'
 		};
 	}
 
-	componentDidMount() {
-		let defaultList = this.props.userPrefs.defaultList;
-		this._setListElements(this.props.userPrefs.activeLists, this._getActiveItem(defaultList));
-	}
-
 	componentDidUpdate(prevProps, prevState) {
-		let isEqual = _.isEqual(prevProps.userPrefs.activeLists, this.props.userPrefs.activeLists);
-		if (isEqual) return;
-
-		let defaultList = this.props.userPrefs.defaultList;
-		this._setListElements(this.props.userPrefs.activeLists, this._getActiveItem(defaultList));
+		const newEditMode = this.props.location.pathname === '/settings';
+		const editModeSame = newEditMode === this.state.editMode;
+		if (!editModeSame) {
+			this.setState({ editMode: newEditMode });
+		}
 	}
 
 	render() {
@@ -47,7 +45,7 @@ class Sidebar extends Component {
 				</div>
 				<div>
 					<List>
-						{this.state.listElements}
+						{ this._setListElements() }
 					</List>
 				</div>
 			</Drawer>
@@ -57,32 +55,34 @@ class Sidebar extends Component {
 	itemClicked = page => () => {
 		this.props.history.push(`/lists/${page}`);
 		this.props.updateCurrentList(page);
-		this._setListElements(this.props.userPrefs.activeLists, page);
 	}
 
 	newListClick = (event) => {
 		this.setState({ listNamePopoverAnchorEl: event.currentTarget });
 	}
 
-	_setListElements = (activeLists, activeItem) => {
-		let listElements = _.map(activeLists, (listName) => {
+	_setListElements = () => {
+		const listpath = '/lists/';
+		let activeItem = '';
+		if (this.props.location.pathname.indexOf(listpath) === 0) {
+			activeItem = this.props.location.pathname.slice(listpath.length);
+		}
+
+		return _.map(this.props.userPrefs.activeLists, (listName) => {
 			let classes = { root: 'list-item' };
 			if (listName === activeItem) classes.root += ' sb-active-item';
 
 			return (
 				<ListItem button key={listName} onClick={this.itemClicked(listName)}>
 					<ListItemText primary={listName} classes={classes}/>
+					{ this.state.editMode && (
+						<IconButton>
+							<MoreVertIcon />
+						</IconButton>
+					)}
 				</ListItem>
 			);
 		});
-
-		this.setState({ listElements });
-	}
-
-	_getActiveItem = (defaultList) => {
-		const item = this.state.activeItem ? this.state.activeItem : defaultList;
-		this.setState({ activeItem: item });
-		return item;
 	}
 }
 
