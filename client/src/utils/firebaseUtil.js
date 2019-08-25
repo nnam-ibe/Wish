@@ -13,8 +13,6 @@ require('firebase/firestore');
 require('firebase/auth');
 
 const db = firebase.firestore();
-const settings = { timestampsInSnapshots: true };
-db.settings(settings);
 const localKey = 'WISH_LIST_KEY';
 const auth = firebase.auth();
 const uuidv4 = require('uuid/v4');
@@ -92,7 +90,7 @@ module.exports = {
 	},
 
 	onAuthStateChanged: (callback) => {
-		auth.onAuthStateChanged(callback);
+		return auth.onAuthStateChanged(callback);
 	},
 
 	// Local Storage

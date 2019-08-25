@@ -20,7 +20,7 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		FirebaseUtil.onAuthStateChanged((user) => {
+		this.unsubscribeAuthListner = FirebaseUtil.onAuthStateChanged((user) => {
 			if (user) {
 				FirebaseUtil.setLocalUID(user.uid);
 				this.setState({ uid: user.uid });
@@ -29,7 +29,7 @@ class App extends Component {
 					this.props.history.push('/lists/Main');
 				}
 
-				this._getUserPrefs(user.uid);
+				this.getUserPrefs(user.uid);
 
 			} else {
 				if (!this.state.uid && !this.state.userPrefs) return;
@@ -41,15 +41,25 @@ class App extends Component {
 		})
 	}
 
+	componentWillUnmount() {
+		this.unsubscribeAuthListner && this.unsubscribeAuthListner();
+		this.onSnapshotUnsubscribe && this.onSnapshotUnsubscribe();
+	}
+
 	render() {
 		const uid = this.state.uid;
 		const userPrefs = this.state.userPrefs;
 
 		return (
 			<div className='App'>
-				<Route path='/' component={Navbar}/>
+				<Navbar
+					handleLoginClick={this.handleLoginClick}
+					title='Wish List'
+					nav={this.navigateToRoute}
+					isLoggedIn={Boolean(this.state.uid)}
+				/>
 				<Route path='/' render={(props) => {
-					const sideProps = {...props, uid, userPrefs};
+					const sideProps = {...props, uid, userPrefs };
 					if (!this.state.userPrefs) return (<div></div>);
 
 					return (<Sidebar {...sideProps}/>);
@@ -69,8 +79,24 @@ class App extends Component {
 		);
 	}
 
-	_getUserPrefs = (uid) => {
-		FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
+	handleLoginClick = () => {
+		if (this.state.uid) {
+			FirebaseUtil.logout().then(() => {
+				this.navigateToRoute('/login');
+			});
+		} else if (this.props.location.pathname !== '/login') {
+			this.navigateToRoute('/login');
+		}
+	}
+
+	navigateToRoute = (route) => {
+		this.props.history.push(route);
+	}
+
+
+
+	getUserPrefs = (uid) => {
+		this.onSnapshotUnsubscribe = FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
 			if (!snapshot.exists) return;
 
 			this.setState({ userPrefs: snapshot.data() });

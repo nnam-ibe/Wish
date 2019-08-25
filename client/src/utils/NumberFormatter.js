@@ -1,19 +1,24 @@
 const _ = require('lodash');
 
-module.exports = {
-	formatMoney: (amount) => {
-		amount = _.toNumber(amount);
-		if (isNaN(amount)) return 0;
+const NumberFormatter = {};
 
-		if (amount < 0) return 0;
+NumberFormatter.formatMoney = (amount) => {
+	amount = _.toNumber(amount);
+	if (isNaN(amount)) return 0;
 
-		return _.round(amount, 2);
-	},
+	if (amount < 0) return 0;
 
-	/*
-	* @param taxRate should be in percentage
-	*/
-	calculateTax: (amount, taxRate) => {
-		return (1 + (taxRate/100)) * amount;
-	}
+	return _.round(amount, 2);
 };
+
+/*
+* @param taxRate should be in percentage
+*/
+NumberFormatter.calculateTax = (amount, taxRate) => {
+	if (amount < 0) return 0;
+	if (taxRate < 0) return amount;
+	var rawValue = (1 + (taxRate/100)) * amount;
+	return NumberFormatter.formatMoney(rawValue);
+};
+
+module.exports = NumberFormatter;

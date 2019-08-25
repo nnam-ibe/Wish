@@ -69,7 +69,7 @@ class Item extends Component {
 				<Paper className='auth-paper'>
 					<div className='display-flex text-align-left ml-36'>
 						<div className='flex-grow-1'>
-							<Typography variant='title'>{this.state.name}</Typography>
+							<Typography variant='h6'>{this.state.name}</Typography>
 						</div>
 						<div>
 							<IconButton onClick={this._editItem}>
@@ -89,19 +89,19 @@ class Item extends Component {
 									<TableCell>
 										<div>
 											<Typography variant='caption'>Saved</Typography>
-											<Typography variant='body2'>{`$${this.state.formattedSaved}`}</Typography>
+											<Typography variant='subtitle2'>{`$${this.state.formattedSaved}`}</Typography>
 										</div>
 									</TableCell>
 									<TableCell>
 										<div>
 											<Typography variant='caption'>Difference</Typography>
-											<Typography variant='body2'>{`$${this.state.formattedDifference}`}</Typography>
+											<Typography variant='subtitle2'>{`$${this.state.formattedDifference}`}</Typography>
 										</div>
 									</TableCell>
 									<TableCell>
 										<div>
 											<Typography variant='caption'>Price</Typography>
-											<Typography variant='body2'>{`$${this.state.formattedPrice}`}</Typography>
+											<Typography variant='subtitle2'>{`$${this.state.formattedPrice}`}</Typography>
 										</div>
 									</TableCell>
 									<TableCell>
@@ -122,7 +122,6 @@ class Item extends Component {
 	_getCalculatedValues = (price, saved, addTaxes) => {
 		if (addTaxes) {
 			price = NumberFormatter.calculateTax(price, this.props.tax);
-			price = NumberFormatter.formatMoney(price);
 		}
 		let difference = this._calculateDifference(price, saved);
 
