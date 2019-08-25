@@ -54,7 +54,6 @@ class Sidebar extends Component {
 
 	itemClicked = page => () => {
 		this.props.history.push(`/lists/${page}`);
-		this.props.updateCurrentList(page);
 	}
 
 	newListClick = (event) => {

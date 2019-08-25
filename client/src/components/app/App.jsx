@@ -15,8 +15,7 @@ class App extends Component {
 		super(props);
 		this.state = {
 			uid: null,
-			userPrefs: null,
-			currentList: 'Main'
+			userPrefs: null
 		}
 	}
 
@@ -50,19 +49,17 @@ class App extends Component {
 	render() {
 		const uid = this.state.uid;
 		const userPrefs = this.state.userPrefs;
-		const currentList = this.state.currentList;
-		const updateCurrentList = this.updateCurrentList;
 
 		return (
 			<div className='App'>
 				<Navbar
 					handleLoginClick={this.handleLoginClick}
-					title={currentList}
+					title='Wish List'
 					nav={this.navigateToRoute}
 					isLoggedIn={Boolean(this.state.uid)}
 				/>
 				<Route path='/' render={(props) => {
-					const sideProps = {...props, uid, userPrefs, updateCurrentList};
+					const sideProps = {...props, uid, userPrefs };
 					if (!this.state.userPrefs) return (<div></div>);
 
 					return (<Sidebar {...sideProps}/>);
@@ -104,10 +101,6 @@ class App extends Component {
 
 			this.setState({ userPrefs: snapshot.data() });
 		});
-	}
-
-	updateCurrentList = (listName) => {
-		this.setState({ currentList: listName });
 	}
 }
 
