@@ -17,14 +17,14 @@ function ConfirmModal({ open, handleClose, buttonLabels, buttonVariant }) {
 					<Button
 						variant={buttonVariant}
 						color={buttonLabels.decline.color}
-						onClick={handleClose}
+						onClick={handleClose(false)}
 						>
 							{buttonLabels.decline.text}
 					</Button>
 					<Button
 						variant={buttonVariant}
 						color={buttonLabels.confirm.color}
-						onClick={handleClose}
+						onClick={handleClose(true)}
 						>
 							{buttonLabels.confirm.text}
 					</Button>

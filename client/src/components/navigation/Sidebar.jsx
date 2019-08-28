@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import DeleteIcon from '@material-ui/icons/Delete';
 import _ from 'lodash';
+import ConfirmModal from '../modals/ConfirmModal';
 import ListNamePopover from '../lists/ListNamePopover';
 
 class Sidebar extends Component {
@@ -19,7 +20,8 @@ class Sidebar extends Component {
 			activeItem: null,
 			listNamePopoverAnchorEl: null,
 			listNamePopoverValue: '',
-			editMode: this.props.location.pathname === '/settings'
+			editMode: this.props.location.pathname === '/settings',
+			confirmModalOpen: false
 		};
 	}
 
@@ -69,9 +71,20 @@ class Sidebar extends Component {
 				<ListItem button key={listName} onClick={this.itemClicked(listName)}>
 					<ListItemText primary={listName} classes={classes}/>
 					{ this.state.editMode && (
-						<IconButton onClick={this.deleteList(listName)}>
-							<DeleteIcon />
-						</IconButton>
+						<div>
+							<IconButton onClick={this.deleteList(listName)}>
+								<DeleteIcon />
+							</IconButton>
+							<ConfirmModal
+								buttonLabels={{
+									confirm: { text: 'Delete', color: 'secondary' },
+									decline: { text: 'Cancel', color: 'primary' }
+								}}
+								buttonVariant='contained'
+								open={this.state.confirmModalOpen}
+								handleClose={this.state.confirmModalCallback}
+							/>
+						</div>
 					)}
 				</ListItem>
 			);
@@ -79,7 +92,7 @@ class Sidebar extends Component {
 	}
 
 	itemClicked = page => () => {
-		this.props.history.push(`/lists/${page}`);
+		// this.props.history.push(`/lists/${page}`);
 	}
 
 	listnamePopoverClick = (name, override) => (event) => {
@@ -90,8 +103,21 @@ class Sidebar extends Component {
 	}
 
 	deleteList = name => async () => {
-		await fetch(`/delete/list/${name}/${this.props.uid}`, {
-			method: 'delete'
+		// await fetch(`/delete/list/${name}/${this.props.uid}`, {
+		// 	method: 'delete'
+		// });
+		this.setState({
+			confirmModalOpen: true,
+			confirmModalCallback: deleteConfirmed => event => {
+				console.log('deleteConfirmed', deleteConfirmed);
+				if (deleteConfirmed) {
+					console.log('Will now attempt to delete', name);
+					// await fetch(`/delete/list/${name}/${this.props.uid}`, {
+					// 	method: 'delete'
+					// });
+				}
+				this.setState({ confirmModalOpen: false, confirmModalCallback: null });
+			}
 		});
 	}
 }
