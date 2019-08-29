@@ -61,7 +61,7 @@ app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 	}
 
 	if (userInfo.activeLists.includes(listName)) {
-		return res.status(400).send({ error: 'Name already exists' });
+		return res.status(400).send({ error: 'List already exists' });
 	}
 
 	userInfo.activeLists.push(listName);
