@@ -100,7 +100,6 @@
 /*------------------NAVIGATION ELEMENTS------------------*/
 .list-item span {
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
@@ -116,6 +115,19 @@
   width: 250px;
 }
 
+.sidebar-list-item {
+  padding-left: 0 !important;
+  padding-bottom: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+}
+
+.sidebar-list-item-div {
+  padding-left: 16px !important;
+  padding-bottom: 8px !important;
+  padding-right: 16px !important;
+  padding-top: 8px !important;
+}
 /*----------------------LIST ITEMS----------------------*/
 .item-margin {
   margin: 10px 10px;
@@ -184,4 +196,11 @@ td svg {
 
 tr td {
   border-bottom: none !important;
+}
+
+/*----------------------MODAL----------------------*/
+.confirm-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -3,30 +3,39 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
-function ConfirmModal({ open, handleClose, buttonLabels, buttonVariant }) {
+function ConfirmModal(props) {
+	const modalProps = {
+		id: 'confirm-modal',
+		className: 'confirm-modal',
+		open: props.open
+	};
+	const declineButtonProps = {
+		variant: props.buttonVariant,
+		color: props.buttonLabels.decline.color
+	};
+	const confirmButtonProps = {
+		variant: props.buttonVariant,
+		color: props.buttonLabels.confirm.color
+	};
+	if (props.handleClose) {
+		modalProps.onClick = props.handleClose(false);
+		declineButtonProps.onClick = props.handleClose(false);
+		confirmButtonProps.onClick = props.handleClose(true);
+	}
 	return (
-		<Modal
-			id='confirm-modal'
-			open={open}
-			onClose={handleClose}
-		>
+		<Modal {...modalProps}>
 			<Paper className='item-form-paper-title'>
-				Are you sure you want to delete this beauty?
+				<Typography variant='body1'>
+					{props.message}
+				</Typography>
 				<ButtonGroup fullWidth>
-					<Button
-						variant={buttonVariant}
-						color={buttonLabels.decline.color}
-						onClick={handleClose(false)}
-						>
-							{buttonLabels.decline.text}
+					<Button {...declineButtonProps}>
+						{props.buttonLabels.decline.text}
 					</Button>
-					<Button
-						variant={buttonVariant}
-						color={buttonLabels.confirm.color}
-						onClick={handleClose(true)}
-						>
-							{buttonLabels.confirm.text}
+					<Button {...confirmButtonProps}>
+						{props.buttonLabels.confirm.text}
 					</Button>
 				</ButtonGroup>
 			</Paper>
