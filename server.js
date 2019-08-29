@@ -19,29 +19,21 @@ const firestore = admin.firestore();
 const settings = { timestampsInSnapshots: true };
 firestore.settings(settings);
 
-app.post('/api/create_account', jsonParser, (req, res) => {
-	let body = req.body;
-	if (!_.has(body, 'uid')) {
-		return res.status(400).send({ error: 'No uid provided' });
-	}
-
-	let uid = body.uid;
-
-	firestore.doc(`users/${uid}`).set({
+app.post('/api/create/account/:uid', jsonParser, (req, res, next) => {
+	firestore.doc(`users/${req.params.uid}`).set({
 		addTaxes: true,
 		defaultList: 'Main',
 		defaultIncrement: 200,
 		tax: 13,
-		username: body.username,
+		username: req.body.username,
 		activeLists: ['Main']
 	}).then(() => {
 		res.send(['all good']);
 	}).catch((err) => {
-		console.error(err);
+		next(err);
 	});
 });
 
-// TODO: Fix error handling mess
 app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 	const { listName } = req.body;
 	try {
