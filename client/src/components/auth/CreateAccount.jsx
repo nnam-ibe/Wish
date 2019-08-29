@@ -5,8 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import _ from 'lodash';
-import firebaseUtil from '../../utils/firebaseUtil.js';
-import fetchUtil from '../../utils/fetchUtil.js';
+import FirebaseUtil from '../../utils/firebaseUtil.js';
+import FetchUtil from '../../utils/fetchUtil.js';
 import InputValidation from '../../utils/InputValidation.js';
 
 const validField = { error: false, helperText: '' };
@@ -42,7 +42,7 @@ class CreateAccount extends Component {
 			return;
 		}
 
-		firebaseUtil.createAccount({
+		FirebaseUtil.createAccount({
 			username: _.trim(args.username.value),
 			email: args.email.value,
 			password: args.password.value,
@@ -65,13 +65,13 @@ class CreateAccount extends Component {
 		})
 		.then((uid) => {
 			return Promise.resolve(
-				fetchUtil.put('/api/create_account', { uid: uid, username: args.username.value })
+				FetchUtil.put('/api/create_account', { uid: uid, username: args.username.value })
 			);
 		})
 		.then((response) => {
 			this.setState({ showProgressBar: false });
 
-			if (response.status === 200 && firebaseUtil.getCurrentUser()) {
+			if (response.status === 200 && FirebaseUtil.getCurrentUser()) {
 				this.props.history.push('/');
 			}
 		})
