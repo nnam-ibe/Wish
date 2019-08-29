@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import DeleteIcon from '@material-ui/icons/Delete';
 import _ from 'lodash';
+import ConfirmModal from '../modals/ConfirmModal';
 import ListNamePopover from '../lists/ListNamePopover';
 
 class Sidebar extends Component {
@@ -19,7 +20,9 @@ class Sidebar extends Component {
 			activeItem: null,
 			listNamePopoverAnchorEl: null,
 			listNamePopoverValue: '',
-			editMode: this.props.location.pathname === '/settings'
+			editMode: this.props.location.pathname === '/settings',
+			confirmModalOpen: false,
+			confirmModalMessage: ''
 		};
 	}
 
@@ -62,16 +65,28 @@ class Sidebar extends Component {
 		}
 
 		return _.map(this.props.userPrefs.activeLists, (listName) => {
-			let classes = { root: 'list-item' };
+			let classes = { root: 'list-item sidebar-list-item-div' };
 			if (listName === activeItem) classes.root += ' sb-active-item';
 
 			return (
-				<ListItem button key={listName} onClick={this.itemClicked(listName)}>
-					<ListItemText primary={listName} classes={classes}/>
+				<ListItem button key={listName} classes={{ root: 'sidebar-list-item' }}>
+					<ListItemText primary={listName} classes={classes} onClick={this.itemClicked(listName)}/>
 					{ this.state.editMode && (
-						<IconButton onClick={this.deleteList(listName)}>
-							<DeleteIcon />
-						</IconButton>
+						<div>
+							<IconButton onClick={this.deleteList(listName)}>
+								<DeleteIcon />
+							</IconButton>
+							<ConfirmModal
+								buttonLabels={{
+									confirm: { text: 'Delete', color: 'secondary' },
+									decline: { text: 'Cancel', color: 'primary' }
+								}}
+								buttonVariant='contained'
+								open={this.state.confirmModalOpen}
+								message={this.state.confirmModalMessage}
+								handleClose={this.state.confirmModalCallback}
+							/>
+						</div>
 					)}
 				</ListItem>
 			);
@@ -89,9 +104,18 @@ class Sidebar extends Component {
 		});
 	}
 
-	deleteList = name => async () => {
-		await fetch(`/delete/list/${name}/${this.props.uid}`, {
-			method: 'delete'
+	deleteList = name => () => {
+		this.setState({
+			confirmModalOpen: true,
+			confirmModalMessage: `Delete ${name}?`,
+			confirmModalCallback: deleteConfirmed => async event => {
+				if (deleteConfirmed) {
+					await fetch(`/delete/list/${name}/${this.props.uid}`, {
+						method: 'delete'
+					});
+				}
+				this.setState({ confirmModalOpen: false, confirmModalCallback: null });
+			}
 		});
 	}
 }
