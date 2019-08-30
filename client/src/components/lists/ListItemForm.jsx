@@ -176,12 +176,11 @@ export default ListItemForm;
 
 
 function CurrencyFormat (props) {
-	const { inputRef, onChange, ...other } = props;
+	const { onChange, ...other } = props;
 
 	return (
 		<NumberFormat
 			{...other}
-			ref={inputRef}
 			onValueChange={values => {
 				onChange({
 					target: { value: values.value }
