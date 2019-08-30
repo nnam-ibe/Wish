@@ -65,7 +65,7 @@ class CreateAccount extends Component {
 		})
 		.then((uid) => {
 			return Promise.resolve(
-				FetchUtil.put(`/api/create/account/${uid}`, { username: args.username.value });
+				FetchUtil.put(`/api/create/account/${uid}`, { username: args.username.value })
 			);
 		})
 		.then((response) => {
