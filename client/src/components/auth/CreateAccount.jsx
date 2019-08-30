@@ -42,44 +42,52 @@ class CreateAccount extends Component {
 			return;
 		}
 
-		FirebaseUtil.createAccount({
+		FetchUtil.put(`/api/create/account`, {
 			username: _.trim(args.username.value),
 			email: args.email.value,
-			password: args.password.value,
-			confirmPassword: args.confirmPassword.value
+			password: args.password.value
 		})
-		.catch((err) => {
-			this.setState({ showProgressBar: false });
+		.then(res => console.log(res))
+		.catch(err => console.error(err));
 
-			if (_.includes(err.code, 'email')) {
-				let fields = this.state.fields;
-				_.set(fields, 'email', { error: true, helperText: err.message });
-				this.setState({ fields });
-			} else if (_.includes(err.code, 'password')) {
-				let fields = this.state.fields;
-				_.set(fields, 'password', { error: true, helperText: err.message });
-				_.set(fields, 'confirmPassword', { error: true, helperText: err.message });
-				this.setState({ fields });
-			}
-			return Promise.reject(err);
-		})
-		.then((uid) => {
-			return Promise.resolve(
-				FetchUtil.put(`/api/create/account/${uid}`, { username: args.username.value })
-			);
-		})
-		.then((response) => {
-			this.setState({ showProgressBar: false });
+		// FirebaseUtil.createAccount({
+		// 	username: _.trim(args.username.value),
+		// 	email: args.email.value,
+		// 	password: args.password.value,
+		// 	confirmPassword: args.confirmPassword.value
+		// })
+		// .catch((err) => {
+		// 	this.setState({ showProgressBar: false });
 
-			if (response.status === 200 && FirebaseUtil.getCurrentUser()) {
-				this.props.history.push('/');
-			}
-		})
-		.catch((err) => {
-			this.setState({ showProgressBar: false });
-			// TODO: Fix this
-			console.error(err);
-		});
+		// 	if (_.includes(err.code, 'email')) {
+		// 		let fields = this.state.fields;
+		// 		_.set(fields, 'email', { error: true, helperText: err.message });
+		// 		this.setState({ fields });
+		// 	} else if (_.includes(err.code, 'password')) {
+		// 		let fields = this.state.fields;
+		// 		_.set(fields, 'password', { error: true, helperText: err.message });
+		// 		_.set(fields, 'confirmPassword', { error: true, helperText: err.message });
+		// 		this.setState({ fields });
+		// 	}
+		// 	return Promise.reject(err);
+		// })
+		// .then((uid) => {
+		// 	return Promise.resolve(
+		// 		FetchUtil.put(`/api/create/account/${uid}`, { username: args.username.value })
+		// 	);
+		// })
+		// .then((response) => {
+		// 	this.setState({ showProgressBar: false });
+
+		// 	if (response.status === 200 && FirebaseUtil.getCurrentUser()) {
+		// 		this.props.history.push('/');
+		// 	}
+		// })
+		// .catch((err) => {
+		// 	this.setState({ showProgressBar: false });
+		// 	// TODO: Fix this
+		// 	console.error(err);
+		// });
 	};
 
 	render() {

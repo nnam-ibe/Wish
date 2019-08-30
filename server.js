@@ -19,18 +19,31 @@ const firestore = admin.firestore();
 const settings = { timestampsInSnapshots: true };
 firestore.settings(settings);
 
-app.post('/api/create/account/:uid', jsonParser, (req, res, next) => {
-	firestore.doc(`users/${req.params.uid}`).set({
-		addTaxes: true,
-		defaultList: 'Main',
-		defaultIncrement: 200,
-		tax: 13,
-		username: req.body.username,
-		activeLists: ['Main']
-	}).then(() => {
-		res.send(['all good']);
-	}).catch((err) => {
-		next(err);
+app.post('/api/create/account', jsonParser, (req, res, next) => {
+	admin.auth().createUser({
+		email: req.body.email,
+		emailVerified: false,
+		password: req.body.password,
+		displayName: req.body.username,
+		disabled: false
+	})
+	.then((userRecord) => {
+		return firestore.doc(`users/${userRecord.uid}`).set({
+			addTaxes: true,
+			defaultList: 'Main',
+			defaultIncrement: 200,
+			tax: 13,
+			username: req.body.username,
+			activeLists: ['Main']
+		});
+	})
+	.then(() => {
+		console.log('Successfully created new user');
+		res.send({ valid: true });
+	})
+	.catch(function(error) {
+		console.error(error);
+		res.status(400).send({ error });
 	});
 });
 
