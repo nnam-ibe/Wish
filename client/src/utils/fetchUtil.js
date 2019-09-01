@@ -6,14 +6,6 @@ module.exports = {
 			body: JSON.stringify(data)
 		};
 
-		return new Promise((resolve, reject) => {
-			fetch(url, options)
-				.then((response) => {
-					resolve(response)
-				})
-				.catch((err) => {
-					reject(err)
-				});
-		});
+		return fetch(url, options);
 	}
 }
