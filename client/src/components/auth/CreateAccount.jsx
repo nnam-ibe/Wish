@@ -5,8 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import _ from 'lodash';
-import firebaseUtil from '../../utils/firebaseUtil.js';
-import fetchUtil from '../../utils/fetchUtil.js';
+import FetchUtil from '../../utils/fetchUtil.js';
 import InputValidation from '../../utils/InputValidation.js';
 
 const validField = { error: false, helperText: '' };
@@ -42,43 +41,31 @@ class CreateAccount extends Component {
 			return;
 		}
 
-		firebaseUtil.createAccount({
+		FetchUtil.put(`/api/create/account`, {
 			username: _.trim(args.username.value),
 			email: args.email.value,
-			password: args.password.value,
-			confirmPassword: args.confirmPassword.value
+			password: args.password.value
 		})
-		.catch((err) => {
-			this.setState({ showProgressBar: false });
-
-			if (_.includes(err.code, 'email')) {
-				let fields = this.state.fields;
-				_.set(fields, 'email', { error: true, helperText: err.message });
-				this.setState({ fields });
-			} else if (_.includes(err.code, 'password')) {
-				let fields = this.state.fields;
-				_.set(fields, 'password', { error: true, helperText: err.message });
-				_.set(fields, 'confirmPassword', { error: true, helperText: err.message });
-				this.setState({ fields });
+		.then(res => {
+			if (res.ok) {
+				return this.props.history.push('/login');
 			}
-			return Promise.reject(err);
+			return res.json();
 		})
-		.then((uid) => {
-			return Promise.resolve(
-				fetchUtil.put('/api/create_account', { uid: uid, username: args.username.value })
-			);
-		})
-		.then((response) => {
-			this.setState({ showProgressBar: false });
-
-			if (response.status === 200 && firebaseUtil.getCurrentUser()) {
-				this.props.history.push('/');
+		.then(data => {
+			let fields = this.state.fields;
+			if (_.includes(data.code, 'email')) {
+				_.set(fields, 'email', { error: true, helperText: data.message });
+			} else {
+				_.set(fields, 'password', { error: true, helperText: data.message });
+				_.set(fields, 'confirmPassword', { error: true, helperText: data.message });
 			}
+			this.setState({ fields, showProgressBar: false });
 		})
-		.catch((err) => {
-			this.setState({ showProgressBar: false });
-			// TODO: Fix this
-			console.error(err);
+		.catch(err => {
+			let fields = this.state.fields;
+			_.set(fields, 'email', { error: true, helperText: err.toString() });
+			this.setState({ fields, showProgressBar: false });
 		});
 	};
 

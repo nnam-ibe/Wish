@@ -19,29 +19,36 @@ const firestore = admin.firestore();
 const settings = { timestampsInSnapshots: true };
 firestore.settings(settings);
 
-app.post('/api/create_account', jsonParser, (req, res) => {
-	let body = req.body;
-	if (!_.has(body, 'uid')) {
-		return res.status(400).send({ error: 'No uid provided' });
-	}
-
-	let uid = body.uid;
-
-	firestore.doc(`users/${uid}`).set({
-		addTaxes: true,
-		defaultList: 'Main',
-		defaultIncrement: 200,
-		tax: 13,
-		username: body.username,
-		activeLists: ['Main']
-	}).then(() => {
-		res.send(['all good']);
-	}).catch((err) => {
-		console.error(err);
+app.post('/api/create/account', jsonParser, (req, res, next) => {
+	let uid;
+	admin.auth().createUser({
+		email: req.body.email,
+		emailVerified: false,
+		password: req.body.password,
+		displayName: req.body.username,
+		disabled: false
+	})
+	.then((userRecord) => {
+		uid = userRecord.uid;
+		return firestore.doc(`users/${uid}`).set({
+			addTaxes: true,
+			defaultList: 'Main',
+			defaultIncrement: 200,
+			tax: 13,
+			username: req.body.username,
+			activeLists: ['Main']
+		});
+	})
+	.then(() => {
+		console.log(`Created new user ${uid}`);
+		res.send({ valid: true });
+	})
+	.catch(function(error) {
+		console.error(error);
+		res.status(400).send(error);
 	});
 });
 
-// TODO: Fix error handling mess
 app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 	const { listName } = req.body;
 	try {
@@ -61,7 +68,7 @@ app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 	}
 
 	if (userInfo.activeLists.includes(listName)) {
-		return res.status(400).send({ error: 'Name already exists' });
+		return res.status(400).send({ error: 'List already exists' });
 	}
 
 	userInfo.activeLists.push(listName);
