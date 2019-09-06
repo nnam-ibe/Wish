@@ -4,6 +4,8 @@ const _ = require('lodash');
 const path = require('path');
 const bodyParser = require('body-parser');
 const InputValidation = require('./client/src/utils/InputValidation');
+const Logger = require('./Logger');
+logger = new Logger('server.js');
 
 const serviceAccount = require('./firebase-config/admin-config.json');
 
@@ -40,11 +42,11 @@ app.post('/api/create/account', jsonParser, (req, res, next) => {
 		});
 	})
 	.then(() => {
-		console.log(`Created new user ${uid}`);
+		logger.info(`Created new user ${uid}`);
 		res.send({ valid: true });
 	})
 	.catch(function(error) {
-		console.error(error);
+		logger.error(error);
 		res.status(400).send(error);
 	});
 });
@@ -109,4 +111,4 @@ if (process.env.NODE_ENV === 'production') {
 	});
 }
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => logger.info(`Listening on port ${port}`));
