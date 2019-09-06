@@ -25,11 +25,7 @@ class App extends Component {
 				FirebaseUtil.setLocalUID(user.uid);
 				this.setState({ uid: user.uid });
 
-				if (this.props.location.pathname === '/') {
-					this.props.history.push('/lists/Main');
-				}
-
-				this.getUserPrefs(user.uid);
+				this.getUserPrefs(user.uid, true);
 
 			} else {
 				if (!this.state.uid && !this.state.userPrefs) return;
@@ -95,11 +91,14 @@ class App extends Component {
 
 
 
-	getUserPrefs = (uid) => {
+	getUserPrefs = (uid, redirectUser) => {
 		this.onSnapshotUnsubscribe = FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
 			if (!snapshot.exists) return;
 
-			this.setState({ userPrefs: snapshot.data() });
+			const userPrefs = snapshot.data();
+			this.setState({ userPrefs });
+
+			if (redirectUser) this.props.history.push(`/lists/${userPrefs.defaultList}`);
 		});
 	}
 }
