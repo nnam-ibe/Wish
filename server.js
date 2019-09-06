@@ -82,7 +82,7 @@ app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 	res.send({ valid: true });
 });
 
-app.delete('/delete/list/:listName/:uid', jsonParser, async (req, res) => {
+app.delete('/api/delete/list/:listName/:uid', jsonParser, async (req, res) => {
 	const snapShot = await firestore.doc(`users/${req.params.uid}`).get();
 	if (!snapShot.exists) {
 		return res.status(400).send({ error: 'User does not exist' });
