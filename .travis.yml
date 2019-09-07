@@ -6,6 +6,6 @@ cache:
     - node_modules
 before_script:
   - cd client
-  - yarn
+  - yarn install
 script:
   - yarn test
