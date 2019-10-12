@@ -1,4 +1,4 @@
-const NumberFormatter = require('../../utils/NumberFormatter');
+const NumberFormatter = require('../NumberFormatter');
 
 test('rounds to two decimal places', () => {
 	expect(NumberFormatter.formatMoney(1398.56459)).toBe(1398.56);

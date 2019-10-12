@@ -110,7 +110,7 @@ class Sidebar extends Component {
 			confirmModalMessage: `Delete ${name}?`,
 			confirmModalCallback: deleteConfirmed => async event => {
 				if (deleteConfirmed) {
-					await fetch(`/delete/list/${name}/${this.props.uid}`, {
+					await fetch(`/api/delete/list/${name}/${this.props.uid}`, {
 						method: 'delete'
 					});
 				}
