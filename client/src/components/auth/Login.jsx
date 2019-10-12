@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import firebaseUtil from '../../utils/firebaseUtil.js';
 import _ from 'lodash';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import InputValidation from '../../utils/InputValidation.js';
+import InputValidation from '../../utils/InputValidation';
 
 const validField = { error: false, helperText: '' };
 
