@@ -1,4 +1,4 @@
-const InputValidation = require('../../utils/InputValidation.js');
+const InputValidation = require('../InputValidation.js');
 
 test('throws error when name is falsy', () => {
 	expect(() => {
