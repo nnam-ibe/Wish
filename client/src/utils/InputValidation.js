@@ -1,121 +1,52 @@
-let _ = require('lodash');
+const _ = require('lodash');
 
 module.exports = {
-	validateUsernameElement: (usernameElement) => {
-		let result = {};
-		let username = _.trim(usernameElement.value);
-		if (_.size(username) <= 0 || _.size(username) > 16 || !usernameElement.checkValidity() ) {
-			result.username = {
-				error: true,
-				helperText: 'Username must be between 1 & 16 characters'
-			};
-		}
-		return result;
+	validateListName(listName) {
+		if (!listName) return new Error('Name is invalid');
+		if (listName.length <= 0 ) return new Error('Name cannot be empty');
+		if (listName.length > 36) return new Error('Maximum of 36 characters allowed');
 	},
 
-	validateEmailElement: (emailElement) => {
-		let result = {};
-		if (!emailElement.checkValidity()) {
-			result.email = {
-				error: true,
-				helperText: 'Enter a valid email'
-			}
+	validateUsername(username) {
+		username = _.trim(username);
+		if (_.size(username) <= 0 || _.size(username) > 16) {
+			return new Error('Username must be between 1 & 16 characters');
 		}
-		return result;
 	},
 
-	validatePasswordElement: (passwordElement) => {
-		let result = {};
-		let password = passwordElement.value;
-		if(!passwordElement.checkValidity()) {
-			result.password = {
-				error:  true,
-				helperText: passwordElement.validationMessage
-			};
-
-		} else if (_.size(password) < 6) {
-			result.password = {
-				error: true,
-				helperText: 'Password must have at 6 characters'
-			}
+	// Further email validation will be done by firebase
+	validateEmail(email) {
+		email = _.trim(email);
+		if (_.isEmpty(email)) {
+			return new Error('Email cannot be empty');
 		}
-		return result;
 	},
 
-	validatePasswordElementsAreEqual: (passwordElement, confirmElement) => {
-		let result = {};
-		let password = passwordElement.value;
-		let confirm = confirmElement.value;
-
+	validatePasswordsAreEqual(password, confirm) {
 		if (password !== confirm) {
-			const passResult = {
-				error:  true,
-				helperText: 'Passwords don\'t match'
-			};
-
-			_.set(result, 'password', passResult);
-			_.set(result, 'confirmPassword', passResult);
-		}
-		return result;
+			return new Error('Passwords don\'t match');
+		};
 	},
 
-	validateString: (value, fieldName, caption) => {
-		let result = {};
-
-		if (_.isEmpty(_.trim(value))) {
-			result[fieldName] = {
-				error: true,
-				helperText: `${caption} cannot be empty`
-			};
+	validatePassword(password) {
+		if (_.size(password) < 6) {
+			return new Error('Password must have at least 6 characters');
 		}
-
-		return result;
 	},
 
-	validateAmount: (amount, fieldName, caption) => {
-		let result = {};
-
-		if(_.isEmpty(_.trim(amount))) {
-			result[fieldName] = {
-				error: true,
-				helperText: `${caption} cannot be empty`
-			};
-		}
-
-		return result;
-	},
-
-	validateTax: (amount, fieldName, caption) => {
-		let result = {};
-
-		if(_.isEmpty(_.trim(amount))) {
-			result[fieldName] = {
-				error: true,
-				helperText: `${caption} cannot be empty`
-			};
+	// assuming tax over 100% is invalid
+	validateTax(amount) {
+		amount = _.trim(amount);
+		if(_.isEmpty(amount)) {
+			return new Error('Tax cannot be empty');
 		}
 
 		if (isNaN(amount)) {
-			result[fieldName] = {
-				error: true,
-				helperText: `${caption} must be a number`
-			};
+			return new Error('Tax must be a valid number');
 		}
 
 		if (Number(amount) < 0 || Number(amount) > 100) {
-			result[fieldName] = {
-				error: true,
-				helperText: `${caption} must be between 0 & 100`
-			};
+			return new Error('Tax must be between 0 & 100');
 		}
-
-		return result;
 	},
-
-	// Migrate validation to new format below
-	validateListName: (listName) => {
-		if (!listName) throw new Error('Name is invalid');
-		if (listName.length <= 0 ) throw new Error('Name cannot be empty');
-		if (listName.length > 36) throw new Error('Maximum of 36 characters allowed');
-	}
 };

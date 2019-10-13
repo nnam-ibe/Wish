@@ -134,26 +134,49 @@ class CreateAccount extends Component {
 	}
 
 	_validateInputs = (args) => {
-		let validationResult = _.merge(
-			InputValidation.validateUsernameElement(args.username),
-			InputValidation.validateEmailElement(args.email),
-			InputValidation.validatePasswordElementsAreEqual(args.password, args.confirmPassword),
-			InputValidation.validatePasswordElement(args.password)
-		);
+		const currentFields = this.state.fields, errors = {};
+		let err = InputValidation.validateUsername(args.username.value);
+		if (err) {
+			errors.username = {
+				error: true,
+				helperText: err.message
+			};
+		}
 
+		err = InputValidation.validateEmail(args.email.value);
+		if (err) {
+			errors.email = {
+				error: true,
+				helperText: err.message
+			};
+		}
 
-		let currentFields = this.state.fields;
+		err = InputValidation.validatePasswordsAreEqual(args.password.value, args.confirmPassword.value);
+		if (err) {
+			errors.confirmPassword = errors.password = {
+				error: true,
+				helperText: err.message
+			};
+		}
 
-		let newFieldsState = _.reduce(currentFields, (acc, fieldValue, fieldKey) => {
-				if (validationResult[fieldKey]) {
-					acc[fieldKey] = validationResult[fieldKey];
+		err = InputValidation.validatePassword(args.password.value);
+		if (err) {
+			errors.password = {
+				error: true,
+				helperText: err.message
+			};
+		}
+
+		const newFieldsState = _.reduce(currentFields, (acc, fieldValue, fieldKey) => {
+				if (errors[fieldKey]) {
+					acc[fieldKey] = errors[fieldKey];
 				} else {
 					acc[fieldKey] = validField;
 				}
 				return acc;
 			}, {});
 		this.setState({ fields: newFieldsState });
-		return _.isEmpty(validationResult);
+		return _.isEmpty(errors);
 	}
 };
 

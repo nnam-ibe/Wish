@@ -112,23 +112,33 @@ class Login extends Component {
 	}
 
 	_validateInputs = (args) => {
-		let validationResult = _.merge(
-			InputValidation.validateEmailElement(args.email),
-			InputValidation.validatePasswordElement(args.password)
-		);
+		const currentFields = this.state.fields, errors = {};
+		let err = InputValidation.validateEmail(args.email.value);
+		if (err) {
+			errors.email = {
+				error: true,
+				helperText: err.message
+			};
+		}
 
-		let currentFields = this.state.fields;
+		err = InputValidation.validatePassword(args.password.value);
+		if (err) {
+			errors.password = {
+				error: true,
+				helperText: err.message
+			};
+		}
 
 		let newFieldsState = _.reduce(currentFields, (acc, fieldValue, fieldKey) => {
-				if (validationResult[fieldKey]) {
-					acc[fieldKey] = validationResult[fieldKey];
+				if (errors[fieldKey]) {
+					acc[fieldKey] = errors[fieldKey];
 				} else {
 					acc[fieldKey] = validField;
 				}
 				return acc;
 			}, {});
 		this.setState({ fields: newFieldsState });
-		return _.size(validationResult) === 0;
+		return _.size(errors) === 0;
 	}
 };
 

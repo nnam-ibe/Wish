@@ -9,7 +9,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import FirebaseUtil from '../../utils/firebaseUtil.js';
 import NumberFormat from 'react-number-format';
 import NumberFormatter from '../../utils/NumberFormatter.js';
-import InputValidation from '../../utils/InputValidation.js';
 import _ from 'lodash';
 
 class ListItemForm extends Component {
@@ -144,29 +143,42 @@ class ListItemForm extends Component {
 	}
 
 	_validateItem = (item) => {
-		let { name, price, increment } = this.props.item;
+		const { name, price, increment } = this.props.item, errors = {};
 
-		let validationResult = _.merge(
-			InputValidation.validateString(name.value, 'name', name.label ),
-			InputValidation.validateAmount(price.value, 'price', price.label),
-			InputValidation.validateAmount(increment.value, 'increment', increment.label)
-		);
+		if (_.isEmpty(_.trim(name.value))) {
+			errors.name = {
+				error: true,
+				helperText: 'Name cannot be empty'
+			};
+		}
+		if (_.isEmpty(_.trim(price.value))) {
+			errors.price = {
+				error: true,
+				helperText: 'Price cannot be empty'
+			}
+		}
+		if (_.isEmpty(_.trim(increment.value))) {
+			errors.increment = {
+				error: true,
+				helperText: 'Increment cannot be empty'
+			}
+		}
 
 		let updatedItem = this.props.item;
-		_.forEach(validationResult, (value, key) => {
+		_.forEach(errors, (value, key) => {
 			_.assign(updatedItem[key], value);
 		});
 
 		_.forEach(updatedItem, (value, key) => {
-			if (validationResult[key]) {
-				_.assign(updatedItem[key], validationResult[key]);
+			if (errors[key]) {
+				_.assign(updatedItem[key], errors[key]);
 			} else {
 				_.assign(updatedItem[key], validField);
 			}
 		});
 
 		this.setState({ item: updatedItem });
-		return _.isEmpty(validationResult);
+		return _.isEmpty(errors);
 	}
 }
 

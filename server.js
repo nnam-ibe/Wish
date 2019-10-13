@@ -53,10 +53,9 @@ app.post('/api/create/account', jsonParser, (req, res, next) => {
 
 app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 	const { listName } = req.body;
-	try {
-		InputValidation.validateListName(listName);
-	} catch (err) {
-		return res.status(400).send({ error: 'Invalid name' });
+	const err = InputValidation.validateListName(listName);
+	if (err) {
+		return res.status(400).send({ error: err.message });
 	}
 
 	const snapShot = await firestore.doc(`users/${req.params.uid}`).get();
