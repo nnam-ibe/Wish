@@ -129,7 +129,7 @@ class Login extends Component {
 			};
 		}
 
-		let newFieldsState = _.reduce(currentFields, (acc, fieldValue, fieldKey) => {
+		const newFieldsState = _.reduce(currentFields, (acc, fieldValue, fieldKey) => {
 				if (errors[fieldKey]) {
 					acc[fieldKey] = errors[fieldKey];
 				} else {
