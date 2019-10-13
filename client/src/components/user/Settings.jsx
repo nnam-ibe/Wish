@@ -136,15 +136,16 @@ class Settings extends Component {
 		this.setState({ fields });
 	}
 
+	// TODO: Move to server, add server side validation
 	saveSettings = () => {
 		this.setState({ showProgressBar: true });
 
-		var uid = firebaseUtil.getLocalUID();
-		var path = `users/${uid}`;
+		const uid = firebaseUtil.getLocalUID();
+		const path = `users/${uid}`;
 
 		if (!this._validateInput()) return;
 
-		var settings = _.reduce(this.state.fields, (acc, value, key) => {
+		const settings = _.reduce(this.state.fields, (acc, value, key) => {
 			if (_.includes(this.state.valueFields, key)) {
 				acc[key] = value.value;
 			} else {
@@ -157,21 +158,29 @@ class Settings extends Component {
 		firebaseUtil.db.doc(path).set(settings, { merge: true })
 			.then(() => {
 				this.setState({ showProgressBar: false });
-				console.log("Saved successfully!")
 			});
 	}
 
 	_validateInput = () => {
-		let { username, tax } = this.state.fields;
-		let validationResult = _.merge(
-			InputValidation.validateString(username.value, username.id, username.label),
-			InputValidation.validateTax(tax.value, tax.id, tax.label)
-		);
+		const { username, tax } = this.state.fields, errors = {};
+		if (_.isEmpty(_.trim(username.value))) {
+			errors.username = {
+				error: true,
+				helperText: `Username cannot be empty`
+			}
+		}
 
-		let newFieldsState = _.reduce(this.state.fields, (acc, value, key) => {
-			if (validationResult[key]) {
-				_.assign(acc[key], validationResult[key]);
-				console.log();
+		let err = InputValidation.validateTax(tax.value);
+		if (err) {
+			errors.tax = {
+				error: true,
+				helperText: err.message
+			}
+		}
+
+		const newFieldsState = _.reduce(this.state.fields, (acc, value, key) => {
+			if (errors[key]) {
+				_.assign(acc[key], errors[key]);
 			} else {
 				_.assign(acc[key], validField);
 			}
@@ -179,25 +188,21 @@ class Settings extends Component {
 		}, this.state.fields);
 
 		this.setState({ field: newFieldsState });
-		return _.isEmpty(validationResult);
+		return _.isEmpty(errors);
 	}
 
 	_getUserSettings = () => {
-		var uid = firebaseUtil.getLocalUID();
+		const uid = firebaseUtil.getLocalUID();
 		if (!uid) {
 			this.props.history.push('/');
 			return;
 		}
 
-		var path = `users/${uid}`;
-
+		const path = `users/${uid}`;
 		this.onSnapshotUnsubscribe = firebaseUtil.db.doc(path).onSnapshot((snapShot) => {
-			if (!snapShot.exists) {
-				return;
-			}
+			if (!snapShot.exists) return;
 
-			let { fields, valueFields, checkedFields } = this.state;
-
+			const { fields, valueFields, checkedFields } = this.state;
 			_.forEach(valueFields, (field) => {
 				fields[field].value = snapShot.data()[field];
 			});

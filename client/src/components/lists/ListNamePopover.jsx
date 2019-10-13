@@ -17,9 +17,8 @@ function ListNamePopover({ anchorEl, popoverClose, uid }) {
 	};
 
 	async function submitClick() {
-		try {
-			InputValidation.validateListName(name);
-		} catch (err) {
+		let err = InputValidation.validateListName(name);
+		if (err) {
 			setError(true);
 			setHelperText(err.message);
 			return;
