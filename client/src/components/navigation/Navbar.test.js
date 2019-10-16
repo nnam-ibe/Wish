@@ -1,6 +1,6 @@
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { mount, render, shallow } from 'enzyme';
+import Enzyme, { shallow } from 'enzyme';
 
 import Navbar from './Navbar';
 
@@ -29,7 +29,7 @@ describe('Navbar', () => {
 		expect(titleElement.text()).toBe(title);
 	});
 
-	it ('setting menu item appears when logged in', () => {
+	it('setting menu item appears when logged in', () => {
 		const nav = jest.fn();
 		const component = shallow(<Navbar isLoggedIn={true} nav={nav}/>);
 		component.find('#menu-appbar').simulate('click');
