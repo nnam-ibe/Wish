@@ -10,6 +10,15 @@ import _ from 'lodash';
 import ConfirmModal from '../modals/ConfirmModal';
 import ListNamePopover from '../lists/ListNamePopover';
 
+/**
+Props
+	uid: user id
+	userPrefs:
+		activeLists: List of items to appear in the sidebar
+	location
+		pathname: base name of the current location path
+*/
+
 class Sidebar extends Component {
 
 	constructor(props) {
@@ -44,7 +53,7 @@ class Sidebar extends Component {
 					uid={this.props.uid}
 				/>
 				<div>
-					<Button color='primary' variant='outlined' onClick={this.listnamePopoverClick('')}>
+					<Button className='btn-new-list' color='primary' variant='outlined' onClick={this.listnamePopoverClick('')}>
 						New List
 					</Button>
 				</div>
