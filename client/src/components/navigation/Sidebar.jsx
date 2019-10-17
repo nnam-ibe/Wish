@@ -81,7 +81,7 @@ class Sidebar extends Component {
 				<ListItem button key={listName} classes={{ root: 'sidebar-list-item' }}>
 					<ListItemText primary={listName} classes={classes} onClick={this.itemClicked(listName)}/>
 					{ this.state.editMode && (
-						<div>
+						<div className='sidebar-delete-button'>
 							<IconButton onClick={this.deleteList(listName)}>
 								<DeleteIcon />
 							</IconButton>
