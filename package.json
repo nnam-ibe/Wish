@@ -18,6 +18,7 @@
     "lodash": "^4.17.10",
     "moment": "^2.24.0",
     "nodemon": "^1.17.5",
+    "react-number-format": "4.3.0",
     "uuid": "^3.3.2",
     "yarn": "^1.9.4"
   },

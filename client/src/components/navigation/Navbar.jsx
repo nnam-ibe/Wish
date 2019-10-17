@@ -39,7 +39,7 @@ function Navbar(props) {
 				<Toolbar>
 					<div className='display-flex width-100'>
 						<Typography variant='h6' color='inherit' className='flex-grow-1 text-align-left'>
-							<a href='/' className='no-a-style'>{props.title}</a>
+							<a href='/' className='no-a-style page-title'>{props.title}</a>
 						</Typography>
 						<div>
 							{
@@ -62,13 +62,13 @@ function Navbar(props) {
 											open={Boolean(anchorEl)}
 											onClose={handleClose}
 										>
-											<MenuItem onClick={handleSettingsClick}>Settings</MenuItem>
+											<MenuItem className='setting-item' onClick={handleSettingsClick}>Settings</MenuItem>
 											<MenuItem onClick={handleClose}>My account</MenuItem>
 										</Menu>
 									</div>
 								)
 							}
-							<Button color='inherit' className='display-flex' onClick={props.handleLoginClick}>{buttonLabel}</Button>
+							<Button color='inherit' className='display-flex btn-login' onClick={props.handleLoginClick}>{buttonLabel}</Button>
 						</div>
 					</div>
 				</Toolbar>

@@ -2,6 +2,9 @@
   "name": "wish",
   "version": "0.1.0",
   "private": true,
+  "jest": {
+    "snapshotSerializers": ["enzyme-to-json/serializer"]
+  },
   "dependencies": {
     "@material-ui/core": "4.3.3",
     "@material-ui/icons": "4.2.1",
@@ -12,6 +15,9 @@
     "react-router-dom": "5.0.1"
   },
   "devDependencies": {
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
+    "enzyme-to-json": "^3.4.2",
     "react-scripts": "3.1.1"
   },
   "scripts": {

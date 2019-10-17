@@ -10,6 +10,11 @@ import firebaseUtil from '../../utils/firebaseUtil.js';
 import _ from 'lodash';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+/**
+Props
+	location: location object from Route
+*/
+
 class Settings extends Component {
 
 	constructor(props) {
@@ -40,15 +45,15 @@ class Settings extends Component {
 
 	// Correct class names
 	render() {
-		let progessBar = ( <LinearProgress/> );
-		let { username, tax, defaultList, defaultIncrement, addTaxes } = this.state.fields;
+		const progessBar = ( <LinearProgress/> );
+		const { username, tax, defaultList, defaultIncrement, addTaxes } = this.state.fields;
 
 		return (
 			<div className='Settings'>
 				<div className='auth-component'>
 					<Paper>
 						{ this.state.showProgressBar && progessBar }
-						<div className='auth-paper'>
+						<div className='auth-paper user-settings-form'>
 							<form>
 								<Typography variant='h6'>Account Settings</Typography>
 								<TextField
@@ -98,6 +103,7 @@ class Settings extends Component {
 									required
 								/>
 								<FormControlLabel
+									id='settings-form-taxes-form-control'
 									control={
 										<Switch
 											id='settings-form-add-taxes'
@@ -125,7 +131,7 @@ class Settings extends Component {
 	}
 
 	handleChange = name => event => {
-		let { fields, valueFields } = this.state;
+		const { fields, valueFields } = this.state;
 
 		if (_.includes(valueFields, name)) {
 			fields[name].value = event.target.value;
@@ -170,7 +176,7 @@ class Settings extends Component {
 			}
 		}
 
-		let err = InputValidation.validateTax(tax.value);
+		const err = InputValidation.validateTax(tax.value);
 		if (err) {
 			errors.tax = {
 				error: true,
