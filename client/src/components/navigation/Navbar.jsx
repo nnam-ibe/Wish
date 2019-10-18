@@ -18,7 +18,7 @@ Props
 **/
 function Navbar(props) {
 	const [anchorEl, setAnchorEl] = useState(null);
-	let buttonLabel = props.isLoggedIn ? 'Logout' : 'Login';
+	const buttonLabel = props.isLoggedIn ? 'Logout' : 'Login';
 
 	function handleClick(event) {
 		setAnchorEl(event.currentTarget);
