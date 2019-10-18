@@ -19,8 +19,9 @@ const uuidv4 = require('uuid/v4');
 let _ = require('lodash');
 
 module.exports = {
-	db: db,
-	localKey: localKey,
+	db,
+	localKey,
+	getErrorMessage,
 
 	createAccount: (options) => {
 		return new Promise((resolve, reject) => {
@@ -29,7 +30,7 @@ module.exports = {
 					resolve(cred.user.uid);
 				})
 				.catch((err) => {
-					let message = _getErrorMessage(err.code);
+					let message = getErrorMessage(err.code);
 
 					if (message) {
 						err.message = message;
@@ -46,7 +47,7 @@ module.exports = {
 					resolve(userCred);
 				})
 				.catch((err) => {
-					let message = _getErrorMessage(err.code);
+					let message = getErrorMessage(err.code);
 
 					if (message) {
 						err.message = message;
@@ -108,7 +109,8 @@ module.exports = {
 
 	generateUUID: () => {
 		return uuidv4();
-	}
+	},
+
 
 };
 
@@ -126,7 +128,7 @@ function _getItems (path) {
 	});
 }
 
-function _getErrorMessage (errorCode) {
+function getErrorMessage (errorCode) {
 	let result;
 	switch (errorCode) {
 		case 'auth/email-already-in-use':
