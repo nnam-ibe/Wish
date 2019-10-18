@@ -166,34 +166,30 @@ class ListPage extends Component {
 
 export default ListPage;
 
+// TODO: Update to use FormFieldDefaults
 const formItemDefaults = {
 	name: {
 		error: false,
 		helperText: '',
-		label: 'Name',
 		value: ''
 	},
 	price: {
 		error: false,
 		helperText: '',
-		label: 'Price',
 		value: ''
 	},
 	saved: {
 		error: false,
 		helperText: '',
-		label: 'Saved',
 		value: ''
 	},
 	increment: {
 		error: false,
 		helperText: '',
-		label: 'Increment',
 		value: '200'
 	},
 	addTaxes: {
 		checked: false,
-		label: 'Add Taxes',
 		value: 'addTaxes'
 	}
 };

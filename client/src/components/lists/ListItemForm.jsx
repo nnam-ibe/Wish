@@ -36,7 +36,7 @@ class ListItemForm extends Component {
 						<div className='item-form-paper-body'>
 							<TextField
 								id='item-form-name'
-								label={name.label}
+								label='Name'
 								value={name.value}
 								onChange={this.props.handleChange('name')}
 								margin='dense'
@@ -48,7 +48,7 @@ class ListItemForm extends Component {
 							<div>
 								<TextField
 									id='item-form-price'
-									label={price.label}
+									label='Price'
 									value={price.value}
 									onChange={this.props.handleChange('price')}
 									margin='dense'
@@ -59,7 +59,7 @@ class ListItemForm extends Component {
 								/>
 								<TextField
 									id='item-form-saved'
-									label={saved.label}
+									label='Saved'
 									value={saved.value}
 									onChange={this.props.handleChange('saved')}
 									margin='dense'
@@ -72,7 +72,7 @@ class ListItemForm extends Component {
 							<div className='item-form-third-row'>
 								<TextField
 									id='item-form-increment'
-									label={increment.label}
+									label='Increment'
 									value={increment.value}
 									onChange={this.props.handleChange('increment')}
 									margin='dense'
@@ -82,7 +82,7 @@ class ListItemForm extends Component {
 									helperText={increment.helperText}
 								/>
 								<div className='display-inline item-form-add-taxes'>
-									<label htmlFor='item-form-add-taxes-switch'>{addTaxes.label}</label>
+									<label htmlFor='item-form-add-taxes-switch'>Add Taxes</label>
 									<Switch
 										id='item-form-add-taxes-switch'
 										checked={addTaxes.checked}
@@ -182,6 +182,7 @@ class ListItemForm extends Component {
 	}
 }
 
+// TODO: Update to use central valid field
 const validField = { helperText: '', error: false };
 
 export default ListItemForm;
