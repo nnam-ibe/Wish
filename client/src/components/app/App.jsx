@@ -89,8 +89,6 @@ class App extends Component {
 		this.props.history.push(route);
 	}
 
-
-
 	getUserPrefs = (uid, redirectUser) => {
 		this.onSnapshotUnsubscribe = FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
 			if (!snapshot.exists) return;
