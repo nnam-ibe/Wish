@@ -15,7 +15,7 @@ function Login(props) {
 	const [showProgressBar, setShowProgressBar] = useState(false);
 	const progessBar = <LinearProgress/>;
 
-	function login(e) {
+	function handleLoginClick(e) {
 		e.preventDefault();
 		setShowProgressBar(true);
 		if (validateInputs()) return setShowProgressBar(false);
@@ -111,7 +111,7 @@ function Login(props) {
 							fullWidth
 							type='submit'
 							color='inherit'
-							onClick={login}>
+							onClick={handleLoginClick}>
 							Login
 						</Button>
 					</form>
