@@ -1,145 +1,128 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import firebaseUtil from '../../utils/firebaseUtil.js';
+import FirebaseUtil from '../../utils/firebaseUtil.js';
 import _ from 'lodash';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import InputValidation from '../../utils/InputValidation';
+import { emailDefault, passwordDefault } from '../../utils/FormFieldDefaults';
 
-const validField = { error: false, helperText: '' };
+function Login(props) {
+	const [email, setEmail] = useState(emailDefault);
+	const [password, setPassword] = useState(passwordDefault);
+	const [showProgressBar, setShowProgressBar] = useState(false);
+	const progessBar = <LinearProgress/>;
 
-class Login extends Component {
-
-	constructor(props) {
-		super(props);
-		this.state = {
-			fields: {
-				email: validField,
-				password: validField
-			},
-			showProgressBar: false
-		};
-	};
-
-	login = (e) => {
+	function login(e) {
 		e.preventDefault();
-		this.setState({ showProgressBar: true });
+		setShowProgressBar(true);
+		if (validateInputs()) return setShowProgressBar(false);
 
-		let args = {
-			email: document.getElementById('email'),
-			password: document.getElementById('password')
-		};
+		FirebaseUtil.login({
+			email: _.trim(email.value),
+			password: password.value
+		})
+		.then(() => {
+			setShowProgressBar(false);
+			props.history.push('/');
+		})
+		.catch((err) => {
+			setShowProgressBar(false);
+			if (!err.code) return;
 
-		if ( !this._validateInputs(args) ) {
-			this.setState({ showProgressBar: false });
-			return;
-		}
+			const message = FirebaseUtil.getErrorMessage(err.code);
+			if (_.includes(err.code, 'password')) {
+				setPassword({ ...password, error: true, helperText: message });
+			} else {
+				setEmail({ ...email, error: true, helperText: message })
+			}
+		});
+	}
 
-		let email = _.trim(args.email.value);
-		let password = args.password.value;
-
-		firebaseUtil.login({ email, password})
-			.then(() => {
-				this.setState({ showProgressBar: false });
-				this.props.history.push('/');
-			})
-			.catch((err) => {
-				this.setState({ showProgressBar: false });
-				if (!_.has(err, 'code')) {
-					console.error(err);
-					return;
-				}
-
-				if (_.includes(err.code, 'email') || _.includes(err.code, 'user')) {
-					let fields = this.state.fields;
-					_.set(fields, 'email', { error: true, helperText: err.message });
-					this.setState({ fields });
-				} else if (_.includes(err.code, 'password')) {
-					let fields = this.state.fields;
-					_.set(fields, 'password', { error: true, helperText: err.message });
-					_.set(fields, 'confirmPassword', { error: true, helperText: err.message });
-					this.setState({ fields });
-				}
+	function validateInputs() {
+		let isInvalid = false;
+		let err = InputValidation.validateEmail(email.value);
+		if (err) {
+			isInvalid = true;
+			setEmail({
+				...email,
+				error: true,
+				helperText: err.message
 			});
-	}
-
-	render() {
-		let fields = this.state.fields;
-		let progessBar = ( <LinearProgress/> );
-
-		return (
-			<div className='auth-component'>
-				<Paper>
-					{ this.state.showProgressBar && progessBar }
-					<div className='auth-paper'>
-						<form>
-							<TextField
-								margin='dense'
-								id='email'
-								label='Email Address'
-								type='email'
-								error={fields.email.error}
-								helperText={fields.email.helperText}
-								fullWidth
-							/>
-							<TextField
-								margin='dense'
-								id='password'
-								label='Password'
-								type='password'
-								error={fields.password.error}
-								helperText={fields.password.helperText}
-								fullWidth
-							/>
-							<Button
-								fullWidth
-								type='submit'
-								color='inherit'
-								onClick={this.login}>
-								Login
-							</Button>
-						</form>
-						<Typography>
-							Not registered?
-							<a href='/create_account'> Create an account</a>
-						</Typography>
-					</div>
-				</Paper>
-			</div>
-		);
-	}
-
-	_validateInputs = (args) => {
-		const currentFields = this.state.fields, errors = {};
-		let err = InputValidation.validateEmail(args.email.value);
-		if (err) {
-			errors.email = {
-				error: true,
-				helperText: err.message
-			};
+		} else if (email.error) {
+			setEmail({
+				...email,
+				error: false,
+				helperText: ''
+			});
 		}
 
-		err = InputValidation.validatePassword(args.password.value);
+		err = InputValidation.validatePassword(password.value);
 		if (err) {
-			errors.password = {
+			isInvalid = true;
+			setPassword({
+				...password,
 				error: true,
 				helperText: err.message
-			};
+			});
+		} else if (password.error) {
+			setPassword({
+				...password,
+				error: false,
+				helperText: ''
+			});
 		}
 
-		const newFieldsState = _.reduce(currentFields, (acc, fieldValue, fieldKey) => {
-				if (errors[fieldKey]) {
-					acc[fieldKey] = errors[fieldKey];
-				} else {
-					acc[fieldKey] = validField;
-				}
-				return acc;
-			}, {});
-		this.setState({ fields: newFieldsState });
-		return _.size(errors) === 0;
+		return isInvalid;
 	}
+
+	return (
+		<div className='auth-component'>
+			<Paper>
+				{ showProgressBar && progessBar }
+				<div className='auth-paper login-form'>
+					<form>
+						<TextField
+							margin='dense'
+							id='email'
+							label='Email Address'
+							type='email'
+							error={email.error}
+							helperText={email.helperText}
+							value={email.value}
+							onChange={(e) => setEmail({...email, value: e.target.value})}
+							fullWidth
+						/>
+						<TextField
+							margin='dense'
+							id='password'
+							label='Password'
+							type='password'
+							error={password.error}
+							helperText={password.helperText}
+							value={password.value}
+							onChange={(e) => setPassword({...password, value: e.target.value})}
+							fullWidth
+						/>
+						<Button
+							id='login-form-button'
+							fullWidth
+							type='submit'
+							color='inherit'
+							onClick={login}>
+							Login
+						</Button>
+					</form>
+					<Typography>
+						Not registered?
+						<a href='/create_account'> Create an account</a>
+					</Typography>
+				</div>
+			</Paper>
+		</div>
+	);
 };
 
 export default Login;
