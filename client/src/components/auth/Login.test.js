@@ -81,6 +81,7 @@ describe('Login', () => {
 
 		expect(FirebaseUtil.login.mock.calls[0][0].email).toBe(emailValue);
 		expect(FirebaseUtil.login.mock.calls[0][0].password).toBe(passwordValue);
+		expect(component.prop('history')[0]).toBe('/');
 	});
 
 	it('displays error from firebase on email', async () => {
