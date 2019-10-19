@@ -3,7 +3,7 @@ import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { mount, shallow } from 'enzyme';
 import Login from './Login';
-import FirebaseUtil from '../../utils/firebaseUtil.js';
+import FirebaseUtil from '../../utils/firebaseUtil';
 
 Enzyme.configure({ adapter: new Adapter() });
 

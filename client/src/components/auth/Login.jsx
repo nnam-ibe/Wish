@@ -3,9 +3,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import FirebaseUtil from '../../utils/firebaseUtil.js';
 import _ from 'lodash';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import FirebaseUtil from '../../utils/firebaseUtil';
 import InputValidation from '../../utils/InputValidation';
 import { emailDefault, passwordDefault } from '../../utils/FormFieldDefaults';
 
