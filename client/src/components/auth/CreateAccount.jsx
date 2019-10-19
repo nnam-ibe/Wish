@@ -132,7 +132,7 @@ function CreateAccount(props) {
 		<div className='auth-component'>
 			<Paper>
 				{ showProgressBar && progessBar }
-				<div className='auth-paper'>
+				<div className='auth-paper create-account-form'>
 					<form>
 						<Typography variant='h6'>Create your Account</Typography>
 						<TextField
@@ -184,6 +184,7 @@ function CreateAccount(props) {
 						/>
 						<Button
 							fullWidth
+							id='create-account-form-button'
 							type='submit'
 							color='inherit'
 							onClick={handleCreateClick}>
