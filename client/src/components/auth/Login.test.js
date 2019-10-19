@@ -108,4 +108,30 @@ describe('Login', () => {
 		const errorMessage = 'No account found';
 		expect(component.find('#email-helper-text').hostNodes().text()).toBe(errorMessage);
 	});
+
+	it('displays error from firebase on password', async () => {
+		const emailValue = 'anderson';
+		const passwordValue = 'limaserver';
+		const component = mount(<Login />);
+		component.find('#email')
+			.hostNodes()
+			.simulate('change', { target: { value: emailValue } });
+		component.find('#password')
+			.hostNodes()
+			.simulate('change', { target: { value: passwordValue } });
+		component.find('#login-form-button')
+			.hostNodes()
+			.simulate('click', { preventDefault() {} });
+
+		await act(async () => {
+			reject({ code: 'auth/wrong-password' });
+		});
+		component.update();
+
+		expect(FirebaseUtil.login.mock.calls[2][0].email).toBe(emailValue);
+		expect(FirebaseUtil.login.mock.calls[2][0].password).toBe(passwordValue);
+
+		const errorMessage = 'Incorrect password';
+		expect(component.find('#password-helper-text').hostNodes().text()).toBe(errorMessage);
+	});
 });
