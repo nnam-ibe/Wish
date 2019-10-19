@@ -2,14 +2,15 @@ import { act } from 'react-dom/test-utils';
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { mount, shallow } from 'enzyme';
-import CreateAccount from './CreateAccount';
-import FetchUtil from '../../utils/fetchUtil';
+
+import CreateAccount from './CreateAccount.js';
+import FetchWrapper from '../../utils/FetchWrapper.js';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 // mock api calls
 let resolve, reject;
-FetchUtil.put = jest.fn(() => new Promise((_resolve, _reject) => {
+FetchWrapper.put = jest.fn(() => new Promise((_resolve, _reject) => {
 	resolve = _resolve;
 	reject = _reject;
 }));
@@ -94,9 +95,9 @@ describe('CreateAccount', () => {
 			});
 		});
 
-		expect(FetchUtil.put.mock.calls[0][1].username).toBe(usernameValue);
-		expect(FetchUtil.put.mock.calls[0][1].email).toBe(emailValue);
-		expect(FetchUtil.put.mock.calls[0][1].password).toBe(passwordValue);
+		expect(FetchWrapper.put.mock.calls[0][1].username).toBe(usernameValue);
+		expect(FetchWrapper.put.mock.calls[0][1].email).toBe(emailValue);
+		expect(FetchWrapper.put.mock.calls[0][1].password).toBe(passwordValue);
 		expect(component.prop('history')[0]).toBe('/login');;
 	});
 
@@ -131,9 +132,9 @@ describe('CreateAccount', () => {
 		});
 		component.update();
 
-		expect(FetchUtil.put.mock.calls[1][1].username).toBe(usernameValue);
-		expect(FetchUtil.put.mock.calls[1][1].email).toBe(emailValue);
-		expect(FetchUtil.put.mock.calls[1][1].password).toBe(passwordValue);
+		expect(FetchWrapper.put.mock.calls[1][1].username).toBe(usernameValue);
+		expect(FetchWrapper.put.mock.calls[1][1].email).toBe(emailValue);
+		expect(FetchWrapper.put.mock.calls[1][1].password).toBe(passwordValue);
 
 		const errorMessage = 'Email is already in use';
 		expect(component.find('#email-helper-text').hostNodes().text()).toBe(errorMessage);
@@ -165,9 +166,9 @@ describe('CreateAccount', () => {
 		await act(async () => reject(errorMessage));
 		component.update();
 
-		expect(FetchUtil.put.mock.calls[2][1].username).toBe(usernameValue);
-		expect(FetchUtil.put.mock.calls[2][1].email).toBe(emailValue);
-		expect(FetchUtil.put.mock.calls[2][1].password).toBe(passwordValue);
+		expect(FetchWrapper.put.mock.calls[2][1].username).toBe(usernameValue);
+		expect(FetchWrapper.put.mock.calls[2][1].email).toBe(emailValue);
+		expect(FetchWrapper.put.mock.calls[2][1].password).toBe(passwordValue);
 
 		expect(component.find('#email-helper-text').hostNodes().text()).toBe(errorMessage);
 	});

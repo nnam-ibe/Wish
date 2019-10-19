@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
 import TextField from '@material-ui/core/TextField';
 import InputValidation from '../../utils/InputValidation';
-import FetchUtil from '../../utils/fetchUtil';
+import FetchWrapper from '../../utils/FetchWrapper.js';
 
 function NewListNamePopover({ anchorEl, popoverClose, uid }) {
 	const open = Boolean(anchorEl);
@@ -26,7 +26,7 @@ function NewListNamePopover({ anchorEl, popoverClose, uid }) {
 		setError(false);
 		setHelperText('');
 
-		let response = await FetchUtil.put(`/api/create/new_list/${uid}`, { listName: name });
+		const response = await FetchWrapper.put(`/api/create/new_list/${uid}`, { listName: name });
 		if (response.ok) {
 			setName('');
 			return popoverClose();

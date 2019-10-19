@@ -5,10 +5,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import _ from 'lodash';
-import FetchUtil from '../../utils/fetchUtil';
+
+import FetchWrapper from '../../utils/FetchWrapper.js';
 import FirebaseUtil from '../../utils/firebaseUtil';
-import InputValidation from '../../utils/InputValidation';
-import { emailDefault, passwordDefault, usernameDefault } from '../../utils/FormFieldDefaults';
+import InputValidation from '../../utils/InputValidation.js';
+import { emailDefault, passwordDefault, usernameDefault } from '../../utils/FormFieldDefaults.js';
 
 function CreateAccount(props) {
 	const [username, setUsername] = useState(usernameDefault);
@@ -24,7 +25,7 @@ function CreateAccount(props) {
 
 		if (validateInputs()) return setShowProgressBar(false);
 
-		FetchUtil.put(`/api/create/account`, {
+		FetchWrapper.put(`/api/create/account`, {
 			username: _.trim(username.value),
 			email: _.trim(email.value),
 			password: password.value
