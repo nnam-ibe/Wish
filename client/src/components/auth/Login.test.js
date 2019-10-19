@@ -7,6 +7,13 @@ import FirebaseUtil from '../../utils/firebaseUtil.js';
 
 Enzyme.configure({ adapter: new Adapter() });
 
+// mock api calls
+let resolve, reject;
+FirebaseUtil.login = jest.fn(() => new Promise((_resolve, _reject) => {
+	resolve = _resolve;
+	reject = _reject;
+}));
+
 describe('Login', () => {
 	it('login form appears', () => {
 		const component = shallow(<Login />);
@@ -54,8 +61,7 @@ describe('Login', () => {
 		expect(component.find('#password-helper-text').hostNodes().text()).toBe(errorMessage);
 	});
 
-	it('makes api calls when validation requirements are met', () => {
-		FirebaseUtil.login = jest.fn(() => Promise.resolve());
+	it('makes api call when validation requirements are met', async () => {
 		const emailValue = 'john';
 		const passwordValue = '123456';
 		const component = mount(<Login {...{history: []}}/>);
@@ -65,39 +71,41 @@ describe('Login', () => {
 		component.find('#password')
 			.hostNodes()
 			.simulate('change', { target: { value: passwordValue } });
-
 		component.find('#login-form-button')
 			.hostNodes()
 			.simulate('click', { preventDefault() {} });
 
-		expect(FirebaseUtil.login.mock.calls.length).toBe(1);
+		await act(async () => {
+			resolve();
+		});
+
 		expect(FirebaseUtil.login.mock.calls[0][0].email).toBe(emailValue);
 		expect(FirebaseUtil.login.mock.calls[0][0].password).toBe(passwordValue);
 	});
 
-	// it('displays error from firebase on email', () => {
-	// 	FirebaseUtil.login = jest.fn(() => Promise.reject({ code: 'auth/user-not-found' }));
-	// 	const emailValue = 'johnny';
-	// 	const passwordValue = '654321';
-	// 	const component = mount(<Login />);
-	// 	// act(() => {
-	// 		component.find('#email')
-	// 			.hostNodes()
-	// 			.simulate('change', { target: { value: emailValue } });
-	// 		component.find('#password')
-	// 			.hostNodes()
-	// 			.simulate('change', { target: { value: passwordValue } });
-	// 		component.find('#login-form-button')
-	// 			.hostNodes()
-	// 			.simulate('click', { preventDefault() {} });
-	// 	// });
+	it('displays error from firebase on email', async () => {
+		const emailValue = 'johnny';
+		const passwordValue = '654321';
+		const component = mount(<Login />);
+		component.find('#email')
+			.hostNodes()
+			.simulate('change', { target: { value: emailValue } });
+		component.find('#password')
+			.hostNodes()
+			.simulate('change', { target: { value: passwordValue } });
+		component.find('#login-form-button')
+			.hostNodes()
+			.simulate('click', { preventDefault() {} });
 
-	// 	expect(FirebaseUtil.login.mock.calls.length).toBe(1);
-	// 	expect(FirebaseUtil.login.mock.calls[0][0].email).toBe(emailValue);
-	// 	expect(FirebaseUtil.login.mock.calls[0][0].password).toBe(passwordValue);
+		await act(async () => {
+			reject({ code: 'auth/user-not-found' });
+		});
+		component.update();
 
-	// 	console.log(component.debug());
-	// 	const errorMessage = 'No account found';
-	// 	expect(component.find('#email-helper-text').hostNodes().text()).toBe(errorMessage);
-	// });
+		expect(FirebaseUtil.login.mock.calls[1][0].email).toBe(emailValue);
+		expect(FirebaseUtil.login.mock.calls[1][0].password).toBe(passwordValue);
+
+		const errorMessage = 'No account found';
+		expect(component.find('#email-helper-text').hostNodes().text()).toBe(errorMessage);
+	});
 });
