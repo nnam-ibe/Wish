@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -14,6 +14,8 @@ import NumberFormatter from '../../utils/NumberFormatter.js';
 
 function Item(props) {
 	const [model, setModel] = useState(props.itemModel);
+
+	useEffect(() => setModel(props.itemModel), [props.itemModel]);
 
 	function decrementSaved() {
 		model.decrementSaved();
