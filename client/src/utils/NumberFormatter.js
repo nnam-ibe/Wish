@@ -6,13 +6,13 @@ NumberFormatter.getBig = (value) => {
 	return new Big(value);
 };
 
-// TODO: Nearing extintion
+// TODO: End-of-life
 NumberFormatter.toFixedTwo = (value) => {
 	let result = Number(value);
-	if (isNaN(value)) return 0;
-	if (value < 0) return 0;
+	if (isNaN(result)) return 0;
+	if (result < 0) return 0;
 
-	return value.toFixed(2);
+	return result.toFixed(2);
 };
 
 // TODO: Needs tests
@@ -22,6 +22,7 @@ NumberFormatter.formatMoney = (amount) => {
 
 /*
 * @param taxRate should be in percentage
+* TODO: also at End-of-life
 */
 NumberFormatter.calculateTax = (amount, taxRate) => {
 	if (amount < 0) return 0;
