@@ -4,6 +4,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Item from './Item.jsx';
 import FirebaseUtil from '../../utils/firebaseUtil.js';
 import ListItemForm from './ListItemForm.jsx';
+import ItemModel from '../../models/ItemModel.js';
 import _ from 'lodash';
 
 class ListPage extends Component {
@@ -152,7 +153,8 @@ class ListPage extends Component {
 
 	_setListElements = (list) => {
 		let listItems = _.map(list, (item) => {
-			return ( <Item {...item} key={item.id} updateItem={this._updateItem} editItem={this._editItem} tax={this.props.userPrefs.tax}/> );
+			const itemModel = new ItemModel({...item, tax: this.props.userPrefs.tax});
+			return ( <Item itemModel={itemModel} key={item.id} updateItem={this._updateItem} editItem={this._editItem} id={item.id}/> );
 		});
 
 		this.setState({ list, listItems });

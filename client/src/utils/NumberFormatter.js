@@ -20,6 +20,10 @@ NumberFormatter.formatMoney = (amount) => {
 	return String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+NumberFormatter.getNumber = (value) => {
+	return Number(value.toString());
+};
+
 /*
 * @param taxRate should be in percentage
 * TODO: also at End-of-life

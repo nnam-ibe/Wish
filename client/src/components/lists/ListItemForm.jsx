@@ -118,9 +118,9 @@ class ListItemForm extends Component {
 
 		let item = {
 			name: name.value,
-			price: NumberFormatter.formatMoney(price.value),
-			saved: NumberFormatter.formatMoney(saved.value),
-			increment: NumberFormatter.formatMoney(increment.value),
+			price: NumberFormatter.toFixedTwo(price.value),
+			saved: NumberFormatter.toFixedTwo(saved.value),
+			increment: NumberFormatter.toFixedTwo(increment.value),
 			addTaxes: addTaxes.checked
 		};
 
