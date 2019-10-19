@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import InputValidation from '../../utils/InputValidation';
 import FetchUtil from '../../utils/fetchUtil';
 
-function ListNamePopover({ anchorEl, popoverClose, uid }) {
+function NewListNamePopover({ anchorEl, popoverClose, uid }) {
 	const open = Boolean(anchorEl);
 	const [name, setName] = useState('');
 	const [error, setError] = useState(false);
@@ -71,4 +71,4 @@ function ListNamePopover({ anchorEl, popoverClose, uid }) {
 	);
 }
 
-export default ListNamePopover;
+export default NewListNamePopover;

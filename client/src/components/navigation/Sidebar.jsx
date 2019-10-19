@@ -8,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DeleteIcon from '@material-ui/icons/Delete';
 import _ from 'lodash';
 import ConfirmModal from '../modals/ConfirmModal';
-import ListNamePopover from '../lists/ListNamePopover';
+import NewListNamePopover from '../lists/NewListNamePopover.jsx';
 
 /**
 Props
@@ -27,8 +27,8 @@ class Sidebar extends Component {
 		this.state = {
 			listElements: null,
 			activeItem: null,
-			listNamePopoverAnchorEl: null,
-			listNamePopoverValue: '',
+			newListNamePopoverAnchorEl: null,
+			newListNamePopoverValue: '',
 			editMode: this.props.location.pathname === '/settings',
 			confirmModalOpen: false,
 			confirmModalMessage: ''
@@ -46,14 +46,14 @@ class Sidebar extends Component {
 	render() {
 		return (
 			<Drawer variant='permanent' classes={{paper: 'side-bar'}}>
-				<ListNamePopover
-					anchorEl={this.state.listNamePopoverAnchorEl}
-					popoverClose={() => this.setState({ listNamePopoverAnchorEl: null })}
-					intialName={this.state.listNamePopoverValue}
+				<NewListNamePopover
+					anchorEl={this.state.newListNamePopoverAnchorEl}
+					popoverClose={() => this.setState({ newListNamePopoverAnchorEl: null })}
+					intialName={this.state.newListNamePopoverValue}
 					uid={this.props.uid}
 				/>
 				<div>
-					<Button className='btn-new-list' color='primary' variant='outlined' onClick={this.listnamePopoverClick('')}>
+					<Button className='btn-new-list' color='primary' variant='outlined' onClick={this.newListnamePopoverClick('')}>
 						New List
 					</Button>
 				</div>
@@ -106,10 +106,10 @@ class Sidebar extends Component {
 		this.props.history.push(`/lists/${page}`);
 	}
 
-	listnamePopoverClick = (name, override) => (event) => {
+	newListnamePopoverClick = (name, override) => (event) => {
 		this.setState({
-			listNamePopoverAnchorEl: event.currentTarget,
-			listNamePopoverValue: name
+			newListNamePopoverAnchorEl: event.currentTarget,
+			newListNamePopoverValue: name
 		});
 	}
 
