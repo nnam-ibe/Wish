@@ -1,30 +1,30 @@
 const NumberFormatter = require('../NumberFormatter');
 
 test('rounds to two decimal places', () => {
-	expect(NumberFormatter.formatMoney(1398.56459)).toBe(1398.56);
+	expect(NumberFormatter.toFixedTwo(1398.56459)).toBe(1398.56);
 });
 
 test('corrertly rounds', () => {
-	expect(NumberFormatter.formatMoney(1398.44499)).toBe(1398.44);
-	expect(NumberFormatter.formatMoney(1398.9994)).toBe(1399);
-	expect(NumberFormatter.formatMoney(1398.0199)).toBe(1398.02);
+	expect(NumberFormatter.toFixedTwo(1398.44499)).toBe(1398.44);
+	expect(NumberFormatter.toFixedTwo(1398.9994)).toBe(1399);
+	expect(NumberFormatter.toFixedTwo(1398.0199)).toBe(1398.02);
 });
 
 test('truncates zeros', () => {
-	expect(NumberFormatter.formatMoney(1398.0000)).toBe(1398);
-	expect(NumberFormatter.formatMoney(1398.00001)).toBe(1398);
+	expect(NumberFormatter.toFixedTwo(1398.0000)).toBe(1398);
+	expect(NumberFormatter.toFixedTwo(1398.00001)).toBe(1398);
 });
 
 test('converts string to integer', () => {
-	expect(NumberFormatter.formatMoney('1398.0000')).toBe(1398);
-	expect(typeof NumberFormatter.formatMoney('1398.0000')).toBe('number');
+	expect(NumberFormatter.toFixedTwo('1398.0000')).toBe(1398);
+	expect(typeof NumberFormatter.toFixedTwo('1398.0000')).toBe('number');
 });
 
 test('returns 0 when for non numbers', () => {
-	expect(NumberFormatter.formatMoney(NaN)).toBe(0);
-	expect(NumberFormatter.formatMoney('Number')).toBe(0);
-	expect(NumberFormatter.formatMoney('Number350')).toBe(0);
-	expect(NumberFormatter.formatMoney('350Number350')).toBe(0);
+	expect(NumberFormatter.toFixedTwo(NaN)).toBe(0);
+	expect(NumberFormatter.toFixedTwo('Number')).toBe(0);
+	expect(NumberFormatter.toFixedTwo('Number350')).toBe(0);
+	expect(NumberFormatter.toFixedTwo('350Number350')).toBe(0);
 });
 
 test('taxes correctly', () => {
