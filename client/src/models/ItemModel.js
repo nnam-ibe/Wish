@@ -33,7 +33,7 @@ export default class ItemModel {
 
 	getPriceWithTax() {
 		if (!this.addTaxes) return this.price;
-		return this.price.times(1 + (this.tax/100));
+		return this.price.times((1 + (this.tax/100))).round(2);
 	}
 
 	valueOf() {
