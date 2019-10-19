@@ -7,7 +7,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import _ from 'lodash';
 
 import FetchWrapper from '../../utils/FetchWrapper.js';
-import FirebaseUtil from '../../utils/firebaseUtil';
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 import InputValidation from '../../utils/InputValidation.js';
 import { emailDefault, passwordDefault, usernameDefault } from '../../utils/FormFieldDefaults.js';
 
@@ -38,7 +38,7 @@ function CreateAccount(props) {
 			return res.json();
 		})
 		.then(err => {
-			const message = FirebaseUtil.getErrorMessage(err.code);
+			const message = FirebaseWrapper.getErrorMessage(err.code);
 			if (_.includes(err.code, 'password')) {
 				setPassword({ ...password, error: true, helperText: message });
 			} else {
@@ -53,19 +53,19 @@ function CreateAccount(props) {
 	function validateInputs() {
 		let isInvalid = false;
 		let err = InputValidation.validateUsername(username.value);
-		if (err && !isInvalid) isInvalid = true; // TODO: test this works & tests fails
+		if (err && !isInvalid) isInvalid = true;
 		setUsername(nextState(username, err));
 
 		err = InputValidation.validateEmail(email.value);
-		if (err && !isInvalid) isInvalid = true; // TODO: test this works & tests fails
+		if (err && !isInvalid) isInvalid = true;
 		setEmail(nextState(email, err));
 
 		err = InputValidation.validatePasswordsAreEqual(password.value, confirmPassword.value);
-		if (err && !isInvalid) isInvalid = true; // TODO: test this works & tests fails
+		if (err && !isInvalid) isInvalid = true;
 		setConfirmPassword(nextState(confirmPassword, err));
 
 		err = InputValidation.validatePassword(password.value);
-		if (err && !isInvalid) isInvalid = true; // TODO: test this works & tests fails
+		if (err && !isInvalid) isInvalid = true;
 		setPassword(nextState(password, err));
 		return isInvalid;
 	}

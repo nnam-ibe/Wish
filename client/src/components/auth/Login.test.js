@@ -2,14 +2,15 @@ import { act } from 'react-dom/test-utils';
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { mount, shallow } from 'enzyme';
-import Login from './Login';
-import FirebaseUtil from '../../utils/firebaseUtil';
+
+import Login from './Login.js';
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 // mock api calls
 let resolve, reject;
-FirebaseUtil.login = jest.fn(() => new Promise((_resolve, _reject) => {
+FirebaseWrapper.login = jest.fn(() => new Promise((_resolve, _reject) => {
 	resolve = _resolve;
 	reject = _reject;
 }));
@@ -79,8 +80,8 @@ describe('Login', () => {
 			resolve();
 		});
 
-		expect(FirebaseUtil.login.mock.calls[0][0].email).toBe(emailValue);
-		expect(FirebaseUtil.login.mock.calls[0][0].password).toBe(passwordValue);
+		expect(FirebaseWrapper.login.mock.calls[0][0].email).toBe(emailValue);
+		expect(FirebaseWrapper.login.mock.calls[0][0].password).toBe(passwordValue);
 		expect(component.prop('history')[0]).toBe('/');
 	});
 
@@ -103,8 +104,8 @@ describe('Login', () => {
 		});
 		component.update();
 
-		expect(FirebaseUtil.login.mock.calls[1][0].email).toBe(emailValue);
-		expect(FirebaseUtil.login.mock.calls[1][0].password).toBe(passwordValue);
+		expect(FirebaseWrapper.login.mock.calls[1][0].email).toBe(emailValue);
+		expect(FirebaseWrapper.login.mock.calls[1][0].password).toBe(passwordValue);
 
 		const errorMessage = 'No account found';
 		expect(component.find('#email-helper-text').hostNodes().text()).toBe(errorMessage);
@@ -129,8 +130,8 @@ describe('Login', () => {
 		});
 		component.update();
 
-		expect(FirebaseUtil.login.mock.calls[2][0].email).toBe(emailValue);
-		expect(FirebaseUtil.login.mock.calls[2][0].password).toBe(passwordValue);
+		expect(FirebaseWrapper.login.mock.calls[2][0].email).toBe(emailValue);
+		expect(FirebaseWrapper.login.mock.calls[2][0].password).toBe(passwordValue);
 
 		const errorMessage = 'Incorrect password';
 		expect(component.find('#password-helper-text').hostNodes().text()).toBe(errorMessage);

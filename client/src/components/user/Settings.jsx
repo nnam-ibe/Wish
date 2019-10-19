@@ -5,10 +5,11 @@ import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import InputValidation from '../../utils/InputValidation.js';
-import firebaseUtil from '../../utils/firebaseUtil.js';
-import _ from 'lodash';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import _ from 'lodash';
+
+import InputValidation from '../../utils/InputValidation.js';
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 
 /**
 Props
@@ -146,7 +147,7 @@ class Settings extends Component {
 	saveSettings = () => {
 		this.setState({ showProgressBar: true });
 
-		const uid = firebaseUtil.getLocalUID();
+		const uid = FirebaseWrapper.getLocalUID();
 		const path = `users/${uid}`;
 
 		if (!this._validateInput()) return;
@@ -161,7 +162,7 @@ class Settings extends Component {
 			return acc;
 		}, {});
 
-		firebaseUtil.db.doc(path).set(settings, { merge: true })
+		FirebaseWrapper.db.doc(path).set(settings, { merge: true })
 			.then(() => {
 				this.setState({ showProgressBar: false });
 			});
@@ -198,14 +199,14 @@ class Settings extends Component {
 	}
 
 	_getUserSettings = () => {
-		const uid = firebaseUtil.getLocalUID();
+		const uid = FirebaseWrapper.getLocalUID();
 		if (!uid) {
 			this.props.history.push('/');
 			return;
 		}
 
 		const path = `users/${uid}`;
-		this.onSnapshotUnsubscribe = firebaseUtil.db.doc(path).onSnapshot((snapShot) => {
+		this.onSnapshotUnsubscribe = FirebaseWrapper.db.doc(path).onSnapshot((snapShot) => {
 			if (!snapShot.exists) return;
 
 			const { fields, valueFields, checkedFields } = this.state;

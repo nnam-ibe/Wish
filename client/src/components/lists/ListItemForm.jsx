@@ -6,10 +6,11 @@ import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import FirebaseUtil from '../../utils/firebaseUtil.js';
 import NumberFormat from 'react-number-format';
-import NumberFormatter from '../../utils/NumberFormatter.js';
 import _ from 'lodash';
+
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
+import NumberFormatter from '../../utils/NumberFormatter.js';
 
 class ListItemForm extends Component {
 
@@ -125,11 +126,11 @@ class ListItemForm extends Component {
 		};
 
 		if (this.props.isNewItem) {
-			item.id = FirebaseUtil.generateUUID();
-			FirebaseUtil.saveNewItem(this.props.getPagePath(), item);
+			item.id = FirebaseWrapper.generateUUID();
+			FirebaseWrapper.saveNewItem(this.props.getPagePath(), item);
 		} else {
 			item.id = this.props.itemId;
-			FirebaseUtil.updateItem(this.props.getPagePath(), item);
+			FirebaseWrapper.updateItem(this.props.getPagePath(), item);
 		}
 
 		this.props.closeForm();
@@ -137,7 +138,7 @@ class ListItemForm extends Component {
 	}
 
 	deleteItem = () => {
-		FirebaseUtil.deleteItem(this.props.getPagePath(), this.props.itemId);
+		FirebaseWrapper.deleteItem(this.props.getPagePath(), this.props.itemId);
 		this.props.closeForm();
 		this.props.resetItem();
 	}

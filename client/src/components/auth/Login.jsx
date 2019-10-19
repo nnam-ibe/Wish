@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import _ from 'lodash';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import FirebaseUtil from '../../utils/firebaseUtil';
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 import InputValidation from '../../utils/InputValidation';
 import { emailDefault, passwordDefault } from '../../utils/FormFieldDefaults';
 
@@ -20,7 +20,7 @@ function Login(props) {
 		setShowProgressBar(true);
 		if (validateInputs()) return setShowProgressBar(false);
 
-		FirebaseUtil.login({
+		FirebaseWrapper.login({
 			email: _.trim(email.value),
 			password: password.value
 		})
@@ -32,7 +32,7 @@ function Login(props) {
 			setShowProgressBar(false);
 			if (!err.code) return;
 
-			const message = FirebaseUtil.getErrorMessage(err.code);
+			const message = FirebaseWrapper.getErrorMessage(err.code);
 			if (_.includes(err.code, 'password')) {
 				setPassword({ ...password, error: true, helperText: message });
 			} else {

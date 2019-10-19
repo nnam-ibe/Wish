@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import _ from 'lodash';
+
 import Item from './Item.jsx';
-import FirebaseUtil from '../../utils/firebaseUtil.js';
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 import ListItemForm from './ListItemForm.jsx';
 import ItemModel from '../../models/ItemModel.js';
-import _ from 'lodash';
 
 class ListPage extends Component {
 
@@ -103,7 +104,7 @@ class ListPage extends Component {
 	}
 
 	_updateItem = (item) => {
-		FirebaseUtil.updateItem(this._getPagePath(), item);
+		FirebaseWrapper.updateItem(this._getPagePath(), item);
 	}
 
 	_editItem = (id) => {
@@ -136,7 +137,7 @@ class ListPage extends Component {
 			return;
 		}
 
-		this.onSnapshotUnsubscribe = FirebaseUtil.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
+		this.onSnapshotUnsubscribe = FirebaseWrapper.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
 			if (!snapShot.exists) {
 				this.setState({ list: null, listItems: null });
 				return;

@@ -7,7 +7,7 @@ import CreateAccount from '../auth/CreateAccount.jsx';
 import Settings from '../user/Settings.jsx';
 import Sidebar from '../navigation/Sidebar.jsx';
 import ListPage from '../lists/ListPage.jsx';
-import FirebaseUtil from '../../utils/firebaseUtil.js';
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 
 class App extends Component {
 
@@ -20,9 +20,9 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		this.unsubscribeAuthListner = FirebaseUtil.onAuthStateChanged((user) => {
+		this.unsubscribeAuthListner = FirebaseWrapper.onAuthStateChanged((user) => {
 			if (user) {
-				FirebaseUtil.setLocalUID(user.uid);
+				FirebaseWrapper.setLocalUID(user.uid);
 				this.setState({ uid: user.uid });
 
 				this.getUserPrefs(user.uid, true);
@@ -30,7 +30,7 @@ class App extends Component {
 			} else {
 				if (!this.state.uid && !this.state.userPrefs) return;
 
-				FirebaseUtil.removeLocalUID();
+				FirebaseWrapper.removeLocalUID();
 				this.setState({ uid: null, userPrefs: null });
 				this.props.history.push('/');
 			}
@@ -77,7 +77,7 @@ class App extends Component {
 
 	handleLoginClick = () => {
 		if (this.state.uid) {
-			FirebaseUtil.logout().then(() => {
+			FirebaseWrapper.logout().then(() => {
 				this.navigateToRoute('/login');
 			});
 		} else if (this.props.location.pathname !== '/login') {
@@ -90,7 +90,7 @@ class App extends Component {
 	}
 
 	getUserPrefs = (uid, redirectUser) => {
-		this.onSnapshotUnsubscribe = FirebaseUtil.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
+		this.onSnapshotUnsubscribe = FirebaseWrapper.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
 			if (!snapshot.exists) return;
 
 			const userPrefs = snapshot.data();
