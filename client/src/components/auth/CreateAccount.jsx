@@ -52,79 +52,20 @@ function CreateAccount(props) {
 	function validateInputs() {
 		let isInvalid = false;
 		let err = InputValidation.validateUsername(username.value);
-		if (err) {
-			isInvalid = true;
-			setUsername({
-				...username,
-				error: true,
-				helperText: err.message
-			});
-		} else if (username.error) {
-			setUsername({
-				...username,
-				error: false,
-				helperText: ''
-			});
-		}
+		if (err && !isInvalid) isInvalid = true; // TODO: test this works & tests fails
+		setUsername(nextState(username, err));
 
 		err = InputValidation.validateEmail(email.value);
-		if (err) {
-			isInvalid = true;
-			setEmail({
-				...email,
-				error: true,
-				helperText: err.message
-			});
-		} else if (email.error) {
-			setEmail({
-				...email,
-				error: false,
-				helperText: ''
-			});
-		}
+		if (err && !isInvalid) isInvalid = true; // TODO: test this works & tests fails
+		setEmail(nextState(email, err));
 
 		err = InputValidation.validatePasswordsAreEqual(password.value, confirmPassword.value);
-		if (err) {
-			isInvalid = true;
-			setPassword({
-				...password,
-				error: true,
-				helperText: err.message
-			});
-			setConfirmPassword({
-				...confirmPassword,
-				error: true,
-				helperText: err.message
-			});
-		} else if (confirmPassword.error) {
-			setPassword({
-				...password,
-				error: false,
-				helperText: ''
-			});
-			setConfirmPassword({
-				...confirmPassword,
-				error: false,
-				helperText: ''
-			});
-		}
+		if (err && !isInvalid) isInvalid = true; // TODO: test this works & tests fails
+		setConfirmPassword(nextState(confirmPassword, err));
 
 		err = InputValidation.validatePassword(password.value);
-		if (err) {
-			isInvalid = true;
-			setPassword({
-				...password,
-				error: true,
-				helperText: err.message
-			});
-		} else if (password.error) {
-			setPassword({
-				...password,
-				error: false,
-				helperText: ''
-			});
-		}
-
+		if (err && !isInvalid) isInvalid = true; // TODO: test this works & tests fails
+		setPassword(nextState(password, err));
 		return isInvalid;
 	}
 
@@ -195,6 +136,24 @@ function CreateAccount(props) {
 			</Paper>
 		</div>
 	);
+}
+
+
+function nextState(prevState, err) {
+	if (err) {
+		prevState = {
+			...prevState,
+			error: true,
+			helperText: err.message
+		};
+	} else if (prevState.error) {
+		prevState = {
+			...prevState,
+			error: false,
+			helperText: ''
+		};
+	}
+	return prevState;
 }
 
 export default CreateAccount;

@@ -63,8 +63,6 @@ describe('CreateAccount', () => {
 			.simulate('click', { preventDefault() {} });
 
 		const passwordError = 'Passwords don\'t match';
-		const confirmPasswordError = 'Passwords don\'t match';
-		expect(component.find('#password-helper-text').hostNodes().text()).toBe(passwordError);
 		expect(component.find('#confirmPassword-helper-text').hostNodes().text()).toBe(passwordError);
 	});
 
