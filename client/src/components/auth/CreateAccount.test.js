@@ -3,7 +3,7 @@ import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { mount, shallow } from 'enzyme';
 
-import CreateAccount from './CreateAccount.js';
+import CreateAccount from './CreateAccount.jsx';
 import FetchWrapper from '../../utils/FetchWrapper.js';
 
 Enzyme.configure({ adapter: new Adapter() });
