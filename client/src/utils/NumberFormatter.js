@@ -12,7 +12,7 @@ NumberFormatter.toFixedTwo = (value) => {
 	if (isNaN(result)) return 0;
 	if (result < 0) return 0;
 
-	return result.toFixed(2);
+	return Number(result.toFixed(2));
 };
 
 // TODO: Needs tests
