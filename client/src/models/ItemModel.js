@@ -25,6 +25,7 @@ export default class ItemModel {
 
 	updateProgress() {
 		this.difference = this.price.minus(this.saved);
+		if (this.difference < 0) this.difference = new Big(0);
 		this.progress = this.saved.div(this.price).times(100);
 		if (this.progress > 100) this.progress = new Big(100);
 

@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandIcon from '@material-ui/icons/ExpandMore';
+
 import NumberFormatter from '../../utils/NumberFormatter.js';
 
 function Item(props) {
@@ -36,10 +37,10 @@ function Item(props) {
 	}
 
 	return (
-		<div className='item-margin'>
+		<div className='item-margin item-div'>
 			<Paper className='auth-paper'>
 				<div className='display-flex text-align-left ml-36'>
-					<div className='flex-grow-1'>
+					<div className='flex-grow-1 item-name'>
 						<Typography variant='h6'>{model.name}</Typography>
 					</div>
 					<div>
@@ -53,30 +54,30 @@ function Item(props) {
 						<TableBody>
 							<TableRow>
 								<TableCell>
-									<IconButton onClick={decrementSaved}>
+									<IconButton onClick={decrementSaved} className='item-decrement-button'>
 										<RemoveIcon/>
 									</IconButton>
 								</TableCell>
 								<TableCell>
 									<div>
 										<Typography variant='caption'>Saved</Typography>
-										<Typography variant='subtitle2'>{`$${NumberFormatter.formatMoney(model.saved)}`}</Typography>
+										<Typography className='item-saved-value' variant='subtitle2'>{`$${NumberFormatter.formatMoney(model.saved)}`}</Typography>
 									</div>
 								</TableCell>
 								<TableCell>
 									<div>
 										<Typography variant='caption'>Difference</Typography>
-										<Typography variant='subtitle2'>{`$${NumberFormatter.formatMoney(model.difference)}`}</Typography>
+										<Typography className='item-difference-value' variant='subtitle2'>{`$${NumberFormatter.formatMoney(model.difference)}`}</Typography>
 									</div>
 								</TableCell>
 								<TableCell>
 									<div>
 										<Typography variant='caption'>Price</Typography>
-										<Typography variant='subtitle2'>{`$${NumberFormatter.formatMoney(model.getPriceWithTax())}`}</Typography>
+										<Typography className='item-price-value' variant='subtitle2'>{`$${NumberFormatter.formatMoney(model.getPriceWithTax())}`}</Typography>
 									</div>
 								</TableCell>
 								<TableCell>
-									<IconButton onClick={incrementSaved}>
+									<IconButton onClick={incrementSaved} className='item-increment-button'>
 										<AddIcon/>
 									</IconButton>
 								</TableCell>
@@ -85,7 +86,7 @@ function Item(props) {
 					</Table>
 				</div>
 			</Paper>
-			<LinearProgress variant="determinate" value={NumberFormatter.getNumber(model.progress)} />
+			<LinearProgress className='item-progress-bar' variant='determinate' value={NumberFormatter.getNumber(model.progress)} />
 		</div>
 	);
 }
