@@ -53,7 +53,7 @@ class Sidebar extends Component {
 					uid={this.props.uid}
 				/>
 				<div>
-					<Button className='btn-new-list' color='primary' variant='outlined' onClick={this.newListnamePopoverClick('')}>
+					<Button data-testid='btn-new-list' color='primary' variant='outlined' onClick={this.newListnamePopoverClick('')}>
 						New List
 					</Button>
 				</div>
@@ -81,7 +81,7 @@ class Sidebar extends Component {
 				<ListItem button key={listName} classes={{ root: 'sidebar-list-item' }}>
 					<ListItemText primary={listName} classes={classes} onClick={this.itemClicked(listName)}/>
 					{ this.state.editMode && (
-						<div className='sidebar-delete-button'>
+						<div data-testid='sidebar-delete-button'>
 							<IconButton onClick={this.deleteList(listName)}>
 								<DeleteIcon />
 							</IconButton>
