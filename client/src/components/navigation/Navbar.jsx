@@ -45,7 +45,7 @@ function Navbar(props) {
 							{
 								props.isLoggedIn && (
 									<div className='display-inline'>
-										<IconButton onClick={handleClick}>
+										<IconButton onClick={handleClick} role='dialog'>
 											<AccountCircle />
 										</IconButton>
 										<Menu
@@ -68,7 +68,7 @@ function Navbar(props) {
 									</div>
 								)
 							}
-							<Button color='inherit' className='display-flex btn-login' onClick={props.handleLoginClick}>{buttonLabel}</Button>
+							<Button color='inherit' className='display-flex' onClick={props.handleLoginClick}>{buttonLabel}</Button>
 						</div>
 					</div>
 				</Toolbar>
