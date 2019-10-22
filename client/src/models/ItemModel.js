@@ -24,9 +24,9 @@ export default class ItemModel {
 	}
 
 	updateProgress() {
-		this.difference = this.price.minus(this.saved);
+		this.difference = this.getPriceWithTax().minus(this.saved);
 		if (this.difference < 0) this.difference = new Big(0);
-		this.progress = this.saved.div(this.price).times(100);
+		this.progress = this.saved.div(this.getPriceWithTax()).times(100);
 		if (this.progress > 100) this.progress = new Big(100);
 
 		return this;
@@ -46,5 +46,9 @@ export default class ItemModel {
 			saved: NumberFormatter.getNumber(this.saved),
 			tax: this.tax
 		}
+	}
+
+	toString() {
+		return Object.entries(this.valueOf()).toString();
 	}
 }
