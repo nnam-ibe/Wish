@@ -97,7 +97,7 @@ class ListPage extends Component {
 
 	resetFormItem = () => {
 		this.setState({
-			formItem:  this._getFormItemDefault(),
+			formItem: this._getFormItemDefault(),
 			isNewFormItem: true,
 			formItemId: null
 		});

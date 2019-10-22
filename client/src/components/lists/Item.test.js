@@ -16,12 +16,12 @@ const model = new ItemModel({
 
 describe('Item', () => {
 	it('item appears', () => {
-		const { getByText } =  render(<Item itemModel={model}/>);
+		const { getByText } = render(<Item itemModel={model}/>);
 		expect(getByText('sample name')).toBeDefined();
 	});
 
 	it('values display correctly - no tax', () => {
-		const { getByText } =  render(<Item itemModel={model}/>);
+		const { getByText } = render(<Item itemModel={model}/>);
 
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
@@ -31,7 +31,7 @@ describe('Item', () => {
 
 	it('values display correctly - with tax', () => {
 		const taxedModel = new ItemModel({...model.valueOf(), addTaxes: true});
-		const { getByText } =  render(<Item itemModel={taxedModel}/>);
+		const { getByText } = render(<Item itemModel={taxedModel}/>);
 
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
@@ -40,7 +40,7 @@ describe('Item', () => {
 	});
 
 	it('values display correctly - when props change', () => {
-		const { getByText, rerender } =  render(<Item itemModel={model}/>);
+		const { getByText, rerender } = render(<Item itemModel={model}/>);
 
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
@@ -64,7 +64,7 @@ describe('Item', () => {
 	});
 
 	it('can decrement saved amount', async () => {
-		const {getAllByText, getByTestId, getByText} =  render(<Item itemModel={model} updateItem={jest.fn()}/>);
+		const {getAllByText, getByTestId, getByText} = render(<Item itemModel={model} updateItem={jest.fn()}/>);
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
 		expect(getByText('$50')).toBeDefined();
@@ -90,7 +90,7 @@ describe('Item', () => {
 			saved: 10,
 			tax: 30
 		});
-		const {getByTestId, getByText} =  render(<Item itemModel={incrementModel} updateItem={jest.fn()}/>);
+		const {getByTestId, getByText} = render(<Item itemModel={incrementModel} updateItem={jest.fn()}/>);
 		fireEvent.click(getByTestId('item-increment-button'));
 
 		expect(getByText('sample name')).toBeDefined();

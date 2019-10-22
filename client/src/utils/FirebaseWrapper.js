@@ -147,7 +147,7 @@ function getErrorMessage (errorCode) {
 			result = 'Incorrect password';
 			break;
 		default:
-			result =  null;
+			result = null;
 	}
 	return result;
 }
