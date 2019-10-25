@@ -150,7 +150,10 @@ class Settings extends Component {
 		const uid = FirebaseWrapper.getLocalUID();
 		const path = `users/${uid}`;
 
-		if (!this._validateInput()) return;
+		if (!this._validateInput()) {
+			this.setState({ showProgressBar: false });
+			return;
+		}
 
 		const settings = _.reduce(this.state.fields, (acc, value, key) => {
 			if (_.includes(this.state.valueFields, key)) {
