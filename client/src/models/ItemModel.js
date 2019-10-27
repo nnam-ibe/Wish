@@ -9,6 +9,10 @@ export default class ItemModel {
 		this.price = NumberFormatter.getBig(options.price);
 		this.saved = NumberFormatter.getBig(options.saved);
 		this.tax = options.tax;
+		this.id = options.id;
+
+		const taxValue = options.tax ? options.tax : 0;
+		this.taxMultipler = 1 + (taxValue/100);
 		return this.updateProgress();
 	}
 
@@ -32,9 +36,18 @@ export default class ItemModel {
 		return this;
 	}
 
+	setId(id) {
+		this.id = id;
+	}
+
 	getPriceWithTax() {
 		if (!this.addTaxes) return this.price;
-		return this.price.times((1 + (this.tax/100))).round(2);
+		return this.price.times(this.taxMultipler).round(2);
+	}
+
+	getTaxMultipler() {
+		if (!options.tax) options.tax = 0;
+		return
 	}
 
 	valueOf() {
@@ -44,7 +57,8 @@ export default class ItemModel {
 			name: this.name,
 			price: NumberFormatter.getNumber(this.price),
 			saved: NumberFormatter.getNumber(this.saved),
-			tax: this.tax
+			tax: this.tax,
+			id: this.id
 		}
 	}
 

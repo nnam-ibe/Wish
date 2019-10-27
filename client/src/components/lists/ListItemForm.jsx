@@ -10,6 +10,7 @@ import NumberFormat from 'react-number-format';
 import _ from 'lodash';
 
 import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
+import ItemModel from '../../models/ItemModel.js';
 import NumberFormatter from '../../utils/NumberFormatter.js';
 
 class ListItemForm extends Component {
@@ -115,22 +116,21 @@ class ListItemForm extends Component {
 		let valid = this._validateItem(this.props.item);
 		if (!valid) return;
 
-		let { name, price, saved, increment, addTaxes } = this.props.item;
-
-		let item = {
+		const { name, price, saved, increment, addTaxes } = this.props.item;
+		const item = new ItemModel({
+			addTaxes: addTaxes.checked,
+			increment: increment.value,
 			name: name.value,
-			price: NumberFormatter.toFixedTwo(price.value),
-			saved: NumberFormatter.toFixedTwo(saved.value),
-			increment: NumberFormatter.toFixedTwo(increment.value),
-			addTaxes: addTaxes.checked
-		};
+			price: price.value,
+			saved: saved.value
+		});
 
 		if (this.props.isNewItem) {
-			item.id = FirebaseWrapper.generateUUID();
-			FirebaseWrapper.saveNewItem(this.props.getPagePath(), item);
+			item.setId(FirebaseWrapper.generateUUID());
+			FirebaseWrapper.saveNewItem(this.props.getPagePath(), item.valueOf());
 		} else {
-			item.id = this.props.itemId;
-			FirebaseWrapper.updateItem(this.props.getPagePath(), item);
+			item.setId(this.props.itemId);
+			FirebaseWrapper.updateItem(this.props.getPagePath(), item.valueOf());
 		}
 
 		this.props.closeForm();
