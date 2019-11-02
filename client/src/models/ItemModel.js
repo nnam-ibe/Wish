@@ -45,11 +45,6 @@ export default class ItemModel {
 		return this.price.times(this.taxMultipler).round(2);
 	}
 
-	getTaxMultipler() {
-		if (!options.tax) options.tax = 0;
-		return
-	}
-
 	valueOf() {
 		return {
 			addTaxes: this.addTaxes,

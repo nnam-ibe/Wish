@@ -11,7 +11,6 @@ import _ from 'lodash';
 
 import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 import ItemModel from '../../models/ItemModel.js';
-import NumberFormatter from '../../utils/NumberFormatter.js';
 
 class ListItemForm extends Component {
 
