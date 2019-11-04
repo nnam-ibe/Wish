@@ -11,6 +11,7 @@ NumberFormatter.formatMoney = (amount) => {
 };
 
 NumberFormatter.getNumber = (value) => {
+	if (!value) return 0;
 	return Number(value.toString());
 };
 
