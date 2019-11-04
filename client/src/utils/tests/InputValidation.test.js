@@ -1,14 +1,17 @@
 const InputValidation = require('../InputValidation');
 
+const usernameError = 'Username must be between 1 & 16 characters';
+
 test('returns error when list name is falsy', () => {
-	expect(InputValidation.validateListName()).toBeDefined();
-	expect(InputValidation.validateListName('')).toBeDefined();
-	expect(InputValidation.validateListName(null)).toBeDefined();
+	expect(InputValidation.validateListName().message).toBe('Name is invalid');
+	expect(InputValidation.validateListName(null).message).toBe('Name is invalid');
+	expect(InputValidation.validateListName('').message).toBe('Name is invalid');
+	expect(InputValidation.validateListName('  ').message).toBe('Name cannot be empty');
 });
 
 test('returns error when list name is has >36 chars', () => {
 	const st = 'ABCDEFGHIJKLMNOPQRSTUVWZYZ1234567890_OVERFLOW';
-	expect(InputValidation.validateListName(st)).toBeDefined();
+	expect(InputValidation.validateListName(st).message).toBe('Maximum of 36 characters allowed');
 });
 
 test('no error with valid list name', () => {
@@ -17,13 +20,13 @@ test('no error with valid list name', () => {
 });
 
 test('returns error when username is falsy', () => {
-	expect(InputValidation.validateUsername()).toBeDefined();
-	expect(InputValidation.validateUsername('')).toBeDefined();
-	expect(InputValidation.validateUsername(null)).toBeDefined();
+	expect(InputValidation.validateUsername().message).toBe(usernameError);
+	expect(InputValidation.validateUsername('').message).toBe(usernameError);
+	expect(InputValidation.validateUsername(null).message).toBe(usernameError);
 });
 
 test('returns error when username is >16 chars', () => {
-	expect(InputValidation.validateUsername('MickJagger0123456')).toBeDefined();
+	expect(InputValidation.validateUsername('MickJagger0123456').message).toBe(usernameError);
 });
 
 test('no error when username is valid', () => {

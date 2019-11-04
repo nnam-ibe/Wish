@@ -3,7 +3,7 @@ const _ = require('lodash');
 module.exports = {
 	validateListName(listName) {
 		if (!listName) return new Error('Name is invalid');
-		if (listName.length <= 0 ) return new Error('Name cannot be empty');
+		if (_.trim(listName).length <= 0 ) return new Error('Name cannot be empty');
 		if (listName.length > 36) return new Error('Maximum of 36 characters allowed');
 	},
 
@@ -19,6 +19,9 @@ module.exports = {
 		email = _.trim(email);
 		if (_.isEmpty(email)) {
 			return new Error('Email cannot be empty');
+		}
+		if (!email.includes('@')) {
+			return new Error('Please enter a valid email');
 		}
 	},
 
