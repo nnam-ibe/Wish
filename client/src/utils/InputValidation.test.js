@@ -1,4 +1,4 @@
-const InputValidation = require('../InputValidation');
+const InputValidation = require('./InputValidation');
 
 const usernameError = 'Username must be between 1 & 16 characters';
 
