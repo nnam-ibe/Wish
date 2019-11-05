@@ -7,6 +7,7 @@ import Item from './Item.jsx';
 import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 import ListItemForm from './ListItemForm.jsx';
 import ItemModel from '../../models/ItemModel.js';
+import FormFieldDefaults from '../../utils/FormFieldDefaults.js';
 
 class ListPage extends Component {
 
@@ -18,6 +19,10 @@ class ListPage extends Component {
 
 			// Input Form State
 			formItem: this._getFormItemDefault(),
+			formItemModel: new ItemModel({
+				addTaxes: props.userPrefs.addTaxes,
+				increment: props.userPrefs.defaultIncrement
+			}),
 			itemFormIsOpen: false,
 			isNewFormItem: true,
 			formItemId: null
@@ -51,8 +56,8 @@ class ListPage extends Component {
 						isOpen={this.state.itemFormIsOpen}
 						closeForm={this.closeItemForm}
 						getPagePath={this._getPagePath}
-						item={this.state.formItem}
-						handleChange={this.handleFormItemChange}
+						item={this.state.formItemModel}
+						fields={this.state.formItem}
 						resetItem={this.resetFormItem}
 						isNewItem={this.state.isNewFormItem}
 						itemId={this.state.formItemId}
@@ -83,17 +88,17 @@ class ListPage extends Component {
 		})
 	}
 
-	handleFormItemChange = name => event => {
-		let item = this.state.formItem;
+	// handleFormItemChange = name => event => {
+	// 	let item = this.state.formItem;
 
-		if (name === 'addTaxes') {
-			item[name].checked = event.target.checked;
-		} else {
-			item[name].value = event.target.value;
-		}
+	// 	if (name === 'addTaxes') {
+	// 		item[name].checked = event.target.checked;
+	// 	} else {
+	// 		item[name].value = event.target.value;
+	// 	}
 
-		this.setState({ formItem: item });
-	}
+	// 	this.setState({ formItem: item });
+	// }
 
 	resetFormItem = () => {
 		this.setState({
@@ -153,7 +158,7 @@ class ListPage extends Component {
 	}
 
 	_setListElements = (list) => {
-		let listItems = _.map(list, (item) => {
+		const listItems = _.map(list, (item) => {
 			const itemModel = new ItemModel({...item, tax: this.props.userPrefs.tax});
 			return ( <Item itemModel={itemModel} key={item.id} updateItem={this._updateItem} editItem={this._editItem} id={item.id}/> );
 		});
@@ -162,8 +167,21 @@ class ListPage extends Component {
 	}
 
 	_getFormItemDefault = () => {
-		let item = _.cloneDeep(formItemDefaults);
-		return _.set(item, 'increment.value', this.props.userPrefs.defaultIncrement);
+		const formDefaults = {
+			nameField: FormFieldDefaults.nameDefault,
+			priceField: FormFieldDefaults.priceDefault,
+			savedField: FormFieldDefaults.savedDefault,
+			incrementField: FormFieldDefaults.incrementDefault,
+			addTaxesField: this.props.userPrefs.addTaxes
+		};
+		return _.set(formDefaults, 'incrementField.value', this.props.userPrefs.defaultIncrement);
+	}
+
+	getDefaultFormItemModel = () => {
+		return new ItemModel({
+			addTaxes: this.props.userPrefs.addTaxes,
+			increment: this.props.userPrefs.defaultIncrement
+		});
 	}
 }
 

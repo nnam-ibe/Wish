@@ -3,7 +3,7 @@ const NumberFormatter = require('../utils/NumberFormatter');
 
 class ItemModel {
 	constructor(options) {
-		this.addTaxes = options.addTaxes;
+		this.addTaxes = Boolean(options.addTaxes);
 		this.increment = NumberFormatter.getBig(options.increment);
 		this.name = options.name;
 		this.price = NumberFormatter.getBig(options.price);
@@ -11,7 +11,7 @@ class ItemModel {
 		this.tax = options.tax;
 		this.id = options.id;
 
-		const taxValue = options.tax ? options.tax : 0;
+		const taxValue = options.tax ? Boolean(options.tax) : 0;
 		this.taxMultipler = 1 + (taxValue/100);
 		return this.updateProgress();
 	}
@@ -36,12 +36,44 @@ class ItemModel {
 		return this;
 	}
 
+	getAddTaxes() {
+		return this.addTaxes;
+	}
+
+	setAddTaxes(val) {
+		this.addTaxes = Boolean(val);
+		return this.updateProgress();
+	}
+
 	getDifference() {
 		return NumberFormatter.getNumber(this.difference);
 	}
 
 	getId() {
 		return this.id;
+	}
+
+	setId(id) {
+		this.id = id;
+		return this;
+	}
+
+	getIncrement() {
+		return NumberFormatter.getNumber(this.increment);
+	}
+
+	setIncrement(val) {
+		this.increment = NumberFormatter.getBig(val);
+		return this.updateProgress();
+	}
+
+	getName() {
+		return this.name;
+	}
+
+	setName(val) {
+		this.name = val;
+		return this;
 	}
 
 	getPrice() {
@@ -57,29 +89,25 @@ class ItemModel {
 		return this.price.times(this.taxMultipler).round(2);
 	}
 
+	setPrice(val) {
+		this.price = NumberFormatter.getBig(val);
+		return this.updateProgress();
+	}
+
 	getSaved() {
 		return NumberFormatter.getNumber(this.saved);
 	}
 
-	setId(id) {
-		this.id = id;
-		return this;
-	}
-
-	setIncrement(value) {
-		this.increment = NumberFormatter.getBig(value);
+	setSaved(val) {
+		this.saved =  NumberFormatter.getBig(val);
 		return this.updateProgress();
 	}
 
-	setSaved(value) {
-		this.saved =  NumberFormatter.getBig(value);
-		return this.updateProgress();
-	}
-
-	setTax(value) {
-		const taxValue = NumberFormatter.getNumber(value);
+	setTax(val) {
+		const taxValue = NumberFormatter.getNumber(val);
+		this.tax = taxValue;
 		this.taxMultipler = 1 + (taxValue/100);
-		this.tax
+		return this.updateProgress();
 	}
 
 	valueOf() {

@@ -20,8 +20,9 @@ class ListItemForm extends Component {
 	}
 
 	render() {
-		let { name, price, saved, increment, addTaxes } = this.props.item;
-		let formTitleText = this.props.isNewItem ? 'Add New Item' : 'Update Item'
+		const item = this.props.item;
+		const { nameField, priceField, savedField, incrementField, addTaxesField } = this.props.fields;
+		const formTitle = this.props.isNewItem ? 'Add New Item' : 'Update Item'
 
 		return	(
 			<div className='item-form'>
@@ -29,7 +30,7 @@ class ListItemForm extends Component {
 					<Paper>
 						<div className='item-form-paper-title display-flex'>
 							<div className='item-form-paper-title-text'>
-								<Typography color='inherit'>{formTitleText}</Typography>
+								<Typography color='inherit'>{formTitle}</Typography>
 							</div>
 							<CloseIcon onClick={this.props.closeForm}/>
 						</div>
@@ -38,57 +39,57 @@ class ListItemForm extends Component {
 							<TextField
 								id='item-form-name'
 								label='Name'
-								value={name.value}
-								onChange={this.props.handleChange('name')}
+								value={item.getName()}
+								onChange={(event) => item.setName(event.target.value)}
 								margin='dense'
 								autoFocus={true}
-								error={name.error}
-								helperText={name.helperText}
+								error={nameField.error}
+								helperText={nameField.helperText}
 								fullWidth
 							/>
 							<div>
 								<TextField
 									id='item-form-price'
 									label='Price'
-									value={price.value}
-									onChange={this.props.handleChange('price')}
+									value={item.getPrice()}
+									onChange={(event) => item.setPrice(event.target.value)}
 									margin='dense'
 									InputProps={{ inputComponent: CurrencyFormat }}
 									className='item-form-price'
-									error={price.error}
-									helperText={price.helperText}
+									error={priceField.error}
+									helperText={priceField.helperText}
 								/>
 								<TextField
 									id='item-form-saved'
 									label='Saved'
-									value={saved.value}
-									onChange={this.props.handleChange('saved')}
+									value={item.getSaved()}
+									onChange={(event) => item.setSaved(event.target.value)}
 									margin='dense'
 									InputProps={{ inputComponent: CurrencyFormat }}
 									className='item-form-saved'
-									error={saved.error}
-									helperText={saved.helperText}
+									error={savedField.error}
+									helperText={savedField.helperText}
 								/>
 							</div>
 							<div className='item-form-third-row'>
 								<TextField
 									id='item-form-increment'
 									label='Increment'
-									value={increment.value}
-									onChange={this.props.handleChange('increment')}
+									value={item.getIncrement()}
+									onChange={(event) => item.setIncrement(event.target.value)}
 									margin='dense'
 									InputProps={{ inputComponent: CurrencyFormat }}
 									className='item-form-increment'
-									error={increment.error}
-									helperText={increment.helperText}
+									error={incrementField.error}
+									helperText={incrementField.helperText}
 								/>
 								<div className='display-inline item-form-add-taxes'>
 									<label htmlFor='item-form-add-taxes-switch'>Add Taxes</label>
 									<Switch
 										id='item-form-add-taxes-switch'
-										checked={addTaxes.checked}
-										onChange={this.props.handleChange('addTaxes')}
-										value={addTaxes.value}
+										checked={item.getAddTaxes()}
+										onChange={(event) => item.setAddTaxes(event.target.checked)}
+										value={addTaxesField.value}
 									/>
 								</div>
 							</div>
@@ -112,23 +113,15 @@ class ListItemForm extends Component {
 	}
 
 	saveItem = () => {
-		let valid = this._validateItem(this.props.item);
+		const item = this.props.item;
+		const valid = this._validateItem(item);
 		if (!valid) return;
-
-		const { name, price, saved, increment, addTaxes } = this.props.item;
-		const item = new ItemModel({
-			addTaxes: addTaxes.checked,
-			increment: increment.value,
-			name: name.value,
-			price: price.value,
-			saved: saved.value
-		});
 
 		if (this.props.isNewItem) {
 			item.setId(FirebaseWrapper.generateUUID());
 			FirebaseWrapper.saveNewItem(this.props.getPagePath(), item.valueOf());
 		} else {
-			item.setId(this.props.itemId);
+			item.setId(this.props.getId());
 			FirebaseWrapper.updateItem(this.props.getPagePath(), item.valueOf());
 		}
 
@@ -137,53 +130,45 @@ class ListItemForm extends Component {
 	}
 
 	deleteItem = () => {
-		FirebaseWrapper.deleteItem(this.props.getPagePath(), this.props.itemId);
+		FirebaseWrapper.deleteItem(this.props.getPagePath(), this.props.item.getId());
 		this.props.closeForm();
 		this.props.resetItem();
 	}
 
 	_validateItem = (item) => {
-		const { name, price, increment } = this.props.item, errors = {};
+		const errors = {};
 
-		if (_.isEmpty(_.trim(name.value))) {
-			errors.name = {
+		if (_.isEmpty(_.trim(item.getName()))) {
+			errors.nameField = {
 				error: true,
 				helperText: 'Name cannot be empty'
 			};
 		}
-		if (_.isEmpty(_.trim(price.value))) {
-			errors.price = {
+		if (_.isEmpty(_.trim(item.getPrice()))) {
+			errors.priceField = {
 				error: true,
 				helperText: 'Price cannot be empty'
 			}
 		}
-		if (_.isEmpty(_.trim(increment.value))) {
-			errors.increment = {
+		if (_.isEmpty(_.trim(item.getIncrement()))) {
+			errors.incrementField = {
 				error: true,
 				helperText: 'Increment cannot be empty'
 			}
 		}
 
-		let updatedItem = this.props.item;
-		_.forEach(errors, (value, key) => {
-			_.assign(updatedItem[key], value);
-		});
-
+		const updatedItem = this.props.item;
 		_.forEach(updatedItem, (value, key) => {
 			if (errors[key]) {
 				_.assign(updatedItem[key], errors[key]);
 			} else {
-				_.assign(updatedItem[key], validField);
+				_.assign(updatedItem[key], { helperText: '', error: false });
 			}
 		});
 
-		this.setState({ item: updatedItem });
 		return _.isEmpty(errors);
 	}
 }
-
-// TODO: Update to use central valid field
-const validField = { helperText: '', error: false };
 
 export default ListItemForm;
 
