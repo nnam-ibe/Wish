@@ -37,16 +37,21 @@ test('no error when username is valid', () => {
 });
 
 test('returns error when email is falsy', () => {
-	expect(InputValidation.validateEmail(' ')).toBeDefined();
-	expect(InputValidation.validateEmail(null)).toBeDefined();
-	expect(InputValidation.validateEmail()).toBeDefined();
+	expect(InputValidation.validateEmail(' ').message).toBe('Email cannot be empty');
+	expect(InputValidation.validateEmail(null).message).toBe('Email cannot be empty');
+	expect(InputValidation.validateEmail().message).toBe('Email cannot be empty');
+});
+
+test('email should have @ symbol', () => {
+	expect(InputValidation.validateEmail('james').message).toBe('Please enter a valid email');
+	expect(InputValidation.validateEmail('james@mail')).toBeUndefined();
 });
 
 test('returns error when password is <6 chars', () => {
-	expect(InputValidation.validatePassword(' ')).toBeDefined();
-	expect(InputValidation.validatePassword('12345')).toBeDefined();
-	expect(InputValidation.validatePassword(null)).toBeDefined();
-	expect(InputValidation.validatePassword()).toBeDefined();
+	expect(InputValidation.validatePassword(' ').message).toBe('Password must have at least 6 characters');
+	expect(InputValidation.validatePassword('12345').message).toBe('Password must have at least 6 characters');
+	expect(InputValidation.validatePassword(null).message).toBe('Password must have at least 6 characters');
+	expect(InputValidation.validatePassword().message).toBe('Password must have at least 6 characters');
 });
 
 test('no error when password is >=6 chars', () => {
@@ -55,16 +60,16 @@ test('no error when password is >=6 chars', () => {
 });
 
 test('returns error when tax amount isNaN', () => {
-	expect(InputValidation.validateTax('A12')).toBeDefined();
-	expect(InputValidation.validateTax('12%')).toBeDefined();
-	expect(InputValidation.validateTax('')).toBeDefined();
-	expect(InputValidation.validateTax(null)).toBeDefined();
-	expect(InputValidation.validateTax()).toBeDefined();
+	expect(InputValidation.validateTax('A12').message).toBe('Tax must be a valid number');
+	expect(InputValidation.validateTax('12%').message).toBe('Tax must be a valid number');
+	expect(InputValidation.validateTax('').message).toBe('Tax cannot be empty');
+	expect(InputValidation.validateTax(null).message).toBe('Tax cannot be empty');
+	expect(InputValidation.validateTax().message).toBe('Tax cannot be empty');
 });
 
 test('returns error when tax amount is <0 || >100', () => {
-	expect(InputValidation.validateTax(-1)).toBeDefined();
-	expect(InputValidation.validateTax(101)).toBeDefined();
+	expect(InputValidation.validateTax(-1).message).toBe('Tax must be between 0 & 100');
+	expect(InputValidation.validateTax(101).message).toBe('Tax must be between 0 & 100');
 });
 
 test('no error when tax is valid', () => {
@@ -76,9 +81,11 @@ test('no error when tax is valid', () => {
 
 test('no error when strings are equal', () => {
 	expect(InputValidation.validatePasswordsAreEqual('value', 'value')).toBeUndefined();
+	expect(InputValidation.validatePasswordsAreEqual('1234', '1234')).toBeUndefined();
 });
 
 test('returns error when strings are different', () => {
-	expect(InputValidation.validatePasswordsAreEqual('value', 'VALUE')).toBeDefined();
-	expect(InputValidation.validatePasswordsAreEqual('value', 'value ')).toBeDefined();
+	expect(InputValidation.validatePasswordsAreEqual('value', 'VALUE').message).toBe('Passwords don\'t match');
+	expect(InputValidation.validatePasswordsAreEqual('value', 'value ').message).toBe('Passwords don\'t match');
+	expect(InputValidation.validatePasswordsAreEqual('1234', '12345').message).toBe('Passwords don\'t match');
 });
