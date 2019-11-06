@@ -88,18 +88,6 @@ class ListPage extends Component {
 		})
 	}
 
-	// handleFormItemChange = name => event => {
-	// 	let item = this.state.formItem;
-
-	// 	if (name === 'addTaxes') {
-	// 		item[name].checked = event.target.checked;
-	// 	} else {
-	// 		item[name].value = event.target.value;
-	// 	}
-
-	// 	this.setState({ formItem: item });
-	// }
-
 	resetFormItem = () => {
 		this.setState({
 			formItem: this._getFormItemDefault(),
@@ -172,8 +160,9 @@ class ListPage extends Component {
 			priceField: FormFieldDefaults.priceDefault,
 			savedField: FormFieldDefaults.savedDefault,
 			incrementField: FormFieldDefaults.incrementDefault,
-			addTaxesField: this.props.userPrefs.addTaxes
+			addTaxesField: FormFieldDefaults.addTaxesDefault
 		};
+		_.set(formDefaults, 'addTaxesField.checked', this.props.userPrefs.addTaxes);
 		return _.set(formDefaults, 'incrementField.value', this.props.userPrefs.defaultIncrement);
 	}
 
@@ -186,31 +175,3 @@ class ListPage extends Component {
 }
 
 export default ListPage;
-
-// TODO: Update to use FormFieldDefaults
-const formItemDefaults = {
-	name: {
-		error: false,
-		helperText: '',
-		value: ''
-	},
-	price: {
-		error: false,
-		helperText: '',
-		value: ''
-	},
-	saved: {
-		error: false,
-		helperText: '',
-		value: ''
-	},
-	increment: {
-		error: false,
-		helperText: '',
-		value: '200'
-	},
-	addTaxes: {
-		checked: false,
-		value: 'addTaxes'
-	}
-};

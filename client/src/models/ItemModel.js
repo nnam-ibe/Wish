@@ -11,7 +11,7 @@ class ItemModel {
 		this.tax = options.tax;
 		this.id = options.id;
 
-		const taxValue = options.tax ? Boolean(options.tax) : 0;
+		const taxValue = options.tax ? options.tax : 0;
 		this.taxMultipler = 1 + (taxValue/100);
 		return this.updateProgress();
 	}
