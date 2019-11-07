@@ -20,12 +20,12 @@ class ListPage extends Component {
 			// Input Form State
 			formItem: this._getFormItemDefault(),
 			formItemModel: new ItemModel({
+				tax: this.props.userPrefs.tax,
 				addTaxes: props.userPrefs.addTaxes,
 				increment: props.userPrefs.defaultIncrement
 			}),
 			itemFormIsOpen: false,
-			isNewFormItem: true,
-			formItemId: null
+			isNewFormItem: true
 		};
 	}
 
@@ -34,8 +34,8 @@ class ListPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		let samePage = prevProps.match.params.page === this.props.match.params.page;
-		let sameProps = this.props.uid === prevProps.uid
+		const samePage = prevProps.match.params.page === this.props.match.params.page;
+		const sameProps = this.props.uid === prevProps.uid
 		if (samePage && sameProps) return;
 
 		this._getList(this.props.uid);
@@ -60,7 +60,6 @@ class ListPage extends Component {
 						fields={this.state.formItem}
 						resetItem={this.resetFormItem}
 						isNewItem={this.state.isNewFormItem}
-						itemId={this.state.formItemId}
 					/>
 				</div>
 				<div>
@@ -91,8 +90,7 @@ class ListPage extends Component {
 	resetFormItem = () => {
 		this.setState({
 			formItem: this._getFormItemDefault(),
-			isNewFormItem: true,
-			formItemId: null
+			isNewFormItem: true
 		});
 	}
 
@@ -101,26 +99,19 @@ class ListPage extends Component {
 	}
 
 	_editItem = (id) => {
-		let item = _.find(this.state.list, { id: id });
+		const item = _.find(this.state.list, { id: id });
 		if (!item) return null;
 
-		let itemToEdit = this._getFormItemDefault();
-		let values = ['addTaxes', 'increment', 'name', 'price', 'saved'];
-
-		_.forEach(values, (key) => {
-			if (key === 'addTaxes') {
-				itemToEdit[key].checked = item[key];
-				return;
-			}
-
-			itemToEdit[key].value = item[key];
+		const itemToEdit = this._getFormItemDefault();
+		const model = new ItemModel({
+			...item,
+			tax: this.props.userPrefs.tax
 		});
-
 		this.setState({
+			formItemModel: model,
 			itemFormIsOpen: true,
 			formItem: itemToEdit,
-			isNewFormItem: false,
-			formItemId: id
+			isNewFormItem: false
 		});
 	}
 
@@ -136,7 +127,7 @@ class ListPage extends Component {
 				return;
 			}
 
-			let list = snapShot.data().items;
+			const list = snapShot.data().items;
 			this._setListElements(list);
 		});
 	}

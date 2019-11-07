@@ -28,9 +28,14 @@ class ItemModel {
 	}
 
 	updateProgress() {
-		this.difference = this.getPriceWithTaxAsBig().minus(this.saved);
+		const totalPrice = this.getPriceWithTaxAsBig();
+		this.difference = totalPrice.minus(this.saved);
 		if (this.difference < 0) this.difference = new Big(0);
-		this.progress = this.saved.div(this.getPriceWithTaxAsBig()).times(100);
+		if (totalPrice > 0) {
+			this.progress = this.saved.div(totalPrice).times(100);
+		} else {
+			this.progress = new Big(100);
+		}
 		if (this.progress > 100) this.progress = new Big(100);
 
 		return this;

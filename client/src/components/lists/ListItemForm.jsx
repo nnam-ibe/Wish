@@ -10,7 +10,6 @@ import NumberFormat from 'react-number-format';
 import _ from 'lodash';
 
 import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
-import ItemModel from '../../models/ItemModel.js';
 
 class ListItemForm extends Component {
 
@@ -121,7 +120,6 @@ class ListItemForm extends Component {
 			item.setId(FirebaseWrapper.generateUUID());
 			FirebaseWrapper.saveNewItem(this.props.getPagePath(), item.valueOf());
 		} else {
-			item.setId(this.props.getId());
 			FirebaseWrapper.updateItem(this.props.getPagePath(), item.valueOf());
 		}
 
