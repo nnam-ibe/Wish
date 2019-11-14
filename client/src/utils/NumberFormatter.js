@@ -1,24 +1,18 @@
-const _ = require('lodash');
-
+const Big = require('big.js');
 const NumberFormatter = {};
 
-NumberFormatter.formatMoney = (amount) => {
-	amount = _.toNumber(amount);
-	if (isNaN(amount)) return 0;
-
-	if (amount < 0) return 0;
-
-	return _.round(amount, 2);
+NumberFormatter.getBig = (value) => {
+	if (isNaN(value) || value === null) return new Big(0);
+	return new Big(value);
 };
 
-/*
-* @param taxRate should be in percentage
-*/
-NumberFormatter.calculateTax = (amount, taxRate) => {
-	if (amount < 0) return 0;
-	if (taxRate < 0) return amount;
-	var rawValue = (1 + (taxRate/100)) * amount;
-	return NumberFormatter.formatMoney(rawValue);
+NumberFormatter.formatMoney = (amount) => {
+	return String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+NumberFormatter.getNumber = (value) => {
+	if (!value) return 0;
+	return Number(value.toString());
 };
 
 module.exports = NumberFormatter;

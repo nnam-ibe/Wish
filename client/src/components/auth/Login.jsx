@@ -3,9 +3,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import FirebaseUtil from '../../utils/firebaseUtil.js';
 import _ from 'lodash';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 import InputValidation from '../../utils/InputValidation';
 import { emailDefault, passwordDefault } from '../../utils/FormFieldDefaults';
 
@@ -15,12 +15,12 @@ function Login(props) {
 	const [showProgressBar, setShowProgressBar] = useState(false);
 	const progessBar = <LinearProgress/>;
 
-	function login(e) {
+	function handleLoginClick(e) {
 		e.preventDefault();
 		setShowProgressBar(true);
 		if (validateInputs()) return setShowProgressBar(false);
 
-		FirebaseUtil.login({
+		FirebaseWrapper.login({
 			email: _.trim(email.value),
 			password: password.value
 		})
@@ -32,7 +32,7 @@ function Login(props) {
 			setShowProgressBar(false);
 			if (!err.code) return;
 
-			const message = FirebaseUtil.getErrorMessage(err.code);
+			const message = FirebaseWrapper.getErrorMessage(err.code);
 			if (_.includes(err.code, 'password')) {
 				setPassword({ ...password, error: true, helperText: message });
 			} else {
@@ -111,7 +111,7 @@ function Login(props) {
 							fullWidth
 							type='submit'
 							color='inherit'
-							onClick={login}>
+							onClick={handleLoginClick}>
 							Login
 						</Button>
 					</form>

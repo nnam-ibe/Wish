@@ -1,42 +1,18 @@
 import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { shallow } from 'enzyme';
+import { render, fireEvent, act, prettyDOM } from '@testing-library/react'
 
-import Settings from './Settings';
+import Settings from './Settings.jsx';
 
-Enzyme.configure({ adapter: new Adapter() });
-
-const props = { history: [] };
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 
 describe('Settings', () => {
 	it('user settings form shows up', () => {
-		const component = shallow(<Settings {...props}/>);
-		expect(component.find('.user-settings-form')).toHaveLength(1);
+		const { getByText } = render(<Settings history={[]}/>);
+		expect(getByText('Username'));
+		expect(getByText('Sales Tax'));
+		expect(getByText('Default Increment'));
+		expect(getByText('Default List'));
+		expect(getByText('Add Taxes'));
+		expect(getByText('Save Settings'));
 	});
-
-	it ('username shows up', () => {
-		const component = shallow(<Settings {...props}/>);
-		expect(component.find('#settings-form-username')).toHaveLength(1);
-	});
-
-	it ('tax shows up', () => {
-		const component = shallow(<Settings {...props}/>);
-		expect(component.find('#settings-form-tax')).toHaveLength(1);
-	});
-
-	it ('default-increment shows up', () => {
-		const component = shallow(<Settings {...props}/>);
-		expect(component.find('#settings-form-default-increment')).toHaveLength(1);
-	});
-
-	it ('default-list shows up', () => {
-		const component = shallow(<Settings {...props}/>);
-		expect(component.find('#settings-form-default-list')).toHaveLength(1);
-	});
-
-	it ('add-taxes shows up', () => {
-		const component = shallow(<Settings {...props}/>);
-		expect(component.find('#settings-form-taxes-form-control')).toHaveLength(1);
-	});
-
 });

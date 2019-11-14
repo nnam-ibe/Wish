@@ -38,3 +38,9 @@ exports.savedDefault = {
 	helperText: '',
 	value: ''
 };
+
+exports.usernameDefault = {
+	error: false,
+	helperText: '',
+	value: ''
+};

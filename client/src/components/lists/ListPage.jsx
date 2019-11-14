@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import Item from './Item.jsx';
-import FirebaseUtil from '../../utils/firebaseUtil.js';
-import ListItemForm from './ListItemForm.jsx';
 import _ from 'lodash';
+
+import Item from './Item.jsx';
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
+import ListItemForm from './ListItemForm.jsx';
+import ItemModel from '../../models/ItemModel.js';
+import FormFieldDefaults from '../../utils/FormFieldDefaults.js';
 
 class ListPage extends Component {
 
@@ -16,6 +19,10 @@ class ListPage extends Component {
 
 			// Input Form State
 			formItem: this._getFormItemDefault(),
+			formItemModel: new ItemModel({
+				addTaxes: props.userPrefs.addTaxes,
+				increment: props.userPrefs.defaultIncrement
+			}),
 			itemFormIsOpen: false,
 			isNewFormItem: true,
 			formItemId: null
@@ -49,8 +56,8 @@ class ListPage extends Component {
 						isOpen={this.state.itemFormIsOpen}
 						closeForm={this.closeItemForm}
 						getPagePath={this._getPagePath}
-						item={this.state.formItem}
-						handleChange={this.handleFormItemChange}
+						item={this.state.formItemModel}
+						fields={this.state.formItem}
 						resetItem={this.resetFormItem}
 						isNewItem={this.state.isNewFormItem}
 						itemId={this.state.formItemId}
@@ -81,28 +88,16 @@ class ListPage extends Component {
 		})
 	}
 
-	handleFormItemChange = name => event => {
-		let item = this.state.formItem;
-
-		if (name === 'addTaxes') {
-			item[name].checked = event.target.checked;
-		} else {
-			item[name].value = event.target.value;
-		}
-
-		this.setState({ formItem: item });
-	}
-
 	resetFormItem = () => {
 		this.setState({
-			formItem:  this._getFormItemDefault(),
+			formItem: this._getFormItemDefault(),
 			isNewFormItem: true,
 			formItemId: null
 		});
 	}
 
 	_updateItem = (item) => {
-		FirebaseUtil.updateItem(this._getPagePath(), item);
+		FirebaseWrapper.updateItem(this._getPagePath(), item);
 	}
 
 	_editItem = (id) => {
@@ -135,7 +130,7 @@ class ListPage extends Component {
 			return;
 		}
 
-		this.onSnapshotUnsubscribe = FirebaseUtil.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
+		this.onSnapshotUnsubscribe = FirebaseWrapper.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
 			if (!snapShot.exists) {
 				this.setState({ list: null, listItems: null });
 				return;
@@ -151,45 +146,32 @@ class ListPage extends Component {
 	}
 
 	_setListElements = (list) => {
-		let listItems = _.map(list, (item) => {
-			return ( <Item {...item} key={item.id} updateItem={this._updateItem} editItem={this._editItem} tax={this.props.userPrefs.tax}/> );
+		const listItems = _.map(list, (item) => {
+			const itemModel = new ItemModel({...item, tax: this.props.userPrefs.tax});
+			return ( <Item itemModel={itemModel} key={item.id} updateItem={this._updateItem} editItem={this._editItem} id={item.id}/> );
 		});
 
 		this.setState({ list, listItems });
 	}
 
 	_getFormItemDefault = () => {
-		let item = _.cloneDeep(formItemDefaults);
-		return _.set(item, 'increment.value', this.props.userPrefs.defaultIncrement);
+		const formDefaults = {
+			nameField: FormFieldDefaults.nameDefault,
+			priceField: FormFieldDefaults.priceDefault,
+			savedField: FormFieldDefaults.savedDefault,
+			incrementField: FormFieldDefaults.incrementDefault,
+			addTaxesField: FormFieldDefaults.addTaxesDefault
+		};
+		_.set(formDefaults, 'addTaxesField.checked', this.props.userPrefs.addTaxes);
+		return _.set(formDefaults, 'incrementField.value', this.props.userPrefs.defaultIncrement);
+	}
+
+	getDefaultFormItemModel = () => {
+		return new ItemModel({
+			addTaxes: this.props.userPrefs.addTaxes,
+			increment: this.props.userPrefs.defaultIncrement
+		});
 	}
 }
 
 export default ListPage;
-
-// TODO: Update to use FormFieldDefaults
-const formItemDefaults = {
-	name: {
-		error: false,
-		helperText: '',
-		value: ''
-	},
-	price: {
-		error: false,
-		helperText: '',
-		value: ''
-	},
-	saved: {
-		error: false,
-		helperText: '',
-		value: ''
-	},
-	increment: {
-		error: false,
-		helperText: '',
-		value: '200'
-	},
-	addTaxes: {
-		checked: false,
-		value: 'addTaxes'
-	}
-};

@@ -1,74 +1,96 @@
 import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
-import Enzyme, { mount, shallow } from 'enzyme';
-import Login from './Login';
+import {render, fireEvent, act} from '@testing-library/react'
 
-Enzyme.configure({ adapter: new Adapter() });
+import Login from './Login.jsx';
+import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
+
+// mock api calls
+let resolve, reject;
+FirebaseWrapper.login = jest.fn(() => new Promise((_resolve, _reject) => {
+	resolve = _resolve;
+	reject = _reject;
+}));
 
 describe('Login', () => {
 	it('login form appears', () => {
-		const component = shallow(<Login />);
-		expect(component.find('.login-form')).toHaveLength(1);
+		const { getByText } = render(<Login />);
+		expect(getByText('Email Address'));
+		expect(getByText('Password'));
 	});
 
-	it('email error message shows up when field is empty', () => {
-		const component = mount(<Login />);
-		expect(component.find('#email-helper-text')).toHaveLength(0);
-		component.find('#login-form-button')
-			.first()
-			.simulate('click', {
-				preventDefault() {}
-			});
+	it('error helper texts shows up when fields are empty', () => {
+		const emailEmptyMessage = 'Email cannot be empty';
+		const passwordEmptyMessage = 'Password must have at least 6 characters';
+		const { getByText, queryByText, getByRole } = render(<Login />);
 
-		const errorMessage = 'Email cannot be empty';
-		expect(component.find('#email-helper-text').first().text()).toBe(errorMessage);
-	});
+		const emailHelperText = queryByText(emailEmptyMessage);
+		const passwordHelperText = queryByText(passwordEmptyMessage);
+		expect(emailHelperText).toBeNull();
+		expect(passwordHelperText).toBeNull();
 
-	it('password error message shows up when field is empty', () => {
-		const component = mount(<Login />);
-		expect(component.find('#password-helper-text')).toHaveLength(0);
-		component.find('#login-form-button')
-			.first()
-			.simulate('click', {
-				preventDefault() {}
-			});
-
-		const errorMessage = 'Password must have at least 6 characters';
-		expect(component.find('#password-helper-text').first().text()).toBe(errorMessage);
+		fireEvent.click(getByRole('button'));
+		expect(getByText(emailEmptyMessage));
+		expect(getByText(passwordEmptyMessage));
 	});
 
 	it('password error message shows up when field has <6 chars', () => {
-		const component = mount(<Login />);
-		expect(component.find('#password-helper-text')).toHaveLength(0);
-		component.find('#password')
-			.first()
-			.simulate('change', { target: { value: '12345' } });
-
-		component.find('#login-form-button')
-			.first()
-			.simulate('click', { preventDefault() {} });
-
-
 		const errorMessage = 'Password must have at least 6 characters';
-		expect(component.find('#password-helper-text').first().text()).toBe(errorMessage);
+		const { getByText, getByRole, container } = render(<Login />);
+
+		fireEvent.change(container.querySelector('#password'), { target: { value: '12345' } });
+		fireEvent.click(getByRole('button'));
+		expect(getByText(errorMessage));
 	});
 
-	// it('shows proper error message', () => {
-	// 	const component = mount(<Login />);
-	// 	expect(component.find('#password-helper-text')).toHaveLength(0);
-	// 	component.find('#email')
-	// 		.first()
-	// 		.simulate('change', { target: { value: 'john' } });
-	// 	component.find('#password')
-	// 		.first()
-	// 		.simulate('change', { target: { value: '1234567' } });
+	it('makes api call when validation requirements are met', async () => {
+		const emailValue = 'sample@mail.com';
+		const passwordValue = '123456';
+		const { getByRole, container } = render(<Login {...{history: []}}/>);
+		fireEvent.change(container.querySelector('#email'), { target: { value: emailValue } });
+		fireEvent.change(container.querySelector('#password'), { target: { value: passwordValue } });
+		fireEvent.click(getByRole('button'));
 
-	// 	component.find('#login-form-button')
-	// 		.first()
-	// 		.simulate('click', { preventDefault() {} });
+		await act(async () => {
+			resolve();
+		});
 
+		expect(FirebaseWrapper.login.mock.calls[0][0].email).toBe(emailValue);
+		expect(FirebaseWrapper.login.mock.calls[0][0].password).toBe(passwordValue);
+	});
 
-	// 	const errorMessage = 'Password must have at least 6 characters';
-	// 	expect(component.find('#password-helper-text').first().text()).toBe(errorMessage);
-	// });
+	it('displays error from firebase on email', async () => {
+		const errorMessage = 'No account found';
+		const emailValue = 'sample@mail.com';
+		const passwordValue = '654321';
+		const { getByText, getByRole, container } = render(<Login />);
+		fireEvent.change(container.querySelector('#email'), { target: { value: emailValue } });
+		fireEvent.change(container.querySelector('#password'), { target: { value: passwordValue } });
+		fireEvent.click(getByRole('button'));
+
+		await act(async () => {
+			reject({ code: 'auth/user-not-found' });
+		});
+
+		expect(FirebaseWrapper.login.mock.calls[1][0].email).toBe(emailValue);
+		expect(FirebaseWrapper.login.mock.calls[1][0].password).toBe(passwordValue);
+		expect(getByText(errorMessage));
+	});
+
+	it('displays error from firebase on password', async () => {
+		const errorMessage = 'Incorrect password';
+		const emailValue = 'sample@mail.com';
+		const passwordValue = '654321';
+		const { getByText, getByRole, container } = render(<Login />);
+		fireEvent.change(container.querySelector('#email'), { target: { value: emailValue } });
+		fireEvent.change(container.querySelector('#password'), { target: { value: passwordValue } });
+		fireEvent.click(getByRole('button'));
+
+		await act(async () => {
+			reject({ code: 'auth/wrong-password' });
+		});
+
+		expect(FirebaseWrapper.login.mock.calls[1][0].email).toBe(emailValue);
+		expect(FirebaseWrapper.login.mock.calls[1][0].password).toBe(passwordValue);
+		expect(getByText(errorMessage));
+	});
 });
