@@ -139,7 +139,6 @@ function CreateAccount(props) {
 	);
 }
 
-
 function nextState(prevState, err) {
 	if (err) {
 		prevState = {

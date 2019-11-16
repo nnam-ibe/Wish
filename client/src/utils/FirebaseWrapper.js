@@ -73,7 +73,6 @@ module.exports = {
 			let index = _.findIndex(items, { id: item.id });
 
 			items[index] = item;
-			console.log('items', items);
 			db.doc(path).set({ items }, { merge: true });
 		});
 	},

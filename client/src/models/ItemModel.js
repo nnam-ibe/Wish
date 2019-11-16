@@ -130,6 +130,12 @@ class ItemModel {
 	toString() {
 		return Object.entries(this.valueOf()).toString();
 	}
+
+	// creates a new object to defeat Object.is comparison
+	// TODO: needs tests
+	newRef() {
+		return new ItemModel(this.valueOf());
+	}
 }
 
 module.exports = ItemModel;

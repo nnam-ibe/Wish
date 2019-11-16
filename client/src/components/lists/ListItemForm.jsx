@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
@@ -11,161 +11,173 @@ import _ from 'lodash';
 
 import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 
-class ListItemForm extends Component {
+function ListItemForm(props) {
+	const [item, setItem] = useState(props.item);
+	const [isOpen, setIsOpen] = useState(props.isOpen);
+	const [fields, setFields] = useState(props.fields);
 
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
+	const formTitle = props.isNewItem ? 'Add New Item' : 'Update Item';
 
-	render() {
-		const item = this.props.item;
-		const { nameField, priceField, savedField, incrementField, addTaxesField } = this.props.fields;
-		const formTitle = this.props.isNewItem ? 'Add New Item' : 'Update Item'
+	useEffect(() => {
+		setItem(props.item);
+		setIsOpen(props.isOpen);
+		setFields(props.fields);
+	}, [props.item, props.isOpen, props.fields]);
 
-		return	(
-			<div className='item-form'>
-				{this.props.isOpen && (
-					<Paper>
-						<div className='item-form-paper-title display-flex'>
-							<div className='item-form-paper-title-text'>
-								<Typography color='inherit'>{formTitle}</Typography>
-							</div>
-							<CloseIcon onClick={this.props.closeForm}/>
-						</div>
-						<Divider />
-						<div className='item-form-paper-body'>
-							<TextField
-								id='item-form-name'
-								label='Name'
-								value={item.getName()}
-								onChange={(event) => item.setName(event.target.value)}
-								margin='dense'
-								autoFocus={true}
-								error={nameField.error}
-								helperText={nameField.helperText}
-								fullWidth
-							/>
-							<div>
-								<TextField
-									id='item-form-price'
-									label='Price'
-									value={item.getPrice()}
-									onChange={(event) => item.setPrice(event.target.value)}
-									margin='dense'
-									InputProps={{ inputComponent: CurrencyFormat }}
-									className='item-form-price'
-									error={priceField.error}
-									helperText={priceField.helperText}
-								/>
-								<TextField
-									id='item-form-saved'
-									label='Saved'
-									value={item.getSaved()}
-									onChange={(event) => item.setSaved(event.target.value)}
-									margin='dense'
-									InputProps={{ inputComponent: CurrencyFormat }}
-									className='item-form-saved'
-									error={savedField.error}
-									helperText={savedField.helperText}
-								/>
-							</div>
-							<div className='item-form-third-row'>
-								<TextField
-									id='item-form-increment'
-									label='Increment'
-									value={item.getIncrement()}
-									onChange={(event) => item.setIncrement(event.target.value)}
-									margin='dense'
-									InputProps={{ inputComponent: CurrencyFormat }}
-									className='item-form-increment'
-									error={incrementField.error}
-									helperText={incrementField.helperText}
-								/>
-								<div className='display-inline item-form-add-taxes'>
-									<label htmlFor='item-form-add-taxes-switch'>Add Taxes</label>
-									<Switch
-										id='item-form-add-taxes-switch'
-										checked={item.getAddTaxes()}
-										onChange={(event) => item.setAddTaxes(event.target.checked)}
-										value={addTaxesField.value}
-									/>
-								</div>
-							</div>
-							<div className='item-form-fourth-row'>
-								{
-									this.props.isNewItem ? (
-										<Button color='primary' variant='contained' onClick={this.saveItem}>Add Item</Button>
-									) : (
-										<div>
-											<Button color='primary' variant='contained' onClick={this.saveItem} className="mr-10">Save Item</Button>
-											<Button color='secondary' variant='contained' onClick={this.deleteItem}>Delete Item</Button>
-										</div>
-									)
-								}
-							</div>
-						</div>
-					</Paper>
-				)}
-			</div>
-		)
-	}
-
-	saveItem = () => {
-		const item = this.props.item;
-		const valid = this._validateItem(item);
+	function saveItem() {
+		const valid = validateItem();
 		if (!valid) return;
 
 		if (this.props.isNewItem) {
 			item.setId(FirebaseWrapper.generateUUID());
-			FirebaseWrapper.saveNewItem(this.props.getPagePath(), item.valueOf());
+			FirebaseWrapper.saveNewItem(props.getPagePath(), item.valueOf());
 		} else {
-			FirebaseWrapper.updateItem(this.props.getPagePath(), item.valueOf());
+			FirebaseWrapper.updateItem(props.getPagePath(), item.valueOf());
 		}
 
-		this.props.closeForm();
-		this.props.resetItem();
+		props.closeForm();
+		props.resetItem();
 	}
 
-	deleteItem = () => {
-		FirebaseWrapper.deleteItem(this.props.getPagePath(), this.props.item.getId());
-		this.props.closeForm();
-		this.props.resetItem();
+	function deleteItem() {
+		FirebaseWrapper.deleteItem(props.getPagePath(), item.getId());
+		props.closeForm();
+		props.resetItem();
 	}
 
-	_validateItem = (item) => {
-		const errors = {};
+	function validateItem() {
+		let err, isInvalid = false;
 
 		if (_.isEmpty(_.trim(item.getName()))) {
-			errors.nameField = {
+			isInvalid = true;
+			err = {
 				error: true,
 				helperText: 'Name cannot be empty'
 			};
 		}
+		fields.nameField = nextState(fields.nameField, err);
+
+		err = null;
 		if (_.isEmpty(_.trim(item.getPrice()))) {
-			errors.priceField = {
+			isInvalid = true;
+			err = {
+				error: true,
+				helperText: 'Saved cannot be empty'
+			}
+		}
+		fields.savedField = nextState(fields.savedField, err);
+
+		err = null;
+		if (_.isEmpty(_.trim(item.getPrice()))) {
+			isInvalid = true;
+			err = {
 				error: true,
 				helperText: 'Price cannot be empty'
 			}
 		}
+		fields.priceField = nextState(fields.priceField, err);
+
+		err = null;
 		if (_.isEmpty(_.trim(item.getIncrement()))) {
-			errors.incrementField = {
+			isInvalid = true;
+			err = {
 				error: true,
 				helperText: 'Increment cannot be empty'
 			}
 		}
+		fields.incrementField = nextState(fields.incrementField, err);
 
-		const updatedItem = this.props.item;
-		_.forEach(updatedItem, (value, key) => {
-			if (errors[key]) {
-				_.assign(updatedItem[key], errors[key]);
-			} else {
-				_.assign(updatedItem[key], { helperText: '', error: false });
-			}
-		});
-
-		return _.isEmpty(errors);
+		setFields(fields);
+		return isInvalid;
 	}
+
+
+	return	(
+		<div className='item-form'>
+			{isOpen && (
+				<Paper>
+					<div className='item-form-paper-title display-flex'>
+						<div className='item-form-paper-title-text'>
+							<Typography color='inherit'>{formTitle}</Typography>
+						</div>
+						<CloseIcon onClick={props.closeForm}/>
+					</div>
+					<Divider />
+					<div className='item-form-paper-body'>
+						<TextField
+							id='item-form-name'
+							label='Name'
+							value={item.getName()}
+							onChange={(event) => setItem(item.setName(event.target.value).newRef())}
+							margin='dense'
+							autoFocus={true}
+							error={fields.nameField.error}
+							helperText={fields.nameField.helperText}
+							fullWidth
+						/>
+						<div>
+							<TextField
+								id='item-form-price'
+								label='Price'
+								value={item.getPrice()}
+								onChange={(event) => setItem(item.setPrice(event.target.value).newRef())}
+								margin='dense'
+								InputProps={{ inputComponent: CurrencyFormat }}
+								className='item-form-price'
+								error={fields.priceField.error}
+								helperText={fields.priceField.helperText}
+							/>
+							<TextField
+								id='item-form-saved'
+								label='Saved'
+								value={item.getSaved()}
+								onChange={(event) => setItem(item.setSaved(event.target.value).newRef())}
+								margin='dense'
+								InputProps={{ inputComponent: CurrencyFormat }}
+								className='item-form-saved'
+								error={fields.savedField.error}
+								helperText={fields.savedField.helperText}
+							/>
+						</div>
+						<div className='item-form-third-row'>
+							<TextField
+								id='item-form-increment'
+								label='Increment'
+								value={item.getIncrement()}
+								onChange={(event) => setItem(item.setIncrement(event.target.value).newRef())}
+								margin='dense'
+								InputProps={{ inputComponent: CurrencyFormat }}
+								className='item-form-increment'
+								error={fields.incrementField.error}
+								helperText={fields.incrementField.helperText}
+							/>
+							<div className='display-inline item-form-add-taxes'>
+								<label htmlFor='item-form-add-taxes-switch'>Add Taxes</label>
+								<Switch
+									id='item-form-add-taxes-switch'
+									checked={item.getAddTaxes()}
+									onChange={(event) => setItem(item.setAddTaxes(event.target.checked).newRef())}
+									value={fields.addTaxesField.value}
+								/>
+							</div>
+						</div>
+						<div className='item-form-fourth-row'>
+							{
+								props.isNewItem ? (
+									<Button color='primary' variant='contained' onClick={saveItem}>Add Item</Button>
+								) : (
+									<div>
+										<Button color='primary' variant='contained' onClick={saveItem} className="mr-10">Save Item</Button>
+										<Button color='secondary' variant='contained' onClick={deleteItem}>Delete Item</Button>
+									</div>
+								)
+							}
+						</div>
+					</div>
+				</Paper>
+			)}
+		</div>
+	);
 }
 
 export default ListItemForm;
@@ -188,4 +200,21 @@ function CurrencyFormat (props) {
 			prefix='$'
 		/>
 	);
+}
+
+function nextState(prevState, err) {
+	if (err) {
+		prevState = {
+			...prevState,
+			error: true,
+			helperText: err.message
+		};
+	} else if (prevState.error) {
+		prevState = {
+			...prevState,
+			error: false,
+			helperText: ''
+		};
+	}
+	return prevState;
 }

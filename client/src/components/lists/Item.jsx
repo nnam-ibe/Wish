@@ -30,7 +30,7 @@ function Item(props) {
 	}
 
 	function updateValues() {
-		setModel(new ItemModel(model.valueOf()));
+		setModel(model.valueOf().newRef());
 		props.updateItem({
 			...model.valueOf(),
 			id: props.id,
