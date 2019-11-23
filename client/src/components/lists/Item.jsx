@@ -12,7 +12,6 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpandIcon from '@material-ui/icons/ExpandMore';
 
 import NumberFormatter from '../../utils/NumberFormatter.js';
-import ItemModel from '../../models/ItemModel.js';
 
 function Item(props) {
 	const [model, setModel] = useState(props.itemModel);
