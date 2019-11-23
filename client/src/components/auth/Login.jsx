@@ -32,6 +32,7 @@ function Login(props) {
 			setShowProgressBar(false);
 			if (!err.code) return;
 
+			// TODO: Error code handling already done in FirebaseWrapper
 			const message = FirebaseWrapper.getErrorMessage(err.code);
 			if (_.includes(err.code, 'password')) {
 				setPassword({ ...password, error: true, helperText: message });
