@@ -81,7 +81,7 @@ class ItemModel {
 		return this;
 	}
 
-	getPrice() {
+	getPricePreTax() {
 		return NumberFormatter.getNumber(this.price);
 	}
 
@@ -92,6 +92,10 @@ class ItemModel {
 	getPriceWithTaxAsBig() {
 		if (!this.addTaxes) return this.price;
 		return this.price.times(this.taxMultipler).round(2);
+	}
+
+	getProgress() {
+		return NumberFormatter.getNumber(this.progress);
 	}
 
 	setPrice(val) {

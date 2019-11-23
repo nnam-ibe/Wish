@@ -94,7 +94,7 @@ function ListItemForm(props) {
 							<TextField
 								id='item-form-price'
 								label='Price'
-								value={item.getPrice()}
+								value={item.getPricePreTax()}
 								onChange={(event) => setItem(item.setPrice(event.target.value).newRef())}
 								margin='dense'
 								InputProps={{ inputComponent: CurrencyFormat }}
