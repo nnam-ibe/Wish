@@ -5,7 +5,7 @@ class ItemModel {
 	constructor(options) {
 		this.addTaxes = Boolean(options.addTaxes);
 		this.increment = NumberFormatter.getBig(options.increment);
-		this.name = options.name;
+		this.name = options.name || '';
 		this.price = NumberFormatter.getBig(options.price);
 		this.saved = NumberFormatter.getBig(options.saved);
 		this.tax = options.tax;
