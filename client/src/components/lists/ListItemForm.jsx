@@ -15,82 +15,56 @@ function ListItemForm(props) {
 	const [item, setItem] = useState(props.item);
 	const [isOpen, setIsOpen] = useState(props.isOpen);
 	const [fields, setFields] = useState(props.fields);
-
 	const formTitle = props.isNewItem ? 'Add New Item' : 'Update Item';
 
 	useEffect(() => {
 		setItem(props.item);
+	}, [props.item]);
+
+	useEffect(() => {
 		setIsOpen(props.isOpen);
+	}, [props.isOpen]);
+
+	useEffect(() => {
 		setFields(props.fields);
-	}, [props.item, props.isOpen, props.fields]);
+	}, [props.fields]);
 
-	function saveItem() {
-		const valid = validateItem();
-		if (!valid) return;
+	async function saveItem() {
+		const isValid = validateItem();
+		if (!isValid) return;
 
-		if (this.props.isNewItem) {
-			item.setId(FirebaseWrapper.generateUUID());
-			FirebaseWrapper.saveNewItem(props.getPagePath(), item.valueOf());
+		if (props.isNewItem) {
+			await FirebaseWrapper.saveNewItem(props.getPagePath(), item.valueOf());
 		} else {
-			FirebaseWrapper.updateItem(props.getPagePath(), item.valueOf());
+			await FirebaseWrapper.updateItem(props.getPagePath(), item.valueOf());
 		}
 
 		props.closeForm();
-		props.resetItem();
+		props.resetItemModel();
 	}
 
-	function deleteItem() {
-		FirebaseWrapper.deleteItem(props.getPagePath(), item.getId());
+	async function deleteItem() {
+		await FirebaseWrapper.deleteItem(props.getPagePath(), item.getId());
 		props.closeForm();
-		props.resetItem();
+		props.resetItemModel();
 	}
 
 	function validateItem() {
-		let err, isInvalid = false;
+		const newFieldsState = { ...fields };
+		let err, isValid = true;
 
 		if (_.isEmpty(_.trim(item.getName()))) {
-			isInvalid = true;
+			isValid = false;
 			err = {
 				error: true,
 				helperText: 'Name cannot be empty'
 			};
 		}
-		fields.nameField = nextState(fields.nameField, err);
+		newFieldsState.nameField = nextState(fields.nameField, err);
 
-		err = null;
-		if (_.isEmpty(_.trim(item.getPrice()))) {
-			isInvalid = true;
-			err = {
-				error: true,
-				helperText: 'Saved cannot be empty'
-			}
-		}
-		fields.savedField = nextState(fields.savedField, err);
-
-		err = null;
-		if (_.isEmpty(_.trim(item.getPrice()))) {
-			isInvalid = true;
-			err = {
-				error: true,
-				helperText: 'Price cannot be empty'
-			}
-		}
-		fields.priceField = nextState(fields.priceField, err);
-
-		err = null;
-		if (_.isEmpty(_.trim(item.getIncrement()))) {
-			isInvalid = true;
-			err = {
-				error: true,
-				helperText: 'Increment cannot be empty'
-			}
-		}
-		fields.incrementField = nextState(fields.incrementField, err);
-
-		setFields(fields);
-		return isInvalid;
+		setFields(newFieldsState);
+		return isValid;
 	}
-
 
 	return	(
 		<div className='item-form'>
@@ -114,6 +88,7 @@ function ListItemForm(props) {
 							error={fields.nameField.error}
 							helperText={fields.nameField.helperText}
 							fullWidth
+							required
 						/>
 						<div>
 							<TextField
@@ -126,6 +101,7 @@ function ListItemForm(props) {
 								className='item-form-price'
 								error={fields.priceField.error}
 								helperText={fields.priceField.helperText}
+								required
 							/>
 							<TextField
 								id='item-form-saved'
@@ -137,6 +113,7 @@ function ListItemForm(props) {
 								className='item-form-saved'
 								error={fields.savedField.error}
 								helperText={fields.savedField.helperText}
+								required
 							/>
 						</div>
 						<div className='item-form-third-row'>
@@ -150,6 +127,7 @@ function ListItemForm(props) {
 								className='item-form-increment'
 								error={fields.incrementField.error}
 								helperText={fields.incrementField.helperText}
+								required
 							/>
 							<div className='display-inline item-form-add-taxes'>
 								<label htmlFor='item-form-add-taxes-switch'>Add Taxes</label>
@@ -207,7 +185,7 @@ function nextState(prevState, err) {
 		prevState = {
 			...prevState,
 			error: true,
-			helperText: err.message
+			helperText: err.helperText
 		};
 	} else if (prevState.error) {
 		prevState = {

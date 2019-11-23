@@ -19,11 +19,7 @@ class ListPage extends Component {
 
 			// Input Form State
 			formItem: this._getFormItemDefault(),
-			formItemModel: new ItemModel({
-				tax: this.props.userPrefs.tax,
-				addTaxes: props.userPrefs.addTaxes,
-				increment: props.userPrefs.defaultIncrement
-			}),
+			formItemModel: this.getDefaultFormItemModel(),
 			itemFormIsOpen: false,
 			isNewFormItem: true
 		};
@@ -58,7 +54,7 @@ class ListPage extends Component {
 						getPagePath={this._getPagePath}
 						item={this.state.formItemModel}
 						fields={this.state.formItem}
-						resetItem={this.resetFormItem}
+						resetItemModel={this.resetFormItemModel}
 						isNewItem={this.state.isNewFormItem}
 					/>
 				</div>
@@ -80,16 +76,17 @@ class ListPage extends Component {
 	}
 
 	closeItemForm = () => {
-		if (!this.state.isNewFormItem) this.resetFormItem();
+		if (!this.state.isNewFormItem) this.resetFormItemModel();
 
 		this.setState({
 			itemFormIsOpen: false
 		})
 	}
 
-	resetFormItem = () => {
+	resetFormItemModel = () => {
 		this.setState({
 			formItem: this._getFormItemDefault(),
+			formItemModel: this.getDefaultFormItemModel(),
 			isNewFormItem: true
 		});
 	}
@@ -159,6 +156,7 @@ class ListPage extends Component {
 
 	getDefaultFormItemModel = () => {
 		return new ItemModel({
+			tax: this.props.userPrefs.tax,
 			addTaxes: this.props.userPrefs.addTaxes,
 			increment: this.props.userPrefs.defaultIncrement
 		});
