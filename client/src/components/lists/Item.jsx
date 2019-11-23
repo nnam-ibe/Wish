@@ -11,8 +11,6 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandIcon from '@material-ui/icons/ExpandMore';
 
-import NumberFormatter from '../../utils/NumberFormatter.js';
-
 function Item(props) {
 	const [model, setModel] = useState(props.itemModel);
 
@@ -29,11 +27,8 @@ function Item(props) {
 	}
 
 	function updateValues() {
-		setModel(model.valueOf().newRef());
-		props.updateItem({
-			...model.valueOf(),
-			id: props.id,
-		});
+		setModel(model.newRef());
+		props.updateItem(model.valueOf());
 	}
 
 	return (
@@ -41,10 +36,10 @@ function Item(props) {
 			<Paper className='auth-paper'>
 				<div className='display-flex text-align-left ml-36'>
 					<div className='flex-grow-1 item-name'>
-						<Typography variant='h6'>{model.name}</Typography>
+						<Typography variant='h6'>{model.getName()}</Typography>
 					</div>
 					<div>
-						<IconButton onClick={() => props.editItem(props.id)}>
+						<IconButton onClick={() => props.editItem(model.getId())}>
 							<ExpandIcon />
 						</IconButton>
 					</div>
@@ -61,19 +56,19 @@ function Item(props) {
 								<TableCell>
 									<div>
 										<Typography variant='caption'>Saved</Typography>
-										<Typography data-testid='item-saved-value' variant='subtitle2'>{`$${NumberFormatter.formatMoney(model.saved)}`}</Typography>
+										<Typography data-testid='item-saved-value' variant='subtitle2'>{`$${model.getSaved()}`}</Typography>
 									</div>
 								</TableCell>
 								<TableCell>
 									<div>
 										<Typography variant='caption'>Difference</Typography>
-										<Typography data-testid='item-difference-value' variant='subtitle2'>{`$${NumberFormatter.formatMoney(model.difference)}`}</Typography>
+										<Typography data-testid='item-difference-value' variant='subtitle2'>{`$${model.getDifference()}`}</Typography>
 									</div>
 								</TableCell>
 								<TableCell>
 									<div>
 										<Typography variant='caption'>Price</Typography>
-										<Typography data-testid='item-price-value' variant='subtitle2'>{`$${NumberFormatter.formatMoney(model.getPriceWithTax())}`}</Typography>
+										<Typography data-testid='item-price-value' variant='subtitle2'>{`$${model.getPriceWithTax()}`}</Typography>
 									</div>
 								</TableCell>
 								<TableCell>
@@ -86,7 +81,7 @@ function Item(props) {
 					</Table>
 				</div>
 			</Paper>
-			<LinearProgress data-testid='item-progress-bar' variant='determinate' value={NumberFormatter.getNumber(model.progress)} />
+			<LinearProgress data-testid='item-progress-bar' variant='determinate' value={model.getProgress()} />
 		</div>
 	);
 }

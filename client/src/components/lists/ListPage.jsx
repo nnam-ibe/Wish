@@ -136,7 +136,7 @@ class ListPage extends Component {
 	_setListElements = (list) => {
 		const listItems = _.map(list, (item) => {
 			const itemModel = new ItemModel({...item, tax: this.props.userPrefs.tax});
-			return ( <Item itemModel={itemModel} key={item.id} updateItem={this._updateItem} editItem={this._editItem} id={item.id}/> );
+			return ( <Item itemModel={itemModel} key={item.id} updateItem={this._updateItem} editItem={this._editItem}/> );
 		});
 
 		this.setState({ list, listItems });
