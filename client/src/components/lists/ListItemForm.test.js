@@ -59,7 +59,7 @@ describe('ListItemForm', () => {
 			...props,
 			getPagePath: jest.fn(),
 			closeForm: jest.fn(),
-			resetItem: jest.fn()
+			resetItemModel: jest.fn()
 		};
 		FirebaseWrapper.saveNewItem = jest.fn();
 		const { getByText } = render(<ListItemForm {...formProps}/>);
@@ -79,7 +79,7 @@ describe('ListItemForm', () => {
 			isNewItem: false,
 			getPagePath: jest.fn(),
 			closeForm: jest.fn(),
-			resetItem: jest.fn()
+			resetItemModel: jest.fn()
 		};
 		FirebaseWrapper.updateItem = jest.fn();
 		const { getByText, container } = render(<ListItemForm {...formProps}/>);
