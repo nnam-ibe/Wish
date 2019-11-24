@@ -25,7 +25,7 @@ function CreateAccount(props) {
 
 		if (validateInputs()) return setShowProgressBar(false);
 
-		FetchWrapper.put(`/api/create/account`, {
+		FetchWrapper.post(`/api/create/account`, {
 			username: _.trim(username.value),
 			email: _.trim(email.value),
 			password: password.value

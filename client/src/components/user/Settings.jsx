@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 import InputValidation from '../../utils/InputValidation.js';
 import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
+import FetchWrapper from '../../utils/FetchWrapper.js';
 
 /**
 Props
@@ -164,6 +165,8 @@ class Settings extends Component {
 
 			return acc;
 		}, {});
+
+		FetchWrapper.post()
 
 		FirebaseWrapper.db.doc(path).set(settings, { merge: true })
 			.then(() => {

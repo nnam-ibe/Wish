@@ -1,5 +1,5 @@
 module.exports = {
-	put: (url, data) => {
+	post(url, data) {
 		const options = {
 			method: 'POST',
 			headers: new Headers({ 'Content-Type': 'application/json' }),
