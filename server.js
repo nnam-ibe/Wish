@@ -81,6 +81,36 @@ app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 	res.send({ valid: true });
 });
 
+app.post('/api/update/settings/:uid', jsonParser, async(req, res) => {
+const { username, tax, defaultIncrement, defaultList } = req.body;
+	const err = InputValidation.validateUsername(username) ||
+		InputValidation.validateTax(tax) ||
+		InputValidation.validateNumber(defaultIncrement) ||
+		InputValidation.validateListName(defaultList);
+
+	if (err) {
+		return res.status(400).send({ error: err.message });
+	}
+
+	const snapShot = await firestore.doc(`users/${req.params.uid}`).get();
+	if (!snapShot.exists) {
+		return res.status(400).send({ error: 'User does not exist' });
+	}
+
+	const userInfo = snapShot.data();
+	if (!userInfo.activeLists.includes(defaultList)) {
+		return res.status(400).send({ error: `List "${defaultList}" does not exist` });
+	}
+
+	_.assign(userInfo, { username, tax, defaultIncrement, defaultList });
+	try {
+		await firestore.doc(`users/${req.params.uid}`).set(userInfo);
+	} catch (err) {
+		return res.status(500).send({ error: err.message });
+	}
+	res.send({ valid: true });
+});
+
 app.delete('/api/delete/list/:listName/:uid', jsonParser, async (req, res) => {
 	const snapShot = await firestore.doc(`users/${req.params.uid}`).get();
 	if (!snapShot.exists) {
