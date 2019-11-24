@@ -26,7 +26,7 @@ function NewListNamePopover({ anchorEl, popoverClose, uid }) {
 		setError(false);
 		setHelperText('');
 
-		const response = await FetchWrapper.put(`/api/create/new_list/${uid}`, { listName: name });
+		const response = await FetchWrapper.post(`/api/create/new_list/${uid}`, { listName: name });
 		if (response.ok) {
 			setName('');
 			return popoverClose();

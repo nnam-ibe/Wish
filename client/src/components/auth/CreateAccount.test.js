@@ -6,7 +6,7 @@ import FetchWrapper from '../../utils/FetchWrapper.js';
 
 // mock api calls
 let resolve, reject;
-FetchWrapper.put = jest.fn(() => new Promise((_resolve, _reject) => {
+FetchWrapper.post = jest.fn(() => new Promise((_resolve, _reject) => {
 	resolve = _resolve;
 	reject = _reject;
 }));
@@ -59,9 +59,9 @@ describe('CreateAccount', () => {
 			});
 		});
 
-		expect(FetchWrapper.put.mock.calls[0][1].username).toBe(usernameValue);
-		expect(FetchWrapper.put.mock.calls[0][1].email).toBe(emailValue);
-		expect(FetchWrapper.put.mock.calls[0][1].password).toBe(passwordValue);
+		expect(FetchWrapper.post.mock.calls[0][1].username).toBe(usernameValue);
+		expect(FetchWrapper.post.mock.calls[0][1].email).toBe(emailValue);
+		expect(FetchWrapper.post.mock.calls[0][1].password).toBe(passwordValue);
 	});
 
 	it('displays validation error message from api', async () => {
@@ -84,9 +84,9 @@ describe('CreateAccount', () => {
 			});
 		});
 
-		expect(FetchWrapper.put.mock.calls[1][1].username).toBe(usernameValue);
-		expect(FetchWrapper.put.mock.calls[1][1].email).toBe(emailValue);
-		expect(FetchWrapper.put.mock.calls[1][1].password).toBe(passwordValue);
+		expect(FetchWrapper.post.mock.calls[1][1].username).toBe(usernameValue);
+		expect(FetchWrapper.post.mock.calls[1][1].email).toBe(emailValue);
+		expect(FetchWrapper.post.mock.calls[1][1].password).toBe(passwordValue);
 		expect(getByText('Email is already in use'));
 	});
 
@@ -105,9 +105,9 @@ describe('CreateAccount', () => {
 		const errorMessage = 'Sample error message';
 		await act(async () => reject(errorMessage));
 
-		expect(FetchWrapper.put.mock.calls[2][1].username).toBe(usernameValue);
-		expect(FetchWrapper.put.mock.calls[2][1].email).toBe(emailValue);
-		expect(FetchWrapper.put.mock.calls[2][1].password).toBe(passwordValue);
+		expect(FetchWrapper.post.mock.calls[2][1].username).toBe(usernameValue);
+		expect(FetchWrapper.post.mock.calls[2][1].email).toBe(emailValue);
+		expect(FetchWrapper.post.mock.calls[2][1].password).toBe(passwordValue);
 		expect(getByText('Sample error message'));
 	});
 });

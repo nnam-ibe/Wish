@@ -52,4 +52,10 @@ module.exports = {
 			return new Error('Tax must be between 0 & 100');
 		}
 	},
+
+	validateNumber(val) {
+		if (isNaN(parseFloat(val))) {
+			return new Error('Please enter a valid number');
+		}
+	}
 };
