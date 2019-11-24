@@ -5,7 +5,7 @@ class ItemModel {
 	constructor(options) {
 		this.addTaxes = Boolean(options.addTaxes);
 		this.increment = NumberFormatter.getBig(options.increment);
-		this.name = options.name;
+		this.name = options.name || '';
 		this.price = NumberFormatter.getBig(options.price);
 		this.saved = NumberFormatter.getBig(options.saved);
 		this.tax = options.tax;
@@ -28,9 +28,14 @@ class ItemModel {
 	}
 
 	updateProgress() {
-		this.difference = this.getPriceWithTaxAsBig().minus(this.saved);
+		const totalPrice = this.getPriceWithTaxAsBig();
+		this.difference = totalPrice.minus(this.saved);
 		if (this.difference < 0) this.difference = new Big(0);
-		this.progress = this.saved.div(this.getPriceWithTaxAsBig()).times(100);
+		if (totalPrice > 0) {
+			this.progress = this.saved.div(totalPrice).times(100);
+		} else {
+			this.progress = new Big(100);
+		}
 		if (this.progress > 100) this.progress = new Big(100);
 
 		return this;
@@ -76,7 +81,7 @@ class ItemModel {
 		return this;
 	}
 
-	getPrice() {
+	getPricePreTax() {
 		return NumberFormatter.getNumber(this.price);
 	}
 
@@ -87,6 +92,10 @@ class ItemModel {
 	getPriceWithTaxAsBig() {
 		if (!this.addTaxes) return this.price;
 		return this.price.times(this.taxMultipler).round(2);
+	}
+
+	getProgress() {
+		return NumberFormatter.getNumber(this.progress);
 	}
 
 	setPrice(val) {
@@ -124,6 +133,12 @@ class ItemModel {
 
 	toString() {
 		return Object.entries(this.valueOf()).toString();
+	}
+
+	// creates a new object to defeat Object.is comparison
+	// TODO: needs tests
+	newRef() {
+		return new ItemModel(this.valueOf());
 	}
 }
 

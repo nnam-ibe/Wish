@@ -19,13 +19,9 @@ class ListPage extends Component {
 
 			// Input Form State
 			formItem: this._getFormItemDefault(),
-			formItemModel: new ItemModel({
-				addTaxes: props.userPrefs.addTaxes,
-				increment: props.userPrefs.defaultIncrement
-			}),
+			formItemModel: this.getDefaultFormItemModel(),
 			itemFormIsOpen: false,
-			isNewFormItem: true,
-			formItemId: null
+			isNewFormItem: true
 		};
 	}
 
@@ -34,8 +30,8 @@ class ListPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		let samePage = prevProps.match.params.page === this.props.match.params.page;
-		let sameProps = this.props.uid === prevProps.uid
+		const samePage = prevProps.match.params.page === this.props.match.params.page;
+		const sameProps = this.props.uid === prevProps.uid
 		if (samePage && sameProps) return;
 
 		this._getList(this.props.uid);
@@ -58,9 +54,8 @@ class ListPage extends Component {
 						getPagePath={this._getPagePath}
 						item={this.state.formItemModel}
 						fields={this.state.formItem}
-						resetItem={this.resetFormItem}
+						resetItemModel={this.resetFormItemModel}
 						isNewItem={this.state.isNewFormItem}
-						itemId={this.state.formItemId}
 					/>
 				</div>
 				<div>
@@ -81,18 +76,18 @@ class ListPage extends Component {
 	}
 
 	closeItemForm = () => {
-		if (!this.state.isNewFormItem) this.resetFormItem();
+		if (!this.state.isNewFormItem) this.resetFormItemModel();
 
 		this.setState({
 			itemFormIsOpen: false
 		})
 	}
 
-	resetFormItem = () => {
+	resetFormItemModel = () => {
 		this.setState({
 			formItem: this._getFormItemDefault(),
-			isNewFormItem: true,
-			formItemId: null
+			formItemModel: this.getDefaultFormItemModel(),
+			isNewFormItem: true
 		});
 	}
 
@@ -101,26 +96,19 @@ class ListPage extends Component {
 	}
 
 	_editItem = (id) => {
-		let item = _.find(this.state.list, { id: id });
+		const item = _.find(this.state.list, { id: id });
 		if (!item) return null;
 
-		let itemToEdit = this._getFormItemDefault();
-		let values = ['addTaxes', 'increment', 'name', 'price', 'saved'];
-
-		_.forEach(values, (key) => {
-			if (key === 'addTaxes') {
-				itemToEdit[key].checked = item[key];
-				return;
-			}
-
-			itemToEdit[key].value = item[key];
+		const itemToEdit = this._getFormItemDefault();
+		const model = new ItemModel({
+			...item,
+			tax: this.props.userPrefs.tax
 		});
-
 		this.setState({
+			formItemModel: model,
 			itemFormIsOpen: true,
 			formItem: itemToEdit,
-			isNewFormItem: false,
-			formItemId: id
+			isNewFormItem: false
 		});
 	}
 
@@ -136,7 +124,7 @@ class ListPage extends Component {
 				return;
 			}
 
-			let list = snapShot.data().items;
+			const list = snapShot.data().items;
 			this._setListElements(list);
 		});
 	}
@@ -148,7 +136,7 @@ class ListPage extends Component {
 	_setListElements = (list) => {
 		const listItems = _.map(list, (item) => {
 			const itemModel = new ItemModel({...item, tax: this.props.userPrefs.tax});
-			return ( <Item itemModel={itemModel} key={item.id} updateItem={this._updateItem} editItem={this._editItem} id={item.id}/> );
+			return ( <Item itemModel={itemModel} key={item.id} updateItem={this._updateItem} editItem={this._editItem}/> );
 		});
 
 		this.setState({ list, listItems });
@@ -168,6 +156,7 @@ class ListPage extends Component {
 
 	getDefaultFormItemModel = () => {
 		return new ItemModel({
+			tax: this.props.userPrefs.tax,
 			addTaxes: this.props.userPrefs.addTaxes,
 			increment: this.props.userPrefs.defaultIncrement
 		});

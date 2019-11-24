@@ -23,53 +23,43 @@ module.exports = {
 	localKey,
 	getErrorMessage,
 
-	createAccount: (options) => {
-		return new Promise((resolve, reject) => {
-			auth.createUserWithEmailAndPassword(options.email, options.password)
-				.then((cred) => {
-					resolve(cred.user.uid);
-				})
-				.catch((err) => {
-					let message = getErrorMessage(err.code);
+	createAccount(options) {
+		return auth.createUserWithEmailAndPassword(options.email, options.password)
+			.then((cred) => {
+				return cred.user.uid;
+			})
+			.catch((err) => {
+				const message = getErrorMessage(err.code);
 
-					if (message) {
-						err.message = message;
-					}
-					reject(err);
-				});
-		});
+				if (message) err.message = message;
+				Promise.reject(err);
+			});
 	},
 
-	login: (options) => {
-		return new Promise((resolve, reject) => {
-			auth.signInWithEmailAndPassword(options.email, options.password)
-				.then((userCred) => {
-					resolve(userCred);
-				})
-				.catch((err) => {
-					let message = getErrorMessage(err.code);
+	login(options) {
+		return auth.signInWithEmailAndPassword(options.email, options.password)
+			.catch((err) => {
+				const message = getErrorMessage(err.code);
 
-					if (message) {
-						err.message = message;
-					}
-					reject(err);
-				});
-		});
+				if (message) err.message = message;
+				Promise.reject(err);
+			});
 	},
 
-	logout: () => {
-		return Promise.resolve(auth.signOut());
+	logout() {
+		return auth.signOut();
 	},
 
-	saveNewItem: (path, data) => {
-		_getItems(path).then((items) => {
+	saveNewItem(path, data) {
+		data.id = uuidv4();
+		return _getItems(path).then((items) => {
 			items.push(data);
 			db.doc(path).set({ items }, { merge: true });
 		});
 	},
 
-	updateItem: (path, item) => {
-		_getItems(path).then((items) => {
+	updateItem(path, item) {
+		return _getItems(path).then((items) => {
 			let index = _.findIndex(items, { id: item.id });
 
 			items[index] = item;
@@ -77,8 +67,8 @@ module.exports = {
 		});
 	},
 
-	deleteItem: (path, itemId) => {
-		_getItems(path).then((items) => {
+	deleteItem(path, itemId) {
+		return _getItems(path).then((items) => {
 			let index = _.findIndex(items, { id: itemId });
 
 			items.splice(index, 1);
@@ -86,46 +76,37 @@ module.exports = {
 		});
 	},
 
-	getCurrentUser: () => {
+	getCurrentUser() {
 		return auth.currentUser;
 	},
 
-	onAuthStateChanged: (callback) => {
+	onAuthStateChanged(callback) {
 		return auth.onAuthStateChanged(callback);
 	},
 
 	// Local Storage
-	getLocalUID: () => {
+	getLocalUID() {
 		return localStorage.getItem(localKey);
 	},
 
-	setLocalUID: (uid) => {
+	setLocalUID(uid) {
 		localStorage.setItem(localKey, uid);
 	},
 
-	removeLocalUID: () => {
+	removeLocalUID() {
 		localStorage.removeItem(localKey);
 	},
 
-	generateUUID: () => {
+	generateUUID() {
 		return uuidv4();
-	},
-
-
+	}
 };
 
-function _getItems (path) {
-	return new Promise((resolve, reject) => {
-		db.doc(path).get()
-			.then((doc) => {
-				if (!doc.exists) {
-					resolve([]);
-					return;
-				}
+async function _getItems (path) {
+	const doc = await db.doc(path).get();
+	if(!doc.exists) return[];
 
-				resolve(doc.data().items);
-			});
-	});
+	return doc.data().items;
 }
 
 function getErrorMessage (errorCode) {

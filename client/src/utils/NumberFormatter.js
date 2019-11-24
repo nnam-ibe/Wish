@@ -2,7 +2,7 @@ const Big = require('big.js');
 const NumberFormatter = {};
 
 NumberFormatter.getBig = (value) => {
-	if (isNaN(value) || value === null) return new Big(0);
+	if (isNaN(value) || value === null || value === '') return new Big(0);
 	return new Big(value);
 };
 

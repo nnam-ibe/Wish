@@ -27,10 +27,10 @@ it('correctly calculates difference', () => {
 it('correctly calculates taxes', () => {
 	const item = new ItemModel({...val, addTaxes: true});
 	expect(item.getPriceWithTax()).toBe(115);
-	expect(item.getPrice()).toBe(100);
+	expect(item.getPricePreTax()).toBe(100);
 	item.setTax(30);
 	expect(item.getPriceWithTax()).toBe(130);
-	expect(item.getPrice()).toBe(100);
+	expect(item.getPricePreTax()).toBe(100);
 });
 
 it('returns correct valueOf', () => {
