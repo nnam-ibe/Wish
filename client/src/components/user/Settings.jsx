@@ -145,11 +145,11 @@ class Settings extends Component {
 	}
 
 	// TODO: Move to server, add server side validation
-	saveSettings = () => {
+	saveSettings = async () => {
 		this.setState({ showProgressBar: true });
 
 		const uid = FirebaseWrapper.getLocalUID();
-		const path = `users/${uid}`;
+		const path = `/api/update/settings/${uid}`;
 
 		if (!this._validateInput()) {
 			this.setState({ showProgressBar: false });
@@ -166,12 +166,10 @@ class Settings extends Component {
 			return acc;
 		}, {});
 
-		FetchWrapper.post()
-
-		FirebaseWrapper.db.doc(path).set(settings, { merge: true })
-			.then(() => {
-				this.setState({ showProgressBar: false });
-			});
+		const res = await FetchWrapper.post(path, settings);
+		this.setState({ showProgressBar: false });
+		if (res.ok) return;
+		// TODO: Give feedback on form
 	}
 
 	_validateInput = () => {
