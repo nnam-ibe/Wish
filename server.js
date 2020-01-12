@@ -82,7 +82,7 @@ app.post('/api/create/new_list/:uid', jsonParser, async (req, res) => {
 });
 
 app.post('/api/update/settings/:uid', jsonParser, async(req, res) => {
-const { username, tax, defaultIncrement, defaultList } = req.body;
+const { addTaxes, username, tax, defaultIncrement, defaultList } = req.body;
 	const err = InputValidation.validateUsername(username) ||
 		InputValidation.validateTax(tax) ||
 		InputValidation.validateNumber(defaultIncrement) ||
@@ -102,7 +102,7 @@ const { username, tax, defaultIncrement, defaultList } = req.body;
 		return res.status(400).send({ error: `List "${defaultList}" does not exist` });
 	}
 
-	_.assign(userInfo, { username, tax, defaultIncrement, defaultList });
+	_.assign(userInfo, { addTaxes, username, tax, defaultIncrement, defaultList });
 	try {
 		await firestore.doc(`users/${req.params.uid}`).set(userInfo);
 	} catch (err) {
