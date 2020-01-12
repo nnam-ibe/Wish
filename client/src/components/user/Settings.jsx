@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useContext } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
@@ -6,264 +6,190 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import _ from 'lodash';
 
 import InputValidation from '../../utils/InputValidation.js';
-import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
+import {
+	stringDefault,
+	addTaxesDefault,
+	salesTaxDefault,
+	incrementDefault
+} from '../../utils/FormFieldDefaults.js';
 import FetchWrapper from '../../utils/FetchWrapper.js';
+import UserContext from '../app/UserContext.jsx';
 
 /**
 Props
 	location: location object from Route
 */
+function Settings(props) {
+	const userContext = useContext(UserContext);
+	const [showProgressBar, setShowProgressBar] = useState(false);
+	const [usernameField, setUsernameField] = useState({
+		...stringDefault,
+		value: userContext.username
+	});
+	const [salesTaxField, setSalesTaxField] = useState({
+		...salesTaxDefault,
+		value: userContext.tax
+	});
+	const [defaultListField, setDefaultListField] = useState({
+		...stringDefault,
+		value: userContext.defaultList
+	});
+	const [defaultIncrementField, setDefaultIncrementField] = useState({
+		...incrementDefault,
+		value: userContext.defaultIncrement
+	});
+	const [addTaxesField, setAddTaxesField] = useState({
+		...addTaxesDefault,
+		checked: userContext.addTaxes
+	});
+	const progessBar = <LinearProgress/>;
 
-class Settings extends Component {
-
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			showProgressBar: true,
-			fields: formItemDefaults,
-			valueFields: [
-				'username',
-				'tax',
-				'defaultList',
-				'defaultIncrement'
-			],
-			checkedFields: [
-				'addTaxes'
-			]
-		};
-	}
-
-	componentDidMount() {
-		this._getUserSettings();
-	}
-
-	componentWillUnmount() {
-		this.onSnapshotUnsubscribe && this.onSnapshotUnsubscribe();
-	}
-
-	// Correct class names
-	render() {
-		const progessBar = ( <LinearProgress/> );
-		const { username, tax, defaultList, defaultIncrement, addTaxes } = this.state.fields;
-
-		return (
-			<div className='Settings'>
-				<div className='auth-component'>
-					<Paper>
-						{ this.state.showProgressBar && progessBar }
-						<div className='auth-paper user-settings-form'>
-							<form>
-								<Typography variant='h6'>Account Settings</Typography>
-								<TextField
-									id='settings-form-username'
-									label={username.label}
-									value={username.value}
-									onChange={this.handleChange(username.id)}
-									helperText={username.helperText}
-									error={username.error}
-									margin='dense'
-									fullWidth
-									required
-								/>
-								<TextField
-									id='settings-form-tax'
-									label={tax.label}
-									type='number'
-									value={tax.value}
-									onChange={this.handleChange(tax.id)}
-									helperText={tax.helperText}
-									error={tax.error}
-									margin='dense'
-									fullWidth
-									required
-								/>
-								<TextField
-									id='settings-form-default-increment'
-									label={defaultIncrement.label}
-									type='number'
-									value={defaultIncrement.value}
-									onChange={this.handleChange(defaultIncrement.id)}
-									helperText={defaultIncrement.helperText}
-									error={defaultIncrement.error}
-									margin='dense'
-									fullWidth
-									required
-								/>
-								<TextField
-									id='settings-form-default-list'
-									label={defaultList.label}
-									value={defaultList.value}
-									onChange={this.handleChange(defaultList.id)}
-									helperText={defaultList.helperText}
-									error={defaultList.error}
-									margin='dense'
-									fullWidth
-									required
-								/>
-								<FormControlLabel
-									id='settings-form-taxes-form-control'
-									control={
-										<Switch
-											id='settings-form-add-taxes'
-											checked={addTaxes.checked}
-											onChange={this.handleChange(addTaxes.id)}
-											value='addTaxes'
-										/>
-									}
-									label={addTaxes.label}
-								/>
-								<Button
-									fullWidth
-									color='primary'
-									variant='contained'
-									onClick={this.saveSettings}
-									disabled={this.state.showProgressBar}>
-									Save Settings
-								</Button>
-							</form>
-						</div>
-					</Paper>
-				</div>
-			</div>
-		);
-	}
-
-	handleChange = name => event => {
-		const { fields, valueFields } = this.state;
-
-		if (_.includes(valueFields, name)) {
-			fields[name].value = event.target.value;
-		} else {
-			fields[name].checked = event.target.checked;
-		}
-
-		this.setState({ fields });
-	}
-
-	// TODO: Move to server, add server side validation
-	saveSettings = async () => {
-		this.setState({ showProgressBar: true });
-
-		const uid = FirebaseWrapper.getLocalUID();
-		const path = `/api/update/settings/${uid}`;
-
-		if (!this._validateInput()) {
-			this.setState({ showProgressBar: false });
-			return;
-		}
-
-		const settings = _.reduce(this.state.fields, (acc, value, key) => {
-			if (_.includes(this.state.valueFields, key)) {
-				acc[key] = value.value;
-			} else {
-				acc[key] = value.checked;
-			}
-
-			return acc;
-		}, {});
-
-		const res = await FetchWrapper.post(path, settings);
-		this.setState({ showProgressBar: false });
-		if (res.ok) return;
-		// TODO: Give feedback on form
-	}
-
-	_validateInput = () => {
-		const { username, tax } = this.state.fields, errors = {};
-		if (_.isEmpty(_.trim(username.value))) {
-			errors.username = {
-				error: true,
-				helperText: `Username cannot be empty`
-			}
-		}
-
-		const err = InputValidation.validateTax(tax.value);
+	const validateInput = () => {
+		let isValid = true;
+		let err = InputValidation.validateUsername(usernameField.value);
 		if (err) {
-			errors.tax = {
+			isValid = false;
+			setUsernameField({
+				...usernameField,
 				error: true,
 				helperText: err.message
-			}
+			});
 		}
 
-		const newFieldsState = _.reduce(this.state.fields, (acc, value, key) => {
-			if (errors[key]) {
-				_.assign(acc[key], errors[key]);
-			} else {
-				_.assign(acc[key], validField);
-			}
-			return acc;
-		}, this.state.fields);
+		err = InputValidation.validateTax(salesTaxField.value);
+		if (err) {
+			isValid = false;
+			setSalesTaxField({
+				...salesTaxField,
+				error: true,
+				helperText: err.message
+			});
+		}
 
-		this.setState({ field: newFieldsState });
-		return _.isEmpty(errors);
-	}
+		return isValid;
+	};
 
-	_getUserSettings = () => {
-		const uid = FirebaseWrapper.getLocalUID();
-		if (!uid) {
-			this.props.history.push('/');
+	const saveSettings = async () => {
+		setShowProgressBar(true);
+		const path = `/api/update/settings/${userContext.uid}`;
+
+		if (!validateInput()) {
+			setShowProgressBar(false);
 			return;
 		}
 
-		const path = `users/${uid}`;
-		this.onSnapshotUnsubscribe = FirebaseWrapper.db.doc(path).onSnapshot((snapShot) => {
-			if (!snapShot.exists) return;
+		const settings = {
+			addTaxes: addTaxesField.checked,
+			defaultIncrement: defaultIncrementField.value,
+			defaultList: defaultListField.value,
+			tax: salesTaxField.value,
+			username: usernameField.value
+		};
 
-			const { fields, valueFields, checkedFields } = this.state;
-			_.forEach(valueFields, (field) => {
-				fields[field].value = snapShot.data()[field];
-			});
+		const res = await FetchWrapper.post(path, settings);
+		setShowProgressBar(false);
+		if (res.ok) return;
+		// TODO: Give feedback on form
+	};
 
-			_.forEach(checkedFields, (field) => {
-				fields[field].checked = snapShot.data()[field];
-			});
 
-			this.setState({ fields, showProgressBar: false });
-		});
-	}
+	return (
+		<div className='Settings'>
+			<div className='auth-component'>
+				<Paper>
+					{ showProgressBar && progessBar }
+					<div className='auth-paper user-settings-form'>
+						<form>
+							<Typography variant='h6'>Account Settings</Typography>
+							<TextField
+								id='settings-form-username'
+								label='Username'
+								value={usernameField.value}
+								onChange={e => setUsernameField({
+									...usernameField,
+									value: e.target.value
+								})}
+								helperText={usernameField.helperText}
+								error={usernameField.error}
+								margin='dense'
+								fullWidth
+								required
+							/>
+							<TextField
+								id='settings-form-tax'
+								label='Sales Tax'
+								type='number'
+								value={salesTaxField.value}
+								onChange={e => setSalesTaxField({
+									...salesTaxField,
+									value: e.target.value
+								})}
+								helperText={salesTaxField.helperText}
+								error={salesTaxField.error}
+								margin='dense'
+								fullWidth
+								required
+							/>
+							<TextField
+								id='settings-form-default-increment'
+								label='Default Increment'
+								type='number'
+								value={defaultIncrementField.value}
+								onChange={e => setDefaultIncrementField({
+									...defaultIncrementField,
+									value: e.target.value
+								})}
+								helperText={defaultIncrementField.helperText}
+								error={defaultIncrementField.error}
+								margin='dense'
+								fullWidth
+								required
+							/>
+							<TextField
+								id='settings-form-default-list'
+								label='Default List'
+								value={defaultListField.value}
+								onChange={e => setDefaultListField({
+									...defaultListField,
+									value: e.target.value
+								})}
+								helperText={defaultListField.helperText}
+								error={defaultListField.error}
+								margin='dense'
+								fullWidth
+								required
+							/>
+							<FormControlLabel
+								id='settings-form-taxes-form-control'
+								control={
+									<Switch
+										id='settings-form-add-taxes'
+										checked={addTaxesField.checked}
+										onChange={e => setAddTaxesField({
+											...addTaxesField,
+											checked: e.target.checked
+										})}
+										value='addTaxes'
+									/>
+								}
+								label='Add Taxes'
+							/>
+							<Button
+								fullWidth
+								color='primary'
+								variant='contained'
+								onClick={saveSettings}
+								disabled={showProgressBar}>
+								Save Settings
+							</Button>
+						</form>
+					</div>
+				</Paper>
+			</div>
+		</div>
+	);
 }
-
-const validField = { helperText: '', error: false };
-
-const formItemDefaults = {
-	username: {
-		id: 'username',
-		error: false,
-		helperText: '',
-		label: 'Username',
-		value: ''
-	},
-	tax: {
-		id: 'tax',
-		error: false,
-		helperText: '',
-		label: 'Sales Tax',
-		value: ''
-	},
-	defaultList: {
-		id: 'defaultList',
-		error: false,
-		helperText: '',
-		label: 'Default List',
-		value: ''
-	},
-	defaultIncrement: {
-		id: 'defaultIncrement',
-		error: false,
-		helperText: '',
-		label: 'Default Increment',
-		value: ''
-	},
-	addTaxes: {
-		id: 'addTaxes',
-		checked: false,
-		label: 'Add Taxes',
-		value: 'addTaxes'
-	}
-};
 
 export default Settings;

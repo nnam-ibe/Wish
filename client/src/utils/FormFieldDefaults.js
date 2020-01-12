@@ -44,3 +44,15 @@ exports.usernameDefault = {
 	helperText: '',
 	value: ''
 };
+
+exports.stringDefault = {
+	error: false,
+	helperText: '',
+	value: ''
+};
+
+exports.salesTaxDefault = {
+	error: false,
+	helperText: '',
+	value: 13
+}

@@ -8,11 +8,13 @@ import Settings from '../user/Settings.jsx';
 import Sidebar from '../navigation/Sidebar.jsx';
 import ListPage from '../lists/ListPage.jsx';
 import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
+import UserContext from './UserContext.jsx';
 
 function App(props) {
 	const [uid, setUID] = useState();
 	const [userPrefs, setUserPrefs] = useState();
 	const prevUID = usePrevious(uid);
+	const userContext = { ...userPrefs, uid };
 
 	useEffect(() => {
 		return FirebaseWrapper.onAuthStateChanged((user) => {
@@ -58,29 +60,31 @@ function App(props) {
 
 	return (
 		<div className='App'>
-			<Navbar
-				handleLoginClick={handleLoginClick}
-				title='Wish List'
-				nav={navigateToRoute}
-				isLoggedIn={Boolean(uid)}
-			/>
-			<Route path='/' render={(props) => {
-				const sideProps = {...props, uid, userPrefs };
-				if (!userPrefs) return (<div></div>);
-
-				return (<Sidebar {...sideProps}/>);
-			}}/>
-			<div className='content'>
-				<Route exact path='/lists/:page' render={(props) => {
+			<UserContext.Provider value={userContext}>
+				<Navbar
+					handleLoginClick={handleLoginClick}
+					title='Wish List'
+					nav={navigateToRoute}
+					isLoggedIn={Boolean(uid)}
+				/>
+				<Route path='/' render={(props) => {
+					const sideProps = {...props, uid, userPrefs };
 					if (!userPrefs) return (<div></div>);
 
-					const listProps = {...props, uid, userPrefs};
-					return (<ListPage {...listProps}/>);
+					return (<Sidebar {...sideProps}/>);
 				}}/>
-				<Route exact path='/login' component={Login}/>
-				<Route exact path='/create_account' component={CreateAccount}/>
-				<Route exact path='/settings' component={Settings}/>
-			</div>
+				<div className='content'>
+					<Route exact path='/lists/:page' render={(props) => {
+						if (!userPrefs) return (<div></div>);
+
+						const listProps = {...props, uid, userPrefs};
+						return (<ListPage {...listProps}/>);
+					}}/>
+					<Route exact path='/login' component={Login}/>
+					<Route exact path='/create_account' component={CreateAccount}/>
+					<Route exact path='/settings' component={Settings}/>
+				</div>
+			</UserContext.Provider>
 		</div>
 	);
 }
