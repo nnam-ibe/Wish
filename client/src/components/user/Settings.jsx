@@ -5,7 +5,12 @@ import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import { map } from 'lodash';
 
 import InputValidation from '../../utils/InputValidation.js';
 import {
@@ -44,6 +49,7 @@ function Settings(props) {
 		...addTaxesDefault,
 		checked: userContext.addTaxes
 	});
+	const activeLists = map(userContext.activeLists, list => <MenuItem value={list} key={list}>{list}</MenuItem>);
 	const progessBar = <LinearProgress/>;
 
 	const validateInput = () => {
@@ -147,20 +153,21 @@ function Settings(props) {
 								fullWidth
 								required
 							/>
-							<TextField
-								id='settings-form-default-list'
-								label='Default List'
-								value={defaultListField.value}
-								onChange={e => setDefaultListField({
-									...defaultListField,
-									value: e.target.value
-								})}
-								helperText={defaultListField.helperText}
-								error={defaultListField.error}
-								margin='dense'
-								fullWidth
-								required
-							/>
+							<FormControl required fullWidth>
+								<InputLabel id='settings-form-default-list-input-label'>
+									Default List
+								</InputLabel>
+								<Select
+									labelid='settings-form-default-list-input-label'
+									value={defaultListField.value}
+									onChange={e => setDefaultListField({
+										...defaultListField,
+										value: e.target.value
+									})}
+									>
+										{activeLists}
+								</Select>
+							</FormControl>
 							<FormControlLabel
 								id='settings-form-taxes-form-control'
 								control={
