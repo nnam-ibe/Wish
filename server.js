@@ -7,10 +7,10 @@ const InputValidation = require('./client/src/utils/InputValidation');
 const Logger = require('./Logger');
 logger = new Logger('server.js');
 
-const serviceAccount = require('./firebase-config/admin-config.json');
+const serviceOptions = require('./options.admin.js');
 
 admin.initializeApp({
-	credential: admin.credential.cert(serviceAccount),
+	credential: admin.credential.cert(serviceOptions),
 	databaseURL: 'https://wish-9d5fa.firebaseio.com'
 });
 
