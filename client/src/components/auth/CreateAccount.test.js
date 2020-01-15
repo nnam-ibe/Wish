@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react'
 
 import CreateAccount from './CreateAccount.jsx';
-import FetchWrapper from '../../utils/FetchWrapper.js';
+const FetchWrapper = require('../../utils/FetchWrapper.js');
 
 // mock api calls
 let resolve, reject;

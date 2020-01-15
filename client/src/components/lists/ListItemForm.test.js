@@ -1,10 +1,10 @@
 import React from 'react';
 import {render, fireEvent} from '@testing-library/react'
 
-import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
-import FormFieldDefaults from '../../utils/FormFieldDefaults.js';
 import ListItemForm from './ListItemForm.jsx';
-import ItemModel from '../../models/ItemModel.js';
+const FirebaseWrapper = require('../../utils/FirebaseWrapper.js');
+const FormFieldDefaults = require('../../utils/FormFieldDefaults.js');
+const ItemModel = require('../../models/ItemModel.js');
 
 const model = new ItemModel({
 	addTaxes: false,

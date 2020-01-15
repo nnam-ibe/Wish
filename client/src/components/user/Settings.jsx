@@ -11,16 +11,16 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { map } from 'lodash';
+import UserContext from '../app/UserContext.jsx';
 
-import InputValidation from '../../utils/InputValidation.js';
-import {
+const InputValidation = require('../../utils/InputValidation.js');
+const {
 	stringDefault,
 	addTaxesDefault,
 	salesTaxDefault,
 	incrementDefault
-} from '../../utils/FormFieldDefaults.js';
-import FetchWrapper from '../../utils/FetchWrapper.js';
-import UserContext from '../app/UserContext.jsx';
+} = require('../../utils/FormFieldDefaults.js');
+const FetchWrapper = require('../../utils/FetchWrapper.js');
 
 /**
 Props

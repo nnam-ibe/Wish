@@ -5,9 +5,13 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import _ from 'lodash';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
-import InputValidation from '../../utils/InputValidation';
-import { emailDefault, passwordDefault } from '../../utils/FormFieldDefaults';
+
+const FirebaseWrapper = require('../../utils/FirebaseWrapper.js');
+const InputValidation = require('../../utils/InputValidation');
+const {
+	emailDefault,
+	passwordDefault
+} = require('../../utils/FormFieldDefaults');
 
 function Login(props) {
 	const [email, setEmail] = useState(emailDefault);

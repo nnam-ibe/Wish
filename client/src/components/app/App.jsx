@@ -7,8 +7,8 @@ import CreateAccount from '../auth/CreateAccount.jsx';
 import Settings from '../user/Settings.jsx';
 import Sidebar from '../navigation/Sidebar.jsx';
 import ListPage from '../lists/ListPage.jsx';
-import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 import UserContext from './UserContext.jsx';
+const FirebaseWrapper = require('../../utils/FirebaseWrapper.js');
 
 function App(props) {
 	const [uid, setUID] = useState();
