@@ -3,8 +3,8 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
 import TextField from '@material-ui/core/TextField';
-import InputValidation from '../../utils/InputValidation';
 import FetchWrapper from '../../utils/FetchWrapper.js';
+const InputValidation = require('../../utils/InputValidation');
 
 function NewListNamePopover({ anchorEl, popoverClose, uid }) {
 	const open = Boolean(anchorEl);

@@ -6,10 +6,14 @@ import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import _ from 'lodash';
 
-import FetchWrapper from '../../utils/FetchWrapper.js';
-import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
-import InputValidation from '../../utils/InputValidation.js';
-import { emailDefault, passwordDefault, usernameDefault } from '../../utils/FormFieldDefaults.js';
+const FirebaseWrapper = require('../../utils/FirebaseWrapper.js');
+const FetchWrapper = require('../../utils/FetchWrapper.js');
+const InputValidation = require('../../utils/InputValidation.js');
+const {
+	emailDefault,
+	passwordDefault,
+	usernameDefault
+} = require('../../utils/FormFieldDefaults.js');
 
 function CreateAccount(props) {
 	const [username, setUsername] = useState(usernameDefault);

@@ -2,7 +2,7 @@ import React from 'react';
 import {render, fireEvent, act} from '@testing-library/react'
 
 import Login from './Login.jsx';
-import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
+const FirebaseWrapper = require('../../utils/FirebaseWrapper.js');
 
 // mock api calls
 let resolve, reject;

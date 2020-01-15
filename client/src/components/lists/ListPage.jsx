@@ -4,10 +4,10 @@ import AddIcon from '@material-ui/icons/Add';
 import _ from 'lodash';
 
 import Item from './Item.jsx';
-import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
 import ListItemForm from './ListItemForm.jsx';
-import ItemModel from '../../models/ItemModel.js';
-import FormFieldDefaults from '../../utils/FormFieldDefaults.js';
+const FirebaseWrapper = require('../../utils/FirebaseWrapper.js');
+const ItemModel = require('../../models/ItemModel.js');
+const FormFieldDefaults = require('../../utils/FormFieldDefaults.js');
 
 class ListPage extends Component {
 
