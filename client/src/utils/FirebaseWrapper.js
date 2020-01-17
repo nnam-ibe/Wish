@@ -18,7 +18,7 @@ const auth = firebase.auth();
 const uuidv4 = require('uuid/v4');
 let _ = require('lodash');
 
-module.exports = {
+const FirebaseWrapper = {
 	db,
 	localKey,
 	getErrorMessage,
@@ -133,6 +133,4 @@ function getErrorMessage (errorCode) {
 	return result;
 }
 
-
-
-
+export default FirebaseWrapper;

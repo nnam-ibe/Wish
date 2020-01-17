@@ -1,4 +1,4 @@
-const NumberFormatter = require('./NumberFormatter');
+import NumberFormatter from './NumberFormatter';
 
 test('getBig handles NaN', () => {
 	expect(NumberFormatter.getBig().toString()).toBe('0');

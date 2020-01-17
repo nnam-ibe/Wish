@@ -1,7 +1,7 @@
-const Big = require('big.js');
-const NumberFormatter = require('../utils/NumberFormatter');
+import Big from'big.js';
+import * as NumberFormatter from '../utils/NumberFormatter';
 
-class ItemModel {
+export default class ItemModel {
 	constructor(options) {
 		this.addTaxes = Boolean(options.addTaxes);
 		this.increment = NumberFormatter.getBig(options.increment);
@@ -141,5 +141,3 @@ class ItemModel {
 		return new ItemModel(this.valueOf());
 	}
 }
-
-module.exports = ItemModel;

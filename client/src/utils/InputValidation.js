@@ -1,6 +1,6 @@
-const _ = require('lodash');
+import * as _ from 'lodash';
 
-module.exports = {
+const InputValidation = {
 	validateListName(listName) {
 		if (!listName) return new Error('Name is invalid');
 		if (_.trim(listName).length <= 0 ) return new Error('Name cannot be empty');
@@ -59,3 +59,5 @@ module.exports = {
 		}
 	}
 };
+
+export default InputValidation;
