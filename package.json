@@ -38,7 +38,8 @@
   "jest": {
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/client/"
+      "/client/",
+      "/dist/"
     ]
   },
   "author": "",
