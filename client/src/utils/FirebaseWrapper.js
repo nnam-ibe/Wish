@@ -7,16 +7,16 @@ const config = {
 	messagingSenderId: "760376786906"
  };
 
-const firebase = require('firebase/app');
-firebase.initializeApp(config);
-require('firebase/firestore');
-require('firebase/auth');
+import { initializeApp, firestore, auth as _auth } from 'firebase/app';
+initializeApp(config);
+import 'firebase/firestore';
+import 'firebase/auth';
 
-const db = firebase.firestore();
+const db = firestore();
 const localKey = 'WISH_LIST_KEY';
-const auth = firebase.auth();
-const uuidv4 = require('uuid/v4');
-let _ = require('lodash');
+const auth = _auth();
+import uuidv4 from 'uuid/v4';
+import { findIndex } from 'lodash';
 
 const FirebaseWrapper = {
 	db,
@@ -60,7 +60,7 @@ const FirebaseWrapper = {
 
 	updateItem(path, item) {
 		return _getItems(path).then((items) => {
-			let index = _.findIndex(items, { id: item.id });
+			const index = findIndex(items, { id: item.id });
 
 			items[index] = item;
 			db.doc(path).set({ items }, { merge: true });
@@ -69,7 +69,7 @@ const FirebaseWrapper = {
 
 	deleteItem(path, itemId) {
 		return _getItems(path).then((items) => {
-			let index = _.findIndex(items, { id: itemId });
+			const index = findIndex(items, { id: itemId });
 
 			items.splice(index, 1);
 			db.doc(path).set({ items }, { merge: true });
