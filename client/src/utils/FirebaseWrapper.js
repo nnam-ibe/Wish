@@ -1,3 +1,9 @@
+import { initializeApp, firestore, auth as _auth } from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+import uuidv4 from 'uuid/v4';
+import { findIndex } from 'lodash';
+
 const config = {
 	apiKey: "AIzaSyBZytWKyXy7KDn99yM9UXjJz8RAVLpRQfE",
 	authDomain: "wish-9d5fa.firebaseapp.com",
@@ -5,18 +11,13 @@ const config = {
 	projectId: "wish-9d5fa",
 	storageBucket: "wish-9d5fa.appspot.com",
 	messagingSenderId: "760376786906"
- };
-
-import { initializeApp, firestore, auth as _auth } from 'firebase/app';
+};
 initializeApp(config);
-import 'firebase/firestore';
-import 'firebase/auth';
 
 const db = firestore();
 const localKey = 'WISH_LIST_KEY';
 const auth = _auth();
-import uuidv4 from 'uuid/v4';
-import { findIndex } from 'lodash';
+
 
 const FirebaseWrapper = {
 	db,
