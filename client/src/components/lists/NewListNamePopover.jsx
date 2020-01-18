@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
 import TextField from '@material-ui/core/TextField';
 import FetchWrapper from '../../utils/FetchWrapper';
-import InputValidation from '../../../../lib/utils/InputValidation';
+import InputValidation from '../../utils/InputValidation';
 
 function NewListNamePopover({ anchorEl, popoverClose, uid }) {
 	const open = Boolean(anchorEl);

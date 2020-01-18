@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { map } from 'lodash';
 import UserContext from '../app/UserContext';
 
-import InputValidation from '../../../../lib/utils/InputValidation';
+import InputValidation from '../../utils/InputValidation';
 import {
 	stringDefault,
 	addTaxesDefault,

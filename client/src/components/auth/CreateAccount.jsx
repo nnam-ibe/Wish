@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
 import FetchWrapper from '../../utils/FetchWrapper';
-import InputValidation from '../../../../lib/utils/InputValidation';
+import InputValidation from '../../utils/InputValidation';
 import {
 	emailDefault,
 	passwordDefault,
