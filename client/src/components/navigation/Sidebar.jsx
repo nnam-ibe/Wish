@@ -8,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DeleteIcon from '@material-ui/icons/Delete';
 import _ from 'lodash';
 import ConfirmModal from '../modals/ConfirmModal';
-import NewListNamePopover from '../lists/NewListNamePopover.jsx';
+import NewListNamePopover from '../lists/NewListNamePopover';
 
 /**
 Props

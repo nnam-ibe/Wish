@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, fireEvent, act, prettyDOM } from '@testing-library/react'
 
-import Settings from './Settings.jsx';
-import UserContext from '../app/UserContext.jsx';
-import FirebaseWrapper from '../../utils/FirebaseWrapper.js';
+import Settings from './Settings';
+import UserContext from '../app/UserContext';
+import FirebaseWrapper from '../../utils/FirebaseWrapper';
 
 const userContext = {
 	username: 'Harry Bosch',

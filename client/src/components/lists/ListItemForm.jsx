@@ -9,7 +9,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import NumberFormat from 'react-number-format';
 import _ from 'lodash';
 
-const FirebaseWrapper = require('../../utils/FirebaseWrapper.js');
+import FirebaseWrapper from '../../utils/FirebaseWrapper';
 
 function ListItemForm(props) {
 	const [item, setItem] = useState(props.item);

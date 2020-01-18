@@ -1,3 +1,9 @@
+import { initializeApp, firestore, auth as _auth } from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+import uuidv4 from 'uuid/v4';
+import { findIndex } from 'lodash';
+
 const config = {
 	apiKey: "AIzaSyBZytWKyXy7KDn99yM9UXjJz8RAVLpRQfE",
 	authDomain: "wish-9d5fa.firebaseapp.com",
@@ -5,20 +11,15 @@ const config = {
 	projectId: "wish-9d5fa",
 	storageBucket: "wish-9d5fa.appspot.com",
 	messagingSenderId: "760376786906"
- };
+};
+initializeApp(config);
 
-const firebase = require('firebase/app');
-firebase.initializeApp(config);
-require('firebase/firestore');
-require('firebase/auth');
-
-const db = firebase.firestore();
+const db = firestore();
 const localKey = 'WISH_LIST_KEY';
-const auth = firebase.auth();
-const uuidv4 = require('uuid/v4');
-let _ = require('lodash');
+const auth = _auth();
 
-module.exports = {
+
+const FirebaseWrapper = {
 	db,
 	localKey,
 	getErrorMessage,
@@ -60,7 +61,7 @@ module.exports = {
 
 	updateItem(path, item) {
 		return _getItems(path).then((items) => {
-			let index = _.findIndex(items, { id: item.id });
+			const index = findIndex(items, { id: item.id });
 
 			items[index] = item;
 			db.doc(path).set({ items }, { merge: true });
@@ -69,7 +70,7 @@ module.exports = {
 
 	deleteItem(path, itemId) {
 		return _getItems(path).then((items) => {
-			let index = _.findIndex(items, { id: itemId });
+			const index = findIndex(items, { id: itemId });
 
 			items.splice(index, 1);
 			db.doc(path).set({ items }, { merge: true });
@@ -133,6 +134,4 @@ function getErrorMessage (errorCode) {
 	return result;
 }
 
-
-
-
+export default FirebaseWrapper;
