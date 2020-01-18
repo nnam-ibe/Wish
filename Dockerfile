@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 5500
 
-CMD ["node", "server.js"]
+CMD ["yarn", "serve"]
