@@ -7,7 +7,7 @@ import _ from 'lodash';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
-import InputValidation from '../../utils/InputValidation';
+import InputValidation from '../../../../lib/utils/InputValidation';
 import {
 	emailDefault,
 	passwordDefault

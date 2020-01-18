@@ -11,9 +11,7 @@ assert(process.env.WISH_TOKEN_URI, 'token_uri missing, please export with WISH_T
 assert(process.env.WISH_AUTH_PROVIDER_X509_CERT_URL, 'auth_provider_x509_cert_url missing, please export with WISH_AUTH_PROVIDER_X509_CERT_URL');
 assert(process.env.WISH_CLIENT_X509_CERT_URL, 'client_x509_cert_url missing, please export with WISH_CLIENT_X509_CERT_URL');
 
-
-
-module.exports = {
+const options = {
 	type: process.env.WISH_ADMIN_CONFIG_TYPE,
 	project_id: process.env.WISH_PROJECT_ID,
 	private_key_id: process.env.WISH_PRIVATE_KEY_ID,
@@ -25,3 +23,5 @@ module.exports = {
 	auth_provider_x509_cert_url: process.env.WISH_AUTH_PROVIDER_X509_CERT_URL,
 	client_x509_cert_url: process.env.WISH_CLIENT_X509_CERT_URL
 };
+
+module.exports = options;
