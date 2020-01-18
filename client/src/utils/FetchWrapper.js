@@ -1,4 +1,4 @@
-module.exports = {
+const FetchWrapper = {
 	post(url, data) {
 		const options = {
 			method: 'POST',
@@ -9,3 +9,5 @@ module.exports = {
 		return fetch(url, options);
 	}
 }
+
+export default FetchWrapper;

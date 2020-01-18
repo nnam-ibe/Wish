@@ -1,4 +1,4 @@
-const ItemModel = require('./ItemModel.js');
+import ItemModel from './ItemModel.js';
 
 const val = {
 	addTaxes: false,

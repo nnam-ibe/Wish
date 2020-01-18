@@ -2,7 +2,7 @@ import React from 'react';
 import {render, fireEvent} from '@testing-library/react'
 
 import Item from './Item.jsx';
-const ItemModel = require('../../models/ItemModel.js');
+import ItemModel from '../../models/ItemModel';
 
 
 const model = new ItemModel({

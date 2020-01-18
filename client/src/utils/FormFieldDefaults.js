@@ -1,57 +1,57 @@
-exports.addTaxesDefault = {
+export const addTaxesDefault = {
 	checked: false,
 	value: 'addTaxes'
 };
 
-exports.emailDefault = {
+export const emailDefault = {
 	error: false,
 	helperText: '',
 	value: ''
 };
 
-exports.incrementDefault = {
+export const incrementDefault = {
 	error: false,
 	helperText: '',
 	value: '200'
 };
 
-exports.nameDefault = {
+export const nameDefault = {
 	error: false,
 	helperText: '',
 	value: ''
 };
 
-exports.passwordDefault = {
+export const passwordDefault = {
 	error: false,
 	helperText: '',
 	value: ''
 };
 
-exports.priceDefault = {
+export const priceDefault = {
 	error: false,
 	helperText: '',
 	value: ''
 };
 
-exports.savedDefault = {
+export const savedDefault = {
 	error: false,
 	helperText: '',
 	value: ''
 };
 
-exports.usernameDefault = {
+export const usernameDefault = {
 	error: false,
 	helperText: '',
 	value: ''
 };
 
-exports.stringDefault = {
+export const stringDefault = {
 	error: false,
 	helperText: '',
 	value: ''
 };
 
-exports.salesTaxDefault = {
+export const salesTaxDefault = {
 	error: false,
 	helperText: '',
 	value: 13

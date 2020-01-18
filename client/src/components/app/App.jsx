@@ -1,14 +1,14 @@
 import './App.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { Route } from 'react-router-dom';
-import Navbar from '../navigation/Navbar.jsx';
-import Login from '../auth/Login.jsx';
-import CreateAccount from '../auth/CreateAccount.jsx';
-import Settings from '../user/Settings.jsx';
-import Sidebar from '../navigation/Sidebar.jsx';
-import ListPage from '../lists/ListPage.jsx';
-import UserContext from './UserContext.jsx';
-const FirebaseWrapper = require('../../utils/FirebaseWrapper.js');
+import Navbar from '../navigation/Navbar';
+import Login from '../auth/Login';
+import CreateAccount from '../auth/CreateAccount';
+import Settings from '../user/Settings';
+import Sidebar from '../navigation/Sidebar';
+import ListPage from '../lists/ListPage';
+import UserContext from './UserContext';
+import FirebaseWrapper from '../../utils/FirebaseWrapper';
 
 function App(props) {
 	const [uid, setUID] = useState();
