@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, fireEvent, act, prettyDOM } from '@testing-library/react'
+import {
+	render, fireEvent, act, prettyDOM,
+} from '@testing-library/react';
 
 import Settings from './Settings';
 import UserContext from '../app/UserContext';
@@ -10,15 +12,15 @@ const userContext = {
 	tax: 13,
 	defaultList: 'Christmas Shopping',
 	defaultIncrement: 50,
-	addTaxes: false
+	addTaxes: false,
 };
 
 describe('Settings', () => {
 	it('user settings form shows up', () => {
 		const { getByText } = render(
 			<UserContext.Provider value={userContext}>
-				<Settings history={[]}/>
-			</UserContext.Provider>
+				<Settings history={[]} />
+  </UserContext.Provider>,
 		);
 
 		expect(getByText('Username'));

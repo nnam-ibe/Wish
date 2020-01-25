@@ -3,7 +3,7 @@ import _ from 'lodash';
 const InputValidation = {
 	validateListName(listName) {
 		if (!listName) return new Error('Name is invalid');
-		if (_.trim(listName).length <= 0 ) return new Error('Name cannot be empty');
+		if (_.trim(listName).length <= 0) return new Error('Name cannot be empty');
 		if (listName.length > 36) return new Error('Maximum of 36 characters allowed');
 	},
 
@@ -28,7 +28,7 @@ const InputValidation = {
 	validatePasswordsAreEqual(password, confirm) {
 		if (password !== confirm) {
 			return new Error('Passwords don\'t match');
-		};
+		}
 	},
 
 	validatePassword(password) {
@@ -40,7 +40,7 @@ const InputValidation = {
 	// assuming tax over 100% is invalid
 	validateTax(amount) {
 		amount = _.trim(amount);
-		if(_.isEmpty(amount)) {
+		if (_.isEmpty(amount)) {
 			return new Error('Tax cannot be empty');
 		}
 
@@ -57,7 +57,7 @@ const InputValidation = {
 		if (isNaN(parseFloat(val))) {
 			return new Error('Please enter a valid number');
 		}
-	}
+	},
 };
 
 export default InputValidation;

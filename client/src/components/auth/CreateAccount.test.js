@@ -1,11 +1,12 @@
 import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react';
 
 import CreateAccount from './CreateAccount';
 import FetchWrapper from '../../utils/FetchWrapper';
 
 // mock api calls
-let resolve, reject;
+let resolve; let
+	reject;
 FetchWrapper.post = jest.fn(() => new Promise((_resolve, _reject) => {
 	resolve = _resolve;
 	reject = _reject;
@@ -45,7 +46,7 @@ describe('CreateAccount', () => {
 		const usernameValue = 'johnny';
 		const emailValue = 'sample@mail.ca';
 		const passwordValue = '654321';
-		const { getByText, getByRole, container } = render(<CreateAccount {...{history: []}}/>);
+		const { getByText, getByRole, container } = render(<CreateAccount {...{ history: [] }} />);
 
 		fireEvent.change(container.querySelector('#username'), { target: { value: usernameValue } });
 		fireEvent.change(container.querySelector('#email'), { target: { value: emailValue } });
@@ -55,7 +56,7 @@ describe('CreateAccount', () => {
 
 		await act(async () => {
 			resolve({
-				ok: true
+				ok: true,
 			});
 		});
 
@@ -79,8 +80,8 @@ describe('CreateAccount', () => {
 		await act(async () => {
 			resolve({
 				json() {
-					return { code: 'auth/email-already-in-use' }
-				}
+					return { code: 'auth/email-already-in-use' };
+				},
 			});
 		});
 

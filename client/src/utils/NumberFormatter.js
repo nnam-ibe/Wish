@@ -5,9 +5,7 @@ export const getBig = (value) => {
 	return new Big(value);
 };
 
-export const formatMoney = (amount) => {
-	return String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
+export const formatMoney = (amount) => String(amount).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 export const getNumber = (value) => {
 	if (!value) return 0;

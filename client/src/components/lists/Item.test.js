@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, fireEvent} from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react';
 
 import Item from './Item.jsx';
 import ItemModel from '../../models/ItemModel';
@@ -11,17 +11,17 @@ const model = new ItemModel({
 	name: 'sample name',
 	price: 50,
 	saved: 10,
-	tax: 30
+	tax: 30,
 });
 
 describe('Item', () => {
 	it('item appears', () => {
-		const { getByText } = render(<Item itemModel={model}/>);
+		const { getByText } = render(<Item itemModel={model} />);
 		expect(getByText('sample name')).toBeDefined();
 	});
 
 	it('values display correctly - no tax', () => {
-		const { getByText } = render(<Item itemModel={model}/>);
+		const { getByText } = render(<Item itemModel={model} />);
 
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
@@ -30,8 +30,8 @@ describe('Item', () => {
 	});
 
 	it('values display correctly - with tax', () => {
-		const taxedModel = new ItemModel({...model.valueOf(), addTaxes: true});
-		const { getByText } = render(<Item itemModel={taxedModel}/>);
+		const taxedModel = new ItemModel({ ...model.valueOf(), addTaxes: true });
+		const { getByText } = render(<Item itemModel={taxedModel} />);
 
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
@@ -40,7 +40,7 @@ describe('Item', () => {
 	});
 
 	it('values display correctly - when props change', () => {
-		const { getByText, rerender } = render(<Item itemModel={model}/>);
+		const { getByText, rerender } = render(<Item itemModel={model} />);
 
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
@@ -53,10 +53,10 @@ describe('Item', () => {
 			name: 'TESTNAME',
 			price: 70,
 			saved: 10,
-			tax: 30
+			tax: 30,
 		});
 
-		rerender(<Item itemModel={itemModel}/>);
+		rerender(<Item itemModel={itemModel} />);
 		expect(getByText('TESTNAME')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
 		expect(getByText('$91')).toBeDefined();
@@ -64,7 +64,7 @@ describe('Item', () => {
 	});
 
 	it('can decrement saved amount', async () => {
-		const {getAllByText, getByTestId, getByText} = render(<Item itemModel={model} updateItem={jest.fn()}/>);
+		const { getAllByText, getByTestId, getByText } = render(<Item itemModel={model} updateItem={jest.fn()} />);
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
 		expect(getByText('$50')).toBeDefined();
@@ -88,9 +88,9 @@ describe('Item', () => {
 			name: 'sample name',
 			price: 70,
 			saved: 10,
-			tax: 30
+			tax: 30,
 		});
-		const {getByTestId, getByText} = render(<Item itemModel={incrementModel} updateItem={jest.fn()}/>);
+		const { getByTestId, getByText } = render(<Item itemModel={incrementModel} updateItem={jest.fn()} />);
 		fireEvent.click(getByTestId('item-increment-button'));
 
 		expect(getByText('sample name')).toBeDefined();

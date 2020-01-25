@@ -5,12 +5,12 @@ import uuidv4 from 'uuid/v4';
 import { findIndex } from 'lodash';
 
 const config = {
-	apiKey: "AIzaSyBZytWKyXy7KDn99yM9UXjJz8RAVLpRQfE",
-	authDomain: "wish-9d5fa.firebaseapp.com",
-	databaseURL: "https://wish-9d5fa.firebaseio.com",
-	projectId: "wish-9d5fa",
-	storageBucket: "wish-9d5fa.appspot.com",
-	messagingSenderId: "760376786906"
+	apiKey: 'AIzaSyBZytWKyXy7KDn99yM9UXjJz8RAVLpRQfE',
+	authDomain: 'wish-9d5fa.firebaseapp.com',
+	databaseURL: 'https://wish-9d5fa.firebaseio.com',
+	projectId: 'wish-9d5fa',
+	storageBucket: 'wish-9d5fa.appspot.com',
+	messagingSenderId: '760376786906',
 };
 initializeApp(config);
 
@@ -26,9 +26,7 @@ const FirebaseWrapper = {
 
 	createAccount(options) {
 		return auth.createUserWithEmailAndPassword(options.email, options.password)
-			.then((cred) => {
-				return cred.user.uid;
-			})
+			.then((cred) => cred.user.uid)
 			.catch((err) => {
 				const message = getErrorMessage(err.code);
 
@@ -100,36 +98,36 @@ const FirebaseWrapper = {
 
 	generateUUID() {
 		return uuidv4();
-	}
+	},
 };
 
-async function _getItems (path) {
+async function _getItems(path) {
 	const doc = await db.doc(path).get();
-	if(!doc.exists) return[];
+	if (!doc.exists) return [];
 
 	return doc.data().items;
 }
 
-function getErrorMessage (errorCode) {
+function getErrorMessage(errorCode) {
 	let result;
 	switch (errorCode) {
-		case 'auth/email-already-in-use':
-			result = 'Email is already in use';
-			break;
-		case 'auth/invalid-email':
-			result = 'Enter a valid email';
-			break;
-		case 'auth/user-disabled':
-			result = 'Account has been disabled';
-			break;
-		case 'auth/user-not-found':
-			result = 'No account found';
-			break;
-		case 'auth/wrong-password':
-			result = 'Incorrect password';
-			break;
-		default:
-			result = null;
+	case 'auth/email-already-in-use':
+		result = 'Email is already in use';
+		break;
+	case 'auth/invalid-email':
+		result = 'Enter a valid email';
+		break;
+	case 'auth/user-disabled':
+		result = 'Account has been disabled';
+		break;
+	case 'auth/user-not-found':
+		result = 'No account found';
+		break;
+	case 'auth/wrong-password':
+		result = 'Incorrect password';
+		break;
+	default:
+		result = null;
 	}
 	return result;
 }
