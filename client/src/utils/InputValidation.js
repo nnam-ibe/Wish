@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import _ from 'lodash';
 
 const InputValidation = {
@@ -7,16 +8,16 @@ const InputValidation = {
 		if (listName.length > 36) return new Error('Maximum of 36 characters allowed');
 	},
 
-	validateUsername(username) {
-		username = _.trim(username);
+	validateUsername(val) {
+		const username = _.trim(val);
 		if (_.size(username) <= 0 || _.size(username) > 16) {
 			return new Error('Username must be between 1 & 16 characters');
 		}
 	},
 
 	// Further email validation will be done by firebase
-	validateEmail(email) {
-		email = _.trim(email);
+	validateEmail(val) {
+		const email = _.trim(val);
 		if (_.isEmpty(email)) {
 			return new Error('Email cannot be empty');
 		}
@@ -38,13 +39,13 @@ const InputValidation = {
 	},
 
 	// assuming tax over 100% is invalid
-	validateTax(amount) {
-		amount = _.trim(amount);
+	validateTax(val) {
+		const amount = _.trim(val);
 		if (_.isEmpty(amount)) {
 			return new Error('Tax cannot be empty');
 		}
 
-		if (isNaN(amount)) {
+		if (Number.isNaN(amount)) {
 			return new Error('Tax must be a valid number');
 		}
 
@@ -54,7 +55,7 @@ const InputValidation = {
 	},
 
 	validateNumber(val) {
-		if (isNaN(parseFloat(val))) {
+		if (Number.isNaN(parseFloat(val))) {
 			return new Error('Please enter a valid number');
 		}
 	},

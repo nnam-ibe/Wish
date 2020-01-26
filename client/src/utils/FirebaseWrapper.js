@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { initializeApp, firestore, auth as _auth } from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -51,14 +52,14 @@ const FirebaseWrapper = {
 
 	saveNewItem(path, data) {
 		data.id = uuidv4();
-		return _getItems(path).then((items) => {
+		return getItems(path).then((items) => {
 			items.push(data);
 			db.doc(path).set({ items }, { merge: true });
 		});
 	},
 
 	updateItem(path, item) {
-		return _getItems(path).then((items) => {
+		return getItems(path).then((items) => {
 			const index = findIndex(items, { id: item.id });
 
 			items[index] = item;
@@ -67,7 +68,7 @@ const FirebaseWrapper = {
 	},
 
 	deleteItem(path, itemId) {
-		return _getItems(path).then((items) => {
+		return getItems(path).then((items) => {
 			const index = findIndex(items, { id: itemId });
 
 			items.splice(index, 1);
@@ -101,7 +102,7 @@ const FirebaseWrapper = {
 	},
 };
 
-async function _getItems(path) {
+async function getItems(path) {
 	const doc = await db.doc(path).get();
 	if (!doc.exists) return [];
 

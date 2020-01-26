@@ -46,7 +46,7 @@ describe('CreateAccount', () => {
 		const usernameValue = 'johnny';
 		const emailValue = 'sample@mail.ca';
 		const passwordValue = '654321';
-		const { getByText, getByRole, container } = render(<CreateAccount {...{ history: [] }} />);
+		const { getByRole, container } = render(<CreateAccount {...{ history: [] }} />);
 
 		fireEvent.change(container.querySelector('#username'), { target: { value: usernameValue } });
 		fireEvent.change(container.querySelector('#email'), { target: { value: emailValue } });

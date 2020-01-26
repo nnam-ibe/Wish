@@ -1,4 +1,4 @@
-import ItemModel from './ItemModel.js';
+import ItemModel from './ItemModel';
 
 const val = {
 	addTaxes: false,

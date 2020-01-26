@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-	render, fireEvent, act, prettyDOM,
-} from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import Settings from './Settings';
 import UserContext from '../app/UserContext';
-import FirebaseWrapper from '../../utils/FirebaseWrapper';
 
 const userContext = {
 	username: 'Harry Bosch',
@@ -20,7 +17,7 @@ describe('Settings', () => {
 		const { getByText } = render(
 			<UserContext.Provider value={userContext}>
 				<Settings history={[]} />
-  </UserContext.Provider>,
+			</UserContext.Provider>,
 		);
 
 		expect(getByText('Username'));

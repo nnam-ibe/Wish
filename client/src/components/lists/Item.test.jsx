@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import Item from './Item.jsx';
+import Item from './Item';
 import ItemModel from '../../models/ItemModel';
 
 
@@ -64,7 +64,9 @@ describe('Item', () => {
 	});
 
 	it('can decrement saved amount', async () => {
-		const { getAllByText, getByTestId, getByText } = render(<Item itemModel={model} updateItem={jest.fn()} />);
+		const { getAllByText, getByTestId, getByText } = render(
+			<Item itemModel={model} updateItem={jest.fn()} />
+		);
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
 		expect(getByText('$50')).toBeDefined();
@@ -90,7 +92,9 @@ describe('Item', () => {
 			saved: 10,
 			tax: 30,
 		});
-		const { getByTestId, getByText } = render(<Item itemModel={incrementModel} updateItem={jest.fn()} />);
+		const { getByTestId, getByText } = render(
+			<Item itemModel={incrementModel} updateItem={jest.fn()} />
+		);
 		fireEvent.click(getByTestId('item-increment-button'));
 
 		expect(getByText('sample name')).toBeDefined();
