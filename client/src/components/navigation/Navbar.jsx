@@ -15,7 +15,7 @@ Props
 	title: title of the page
 	isLoggedIn: boolean log in value
 	nav(route): navigate to route
-**/
+* */
 function Navbar(props) {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const buttonLabel = props.isLoggedIn ? 'Logout' : 'Login';
@@ -34,41 +34,41 @@ function Navbar(props) {
 	}
 
 	return (
-		<div className='Navbar'>
-			<AppBar position='fixed' color='default'>
+		<div className="Navbar">
+			<AppBar position="fixed" color="default">
 				<Toolbar>
-					<div className='display-flex width-100'>
-						<Typography variant='h6' color='inherit' className='flex-grow-1 text-align-left'>
-							<a href='/' className='no-a-style page-title'>{props.title}</a>
+					<div className="display-flex width-100">
+						<Typography variant="h6" color="inherit" className="flex-grow-1 text-align-left">
+							<a href="/" className="no-a-style page-title">{props.title}</a>
 						</Typography>
 						<div>
 							{
-								props.isLoggedIn && (
-									<div className='display-inline'>
-										<IconButton onClick={handleClick} role='dialog'>
-											<AccountCircle />
-										</IconButton>
-										<Menu
-											id="menu-appbar"
-											anchorEl={anchorEl}
-											anchorOrigin={{
-												vertical: 'top',
-												horizontal: 'right',
-											}}
-											transformOrigin={{
-												vertical: 'top',
-												horizontal: 'right',
-											}}
-											open={Boolean(anchorEl)}
-											onClose={handleClose}
-										>
-											<MenuItem className='setting-item' onClick={handleSettingsClick}>Settings</MenuItem>
-											<MenuItem onClick={handleClose}>My account</MenuItem>
-										</Menu>
-									</div>
-								)
+	props.isLoggedIn && (
+	<div className="display-inline">
+		<IconButton onClick={handleClick} role="dialog">
+			<AccountCircle />
+		</IconButton>
+		<Menu
+			id="menu-appbar"
+			anchorEl={anchorEl}
+			anchorOrigin={{
+				vertical: 'top',
+				horizontal: 'right',
+			}}
+			transformOrigin={{
+				vertical: 'top',
+				horizontal: 'right',
+			}}
+			open={Boolean(anchorEl)}
+			onClose={handleClose}
+		>
+			<MenuItem className="setting-item" onClick={handleSettingsClick}>Settings</MenuItem>
+			<MenuItem onClick={handleClose}>My account</MenuItem>
+		</Menu>
+	</div>
+	)
 							}
-							<Button color='inherit' className='display-flex' onClick={props.handleLoginClick}>{buttonLabel}</Button>
+							<Button color="inherit" className="display-flex" onClick={props.handleLoginClick}>{buttonLabel}</Button>
 						</div>
 					</div>
 				</Toolbar>

@@ -14,8 +14,8 @@
     "build": "yarn build-client && yarn build-server",
     "serve": "node dist/server.js",
     "compose": "yarn run build && docker-compose up -d --build",
-    "lint": "eslint lib/ client/src",
-    "lint:fix": "eslint --fix lib/ client/src"
+    "lint": "eslint lib/**/*.js client/src/**/*.js client/src/**/*.jsx",
+    "lint:fix": "eslint --fix lib/**/*.js client/src/**/*.js client/src/**/*.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.8.3",

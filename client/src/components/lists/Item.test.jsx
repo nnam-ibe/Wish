@@ -65,7 +65,7 @@ describe('Item', () => {
 
 	it('can decrement saved amount', async () => {
 		const { getAllByText, getByTestId, getByText } = render(
-			<Item itemModel={model} updateItem={jest.fn()} />
+			<Item itemModel={model} updateItem={jest.fn()} />,
 		);
 		expect(getByText('sample name')).toBeDefined();
 		expect(getByText('$10')).toBeDefined();
@@ -93,7 +93,7 @@ describe('Item', () => {
 			tax: 30,
 		});
 		const { getByTestId, getByText } = render(
-			<Item itemModel={incrementModel} updateItem={jest.fn()} />
+			<Item itemModel={incrementModel} updateItem={jest.fn()} />,
 		);
 		fireEvent.click(getByTestId('item-increment-button'));
 

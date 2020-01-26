@@ -10,7 +10,6 @@ import ItemModel from '../../models/ItemModel';
 import * as FormFieldDefaults from '../../utils/FormFieldDefaults';
 
 class ListPage extends Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -18,29 +17,30 @@ class ListPage extends Component {
 			listItems: null,
 
 			// Input Form State
-			formItem: this._getFormItemDefault(),
+			formItem: this.getFormItemDefault(),
 			formItemModel: this.getDefaultFormItemModel(),
 			itemFormIsOpen: false,
-			isNewFormItem: true
+			isNewFormItem: true,
 		};
 	}
 
 	componentDidMount() {
-		this._getList(this.props.uid);
+		this.getList(this.props.uid);
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate(prevProps) {
 		const samePage = prevProps.match.params.page === this.props.match.params.page;
-		const sameProps = this.props.uid === prevProps.uid
+		const sameProps = this.props.uid === prevProps.uid;
 		if (samePage && sameProps) return;
 
-		this._getList(this.props.uid);
+		this.getList(this.props.uid);
 	}
 
 	componentWillUnmount() {
-		this.onSnapshotUnsubscribe && this.onSnapshotUnsubscribe();
+		if (this.onSnapshotUnsubscribe) this.onSnapshotUnsubscribe();
 	}
 
+	// eslint-disable-next-line react/sort-comp
 	render() {
 		return (
 			<div>
@@ -51,7 +51,7 @@ class ListPage extends Component {
 					<ListItemForm
 						isOpen={this.state.itemFormIsOpen}
 						closeForm={this.closeItemForm}
-						getPagePath={this._getPagePath}
+						getPagePath={this.getPagePath}
 						item={this.state.formItemModel}
 						fields={this.state.formItem}
 						resetItemModel={this.resetFormItemModel}
@@ -59,108 +59,112 @@ class ListPage extends Component {
 					/>
 				</div>
 				<div>
-					<Fab color='primary' className='list-fab' onClick={this.openItemForm}>
+					<Fab color="primary" className="list-fab" onClick={this.openItemForm}>
 						<AddIcon />
 					</Fab>
 				</div>
 			</div>
-		)
+		);
 	}
 
 	openItemForm = () => {
 		if (this.state.itemFormIsOpen) return;
 
 		this.setState({
-			itemFormIsOpen: true
-		})
+			itemFormIsOpen: true,
+		});
 	}
 
 	closeItemForm = () => {
 		if (!this.state.isNewFormItem) this.resetFormItemModel();
 
 		this.setState({
-			itemFormIsOpen: false
-		})
+			itemFormIsOpen: false,
+		});
 	}
 
 	resetFormItemModel = () => {
 		this.setState({
-			formItem: this._getFormItemDefault(),
+			formItem: this.getFormItemDefault(),
 			formItemModel: this.getDefaultFormItemModel(),
-			isNewFormItem: true
+			isNewFormItem: true,
 		});
 	}
 
-	_updateItem = (item) => {
-		FirebaseWrapper.updateItem(this._getPagePath(), item);
+	updateItem = (item) => {
+		FirebaseWrapper.updateItem(this.getPagePath(), item);
 	}
 
-	_editItem = (id) => {
-		const item = _.find(this.state.list, { id: id });
+	editItem = (id) => {
+		const item = _.find(this.state.list, { id });
 		if (!item) return null;
 
-		const itemToEdit = this._getFormItemDefault();
+		const itemToEdit = this.getFormItemDefault();
 		const model = new ItemModel({
 			...item,
-			tax: this.props.userPrefs.tax
+			tax: this.props.userPrefs.tax,
 		});
-		this.setState({
+		return this.setState({
 			formItemModel: model,
 			itemFormIsOpen: true,
 			formItem: itemToEdit,
-			isNewFormItem: false
+			isNewFormItem: false,
 		});
 	}
 
-	_getList = (uid) => {
+	getList = (uid) => {
 		if (!uid) {
 			this.setState({ list: null, listItems: null });
 			return;
 		}
 
-		this.onSnapshotUnsubscribe = FirebaseWrapper.db.doc(this._getPagePath()).onSnapshot((snapShot) => {
-			if (!snapShot.exists) {
-				this.setState({ list: null, listItems: null });
-				return;
-			}
+		this.onSnapshotUnsubscribe = FirebaseWrapper.db.doc(this.getPagePath())
+			.onSnapshot((snapShot) => {
+				if (!snapShot.exists) {
+					this.setState({ list: null, listItems: null });
+					return;
+				}
 
-			const list = snapShot.data().items;
-			this._setListElements(list);
-		});
+				const list = snapShot.data().items;
+				this.setListElements(list);
+			});
 	}
 
-	_getPagePath = () => {
-		return `users/${this.props.uid}/active/${this.props.match.params.page}`;
-	}
+	getPagePath = () => `users/${this.props.uid}/active/${this.props.match.params.page}`
 
-	_setListElements = (list) => {
+	setListElements = (list) => {
 		const listItems = _.map(list, (item) => {
-			const itemModel = new ItemModel({...item, tax: this.props.userPrefs.tax});
-			return ( <Item itemModel={itemModel} key={item.id} updateItem={this._updateItem} editItem={this._editItem}/> );
+			const itemModel = new ItemModel({ ...item, tax: this.props.userPrefs.tax });
+			return (
+				<Item
+					itemModel={itemModel}
+					key={item.id}
+					updateItem={this.updateItem}
+					editItem={this.editItem}
+				/>
+			);
 		});
 
 		this.setState({ list, listItems });
 	}
 
-	_getFormItemDefault = () => {
+	getFormItemDefault = () => {
 		const formDefaults = {
 			nameField: FormFieldDefaults.nameDefault,
 			priceField: FormFieldDefaults.priceDefault,
 			savedField: FormFieldDefaults.savedDefault,
 			incrementField: FormFieldDefaults.incrementDefault,
-			addTaxesField: FormFieldDefaults.addTaxesDefault
+			addTaxesField: FormFieldDefaults.addTaxesDefault,
 		};
 		_.set(formDefaults, 'addTaxesField.checked', this.props.userPrefs.addTaxes);
 		return _.set(formDefaults, 'incrementField.value', this.props.userPrefs.defaultIncrement);
 	}
 
-	getDefaultFormItemModel = () => {
-		return new ItemModel({
-			tax: this.props.userPrefs.tax,
-			addTaxes: this.props.userPrefs.addTaxes,
-			increment: this.props.userPrefs.defaultIncrement
-		});
-	}
+	getDefaultFormItemModel = () => new ItemModel({
+		tax: this.props.userPrefs.tax,
+		addTaxes: this.props.userPrefs.addTaxes,
+		increment: this.props.userPrefs.defaultIncrement,
+	})
 }
 
 export default ListPage;

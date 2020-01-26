@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
 
-import Login from './Login.jsx';
+import Login from './Login';
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
 
 // mock api calls
