@@ -5,8 +5,8 @@ import CreateAccount from './CreateAccount';
 import FetchWrapper from '../../utils/FetchWrapper';
 
 // mock api calls
-let resolve; let
-	reject;
+let resolve;
+let reject;
 FetchWrapper.post = jest.fn(() => new Promise((_resolve, _reject) => {
 	resolve = _resolve;
 	reject = _reject;

@@ -45,7 +45,8 @@ const InputValidation = {
 			return new Error('Tax cannot be empty');
 		}
 
-		if (Number.isNaN(amount)) {
+		/* eslint-disable-next-line no-restricted-globals */
+		if (isNaN(amount)) {
 			return new Error('Tax must be a valid number');
 		}
 
@@ -55,7 +56,8 @@ const InputValidation = {
 	},
 
 	validateNumber(val) {
-		if (Number.isNaN(parseFloat(val))) {
+		/* eslint-disable-next-line no-restricted-globals */
+		if (isNaN(parseFloat(val))) {
 			return new Error('Please enter a valid number');
 		}
 	},

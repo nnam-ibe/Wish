@@ -1,7 +1,8 @@
 import Big from 'big.js';
 
 export const getBig = (value) => {
-	if (Number.isNaN(value) || value === null || value === '') return new Big(0);
+	/* eslint-disable-next-line no-restricted-globals */
+	if (isNaN(value) || value === null || value === '') return new Big(0);
 	return new Big(value);
 };
 

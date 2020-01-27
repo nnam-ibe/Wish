@@ -183,7 +183,7 @@ function CurrencyFormat(props) {
 }
 
 function nextState(prevState, err) {
-	let res;
+	let res = prevState;
 	if (err) {
 		res = {
 			...prevState,
