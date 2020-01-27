@@ -8,7 +8,7 @@
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "test-client": "cd client && yarn test",
     "test-server": "jest",
-    "test": "yarn test-client && yarn test-server",
+    "test": "yarn lint && yarn test-client && yarn test-server",
     "build-client": "cd client && yarn build",
     "build-server": "babel lib -d dist",
     "build": "yarn build-client && yarn build-server",
