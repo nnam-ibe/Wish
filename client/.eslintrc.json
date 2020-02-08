@@ -1,0 +1,28 @@
+{
+    "extends": [
+        "plugin:react/recommended"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "indent": ["error", "tab", {"ignoredNodes": ["JSXElement", "JSXElement > *", "JSXAttribute", "JSXIdentifier", "JSXNamespacedName", "JSXMemberExpression", "JSXSpreadAttribute", "JSXExpressionContainer", "JSXOpeningElement", "JSXClosingElement", "JSXText", "JSXEmptyExpression", "JSXSpreadChild"]}],
+        "no-tabs": 0,
+	"no-use-before-define": "off",
+	"react/jsx-props-no-spreading": "off",
+	"react/jsx-indent": ["error", "tab"],
+	"react/jsx-indent-props": ["error", "tab"],
+	"react/destructuring-assignment": "off",
+	"react/no-unused-state": "off",
+	"react/prop-types": "off",
+	"react/no-did-update-set-state": "off"
+    }
+}

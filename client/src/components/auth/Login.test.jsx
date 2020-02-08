@@ -1,11 +1,12 @@
 import React from 'react';
-import {render, fireEvent, act} from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react';
 
-import Login from './Login.jsx';
+import Login from './Login';
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
 
 // mock api calls
-let resolve, reject;
+let resolve; let
+	reject;
 FirebaseWrapper.login = jest.fn(() => new Promise((_resolve, _reject) => {
 	resolve = _resolve;
 	reject = _reject;
@@ -45,7 +46,7 @@ describe('Login', () => {
 	it('makes api call when validation requirements are met', async () => {
 		const emailValue = 'sample@mail.com';
 		const passwordValue = '123456';
-		const { getByRole, container } = render(<Login {...{history: []}}/>);
+		const { getByRole, container } = render(<Login {...{ history: [] }} />);
 		fireEvent.change(container.querySelector('#email'), { target: { value: emailValue } });
 		fireEvent.change(container.querySelector('#password'), { target: { value: passwordValue } });
 		fireEvent.click(getByRole('button'));

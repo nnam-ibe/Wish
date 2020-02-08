@@ -12,7 +12,7 @@ import InputValidation from '../../utils/InputValidation';
 import {
 	emailDefault,
 	passwordDefault,
-	usernameDefault
+	usernameDefault,
 } from '../../utils/FormFieldDefaults';
 
 function CreateAccount(props) {
@@ -21,7 +21,7 @@ function CreateAccount(props) {
 	const [password, setPassword] = useState(passwordDefault);
 	const [confirmPassword, setConfirmPassword] = useState(passwordDefault);
 	const [showProgressBar, setShowProgressBar] = useState(false);
-	const progessBar = <LinearProgress/>;
+	const progessBar = <LinearProgress />;
 
 	function handleCreateClick(e) {
 		e.preventDefault();
@@ -29,29 +29,30 @@ function CreateAccount(props) {
 
 		if (validateInputs()) return setShowProgressBar(false);
 
-		FetchWrapper.post(`/api/create/account`, {
+		return FetchWrapper.post('/api/create/account', {
 			username: _.trim(username.value),
 			email: _.trim(email.value),
-			password: password.value
+			password: password.value,
 		})
-		.then(res => {
-			setShowProgressBar(false);
-			if (res.ok) {
-				return props.history.push('/login');
-			}
-			return res.json();
-		})
-		.then(err => {
-			const message = FirebaseWrapper.getErrorMessage(err.code);
-			if (_.includes(err.code, 'password')) {
-				setPassword({ ...password, error: true, helperText: message });
-			} else {
-				setEmail({ ...email, error: true, helperText: message })
-			}
-		})
-		.catch(err => {
-			setEmail({ ...email, error: true, helperText: err.toString() });
-		});
+			.then((res) => {
+				res.one = 'three';
+				setShowProgressBar(false);
+				if (res.ok) {
+					return props.history.push('/login');
+				}
+				return res.json();
+			})
+			.then((err) => {
+				const message = FirebaseWrapper.getErrorMessage(err.code);
+				if (_.includes(err.code, 'password')) {
+					setPassword({ ...password, error: true, helperText: message });
+				} else {
+					setEmail({ ...email, error: true, helperText: message });
+				}
+			})
+			.catch((err) => {
+				setEmail({ ...email, error: true, helperText: err.toString() });
+			});
 	}
 
 	function validateInputs() {
@@ -75,65 +76,66 @@ function CreateAccount(props) {
 	}
 
 	return (
-		<div className='auth-component'>
+		<div className="auth-component">
 			<Paper>
 				{ showProgressBar && progessBar }
-				<div className='auth-paper create-account-form'>
+				<div className="auth-paper create-account-form">
 					<form>
-						<Typography variant='h6'>Create your Account</Typography>
+						<Typography variant="h6">Create your Account</Typography>
 						<TextField
-							margin='dense'
-							id='username'
-							label='Username'
+							margin="dense"
+							id="username"
+							label="Username"
 							error={username.error}
 							value={username.value}
 							helperText={username.helperText}
-							onChange={(e) => setUsername({...username, value: e.target.value})}
+							onChange={(e) => setUsername({ ...username, value: e.target.value })}
 							fullWidth
 							required
 						/>
 						<TextField
-							margin='dense'
-							id='email'
-							label='Email Address'
-							type='email'
+							margin="dense"
+							id="email"
+							label="Email Address"
+							type="email"
 							error={email.error}
 							value={email.value}
 							helperText={email.helperText}
-							onChange={(e) => setEmail({...email, value: e.target.value})}
+							onChange={(e) => setEmail({ ...email, value: e.target.value })}
 							fullWidth
 							required
 						/>
 						<TextField
-							margin='dense'
-							id='password'
-							label='Password'
-							type='password'
+							margin="dense"
+							id="password"
+							label="Password"
+							type="password"
 							error={password.error}
 							value={password.value}
 							helperText={password.helperText}
-							onChange={(e) => setPassword({...password, value: e.target.value})}
+							onChange={(e) => setPassword({ ...password, value: e.target.value })}
 							fullWidth
 							required
 						/>
 						<TextField
-							margin='dense'
-							id='confirmPassword'
-							label='Confirm Password'
-							type='password'
+							margin="dense"
+							id="confirmPassword"
+							label="Confirm Password"
+							type="password"
 							error={confirmPassword.error}
 							value={confirmPassword.value}
 							helperText={confirmPassword.helperText}
-							onChange={(e) => setConfirmPassword({...confirmPassword, value: e.target.value})}
+							onChange={(e) => setConfirmPassword({ ...confirmPassword, value: e.target.value })}
 							fullWidth
 							required
 						/>
 						<Button
 							fullWidth
-							id='create-account-form-button'
-							type='submit'
-							color='inherit'
-							onClick={handleCreateClick}>
+							id="create-account-form-button"
+							type="submit"
+							color="inherit"
+							onClick={handleCreateClick}
+						>
 							Create Account
 						</Button>
 					</form>
@@ -144,20 +146,21 @@ function CreateAccount(props) {
 }
 
 function nextState(prevState, err) {
+	let res = prevState;
 	if (err) {
-		prevState = {
+		res = {
 			...prevState,
 			error: true,
-			helperText: err.message
+			helperText: err.message,
 		};
 	} else if (prevState.error) {
-		prevState = {
+		res = {
 			...prevState,
 			error: false,
-			helperText: ''
+			helperText: '',
 		};
 	}
-	return prevState;
+	return res;
 }
 
 export default CreateAccount;

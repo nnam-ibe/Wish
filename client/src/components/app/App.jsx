@@ -16,31 +16,29 @@ function App(props) {
 	const prevUID = usePrevious(uid);
 	const userContext = { ...userPrefs, uid };
 
-	useEffect(() => {
-		return FirebaseWrapper.onAuthStateChanged((user) => {
-			if (user) {
-				FirebaseWrapper.setLocalUID(user.uid);
-				setUID(user.uid);
-			} else {
-				if (!uid && !userPrefs) return;
+	useEffect(() => FirebaseWrapper.onAuthStateChanged((user) => {
+		if (user) {
+			FirebaseWrapper.setLocalUID(user.uid);
+			setUID(user.uid);
+		} else {
+			if (!uid && !userPrefs) return;
 
-				FirebaseWrapper.removeLocalUID();
-				setUID(null);
-				setUserPrefs(null);
-				props.history.push('/');
-			}
-		});
-	});
+			FirebaseWrapper.removeLocalUID();
+			setUID(null);
+			setUserPrefs(null);
+			props.history.push('/');
+		}
+	}));
 
 	useEffect(() => {
 		if (!uid) return;
-		return FirebaseWrapper.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
+		FirebaseWrapper.db.doc(`users/${uid}`).onSnapshot((snapshot) => {
 			if (!snapshot.exists) return;
 
-			const userPrefs = snapshot.data();
-			setUserPrefs(userPrefs);
+			const prefs = snapshot.data();
+			setUserPrefs(prefs);
 			if (uid !== prevUID) {
-				navigateToRoute(`/lists/${userPrefs.defaultList}`);
+				navigateToRoute(`/lists/${prefs.defaultList}`);
 			}
 		});
 	});
@@ -59,30 +57,37 @@ function App(props) {
 	}
 
 	return (
-		<div className='App'>
+		<div className="App">
 			<UserContext.Provider value={userContext}>
 				<Navbar
 					handleLoginClick={handleLoginClick}
-					title='Wish List'
+					title="Wish List"
 					nav={navigateToRoute}
 					isLoggedIn={Boolean(uid)}
 				/>
-				<Route path='/' render={(props) => {
-					const sideProps = {...props, uid, userPrefs };
-					if (!userPrefs) return (<div></div>);
+				<Route
+					path="/"
+					render={(renderProps) => {
+						const sideProps = { ...renderProps, uid, userPrefs };
+						if (!userPrefs) return (<div />);
 
-					return (<Sidebar {...sideProps}/>);
-				}}/>
-				<div className='content'>
-					<Route exact path='/lists/:page' render={(props) => {
-						if (!userPrefs) return (<div></div>);
+						return (<Sidebar {...sideProps} />);
+					}}
+				/>
+				<div className="content">
+					<Route
+						exact
+						path="/lists/:page"
+						render={(renderProps) => {
+							if (!userPrefs) return (<div />);
 
-						const listProps = {...props, uid, userPrefs};
-						return (<ListPage {...listProps}/>);
-					}}/>
-					<Route exact path='/login' component={Login}/>
-					<Route exact path='/create_account' component={CreateAccount}/>
-					<Route exact path='/settings' component={Settings}/>
+							const listProps = { ...renderProps, uid, userPrefs };
+							return (<ListPage {...listProps} />);
+						}}
+					/>
+					<Route exact path="/login" component={Login} />
+					<Route exact path="/create_account" component={CreateAccount} />
+					<Route exact path="/settings" component={Settings} />
 				</div>
 			</UserContext.Provider>
 		</div>

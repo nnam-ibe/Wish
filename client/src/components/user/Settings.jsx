@@ -18,7 +18,7 @@ import {
 	stringDefault,
 	addTaxesDefault,
 	salesTaxDefault,
-	incrementDefault
+	incrementDefault,
 } from '../../utils/FormFieldDefaults';
 import FetchWrapper from '../../utils/FetchWrapper';
 
@@ -26,31 +26,33 @@ import FetchWrapper from '../../utils/FetchWrapper';
 Props
 	location: location object from Route
 */
-function Settings(props) {
+function Settings() {
 	const userContext = useContext(UserContext);
 	const [showProgressBar, setShowProgressBar] = useState(false);
 	const [usernameField, setUsernameField] = useState({
 		...stringDefault,
-		value: userContext.username
+		value: userContext.username,
 	});
 	const [salesTaxField, setSalesTaxField] = useState({
 		...salesTaxDefault,
-		value: userContext.tax
+		value: userContext.tax,
 	});
 	const [defaultListField, setDefaultListField] = useState({
 		...stringDefault,
-		value: userContext.defaultList
+		value: userContext.defaultList,
 	});
 	const [defaultIncrementField, setDefaultIncrementField] = useState({
 		...incrementDefault,
-		value: userContext.defaultIncrement
+		value: userContext.defaultIncrement,
 	});
 	const [addTaxesField, setAddTaxesField] = useState({
 		...addTaxesDefault,
-		checked: userContext.addTaxes
+		checked: userContext.addTaxes,
 	});
-	const activeLists = map(userContext.activeLists, list => <MenuItem value={list} key={list}>{list}</MenuItem>);
-	const progessBar = <LinearProgress/>;
+	const activeLists = map(userContext.activeLists, (list) => (
+		<MenuItem value={list} key={list}>{list}</MenuItem>
+	));
+	const progessBar = <LinearProgress />;
 
 	const validateInput = () => {
 		let isValid = true;
@@ -60,7 +62,7 @@ function Settings(props) {
 			setUsernameField({
 				...usernameField,
 				error: true,
-				helperText: err.message
+				helperText: err.message,
 			});
 		}
 
@@ -70,7 +72,7 @@ function Settings(props) {
 			setSalesTaxField({
 				...salesTaxField,
 				error: true,
-				helperText: err.message
+				helperText: err.message,
 			});
 		}
 
@@ -87,108 +89,109 @@ function Settings(props) {
 		}
 
 		const settings = {
+			uid: userContext.uid,
 			addTaxes: addTaxesField.checked,
 			defaultIncrement: defaultIncrementField.value,
 			defaultList: defaultListField.value,
 			tax: salesTaxField.value,
-			username: usernameField.value
+			username: usernameField.value,
 		};
 
-		const res = await FetchWrapper.post(path, settings);
+		await FetchWrapper.post(path, settings);
 		setShowProgressBar(false);
-		if (res.ok) return;
 		// TODO: Give feedback on form
 	};
 
 
 	return (
-		<div className='Settings'>
-			<div className='auth-component'>
+		<div className="Settings">
+			<div className="auth-component">
 				<Paper>
 					{ showProgressBar && progessBar }
-					<div className='auth-paper user-settings-form'>
+					<div className="auth-paper user-settings-form">
 						<form>
-							<Typography variant='h6'>Account Settings</Typography>
+							<Typography variant="h6">Account Settings</Typography>
 							<TextField
-								id='settings-form-username'
-								label='Username'
+								id="settings-form-username"
+								label="Username"
 								value={usernameField.value}
-								onChange={e => setUsernameField({
+								onChange={(e) => setUsernameField({
 									...usernameField,
-									value: e.target.value
+									value: e.target.value,
 								})}
 								helperText={usernameField.helperText}
 								error={usernameField.error}
-								margin='dense'
+								margin="dense"
 								fullWidth
 								required
 							/>
 							<TextField
-								id='settings-form-tax'
-								label='Sales Tax'
-								type='number'
+								id="settings-form-tax"
+								label="Sales Tax"
+								type="number"
 								value={salesTaxField.value}
-								onChange={e => setSalesTaxField({
+								onChange={(e) => setSalesTaxField({
 									...salesTaxField,
-									value: e.target.value
+									value: e.target.value,
 								})}
 								helperText={salesTaxField.helperText}
 								error={salesTaxField.error}
-								margin='dense'
+								margin="dense"
 								fullWidth
 								required
 							/>
 							<TextField
-								id='settings-form-default-increment'
-								label='Default Increment'
-								type='number'
+								id="settings-form-default-increment"
+								label="Default Increment"
+								type="number"
 								value={defaultIncrementField.value}
-								onChange={e => setDefaultIncrementField({
+								onChange={(e) => setDefaultIncrementField({
 									...defaultIncrementField,
-									value: e.target.value
+									value: e.target.value,
 								})}
 								helperText={defaultIncrementField.helperText}
 								error={defaultIncrementField.error}
-								margin='dense'
+								margin="dense"
 								fullWidth
 								required
 							/>
 							<FormControl required fullWidth>
-								<InputLabel id='settings-form-default-list-input-label'>
+								<InputLabel id="settings-form-default-list-input-label">
 									Default List
 								</InputLabel>
 								<Select
-									labelid='settings-form-default-list-input-label'
+									labelid="settings-form-default-list-input-label"
 									value={defaultListField.value}
-									onChange={e => setDefaultListField({
+									onChange={(e) => setDefaultListField({
 										...defaultListField,
-										value: e.target.value
+										value: e.target.value,
 									})}
-									>
-										{activeLists}
+								>
+									{activeLists}
 								</Select>
 							</FormControl>
 							<FormControlLabel
-								id='settings-form-taxes-form-control'
-								control={
+								id="settings-form-taxes-form-control"
+								control={(
 									<Switch
-										id='settings-form-add-taxes'
+										id="settings-form-add-taxes"
 										checked={addTaxesField.checked}
-										onChange={e => setAddTaxesField({
+										onChange={(e) => setAddTaxesField({
 											...addTaxesField,
-											checked: e.target.checked
+											checked: e.target.checked,
 										})}
-										value='addTaxes'
+										value="addTaxes"
 									/>
-								}
-								label='Add Taxes'
+								)}
+								label="Add Taxes"
 							/>
 							<Button
 								fullWidth
-								color='primary'
-								variant='contained'
+								color="primary"
+								variant="contained"
 								onClick={saveSettings}
-								disabled={showProgressBar}>
+								disabled={showProgressBar}
+							>
 								Save Settings
 							</Button>
 						</form>
