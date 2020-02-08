@@ -1,4 +1,4 @@
-import ItemModel from './ItemModel.js';
+import ItemModel from './ItemModel';
 
 const val = {
 	addTaxes: false,
@@ -6,7 +6,7 @@ const val = {
 	name: 'Item Name',
 	price: 100,
 	saved: 50,
-	tax: 15
+	tax: 15,
 };
 
 it('increments & decrements saved correctly', () => {
@@ -25,7 +25,7 @@ it('correctly calculates difference', () => {
 });
 
 it('correctly calculates taxes', () => {
-	const item = new ItemModel({...val, addTaxes: true});
+	const item = new ItemModel({ ...val, addTaxes: true });
 	expect(item.getPriceWithTax()).toBe(115);
 	expect(item.getPricePreTax()).toBe(100);
 	item.setTax(30);
@@ -35,7 +35,7 @@ it('correctly calculates taxes', () => {
 
 it('returns correct valueOf', () => {
 	const item1 = new ItemModel(val);
-	var res = item1.valueOf();
+	const res = item1.valueOf();
 	expect(res.addTaxes).toBe(val.addTaxes);
 	expect(res.increment).toBe(val.increment);
 	expect(res.name).toBe(val.name);

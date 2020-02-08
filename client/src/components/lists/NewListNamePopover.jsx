@@ -12,12 +12,12 @@ function NewListNamePopover({ anchorEl, popoverClose, uid }) {
 	const [error, setError] = useState(false);
 	const [helperText, setHelperText] = useState('');
 
-	const nameChange = event => {
+	const nameChange = (event) => {
 		setName(event.target.value);
 	};
 
 	async function submitClick() {
-		let err = InputValidation.validateListName(name);
+		const err = InputValidation.validateListName(name);
 		if (err) {
 			setError(true);
 			setHelperText(err.message);
@@ -29,7 +29,7 @@ function NewListNamePopover({ anchorEl, popoverClose, uid }) {
 		const response = await FetchWrapper.post(`/api/create/new_list/${uid}`, { listName: name });
 		if (response.ok) {
 			setName('');
-			return popoverClose();
+			popoverClose();
 		}
 		const body = await response.json();
 		setError(true);
@@ -38,27 +38,27 @@ function NewListNamePopover({ anchorEl, popoverClose, uid }) {
 
 	return (
 		<Popover
-			id='list-name-popover'
+			id="list-name-popover"
 			open={open}
 			anchorEl={anchorEl}
 			onClose={popoverClose}
 			anchorOrigin={{
 				vertical: 'bottom',
-				horizontal: 'right'
+				horizontal: 'right',
 			}}
 			transformOrigin={{
 				vertical: 'top',
-				horizontal: 'left'
+				horizontal: 'left',
 			}}
 		>
-			<Paper className='item-form-paper-title'>
+			<Paper className="item-form-paper-title">
 				<TextField
-					id='list-name-popover-id'
-					label='List Name'
+					id="list-name-popover-id"
+					label="List Name"
 					value={name}
 					onChange={nameChange}
-					margin='dense'
-					autoFocus={true}
+					margin="dense"
+					autoFocus
 					error={error}
 					helperText={helperText}
 					fullWidth

@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, fireEvent} from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react';
 
 import ListItemForm from './ListItemForm';
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
@@ -12,7 +12,7 @@ const model = new ItemModel({
 	name: 'sample name',
 	price: 50,
 	saved: 10,
-	tax: 30
+	tax: 30,
 });
 
 const formFields = {
@@ -20,19 +20,19 @@ const formFields = {
 	priceField: FormFieldDefaults.priceDefault,
 	savedField: FormFieldDefaults.savedDefault,
 	incrementField: FormFieldDefaults.incrementDefault,
-	addTaxesField: FormFieldDefaults.addTaxesDefault
+	addTaxesField: FormFieldDefaults.addTaxesDefault,
 };
 
 const props = {
 	isNewItem: true,
 	item: model,
 	fields: formFields,
-	isOpen: true
+	isOpen: true,
 };
 
 describe('ListItemForm', () => {
 	it('renders new form', () => {
-		const { getByText } = render(<ListItemForm {...props}/>);
+		const { getByText } = render(<ListItemForm {...props} />);
 		expect(getByText('Add New Item')).toBeDefined();
 		expect(getByText('Name')).toBeDefined();
 		expect(getByText('Price')).toBeDefined();
@@ -42,8 +42,8 @@ describe('ListItemForm', () => {
 	});
 
 	it('renders existing form', () => {
-		const updateItemProps = {...props, isNewItem: false};
-		const { getByText } = render(<ListItemForm {...updateItemProps}/>);
+		const updateItemProps = { ...props, isNewItem: false };
+		const { getByText } = render(<ListItemForm {...updateItemProps} />);
 		expect(getByText('Update Item')).toBeDefined();
 		expect(getByText('Name')).toBeDefined();
 		expect(getByText('Price')).toBeDefined();
@@ -59,10 +59,10 @@ describe('ListItemForm', () => {
 			...props,
 			getPagePath: jest.fn(),
 			closeForm: jest.fn(),
-			resetItemModel: jest.fn()
+			resetItemModel: jest.fn(),
 		};
 		FirebaseWrapper.saveNewItem = jest.fn();
-		const { getByText } = render(<ListItemForm {...formProps}/>);
+		const { getByText } = render(<ListItemForm {...formProps} />);
 		fireEvent.click(getByText('Add Item'));
 		expect(FirebaseWrapper.saveNewItem.mock.calls.length).toBe(1);
 		expect(FirebaseWrapper.saveNewItem.mock.calls[0][1].addTaxes).toBe(false);
@@ -79,10 +79,10 @@ describe('ListItemForm', () => {
 			isNewItem: false,
 			getPagePath: jest.fn(),
 			closeForm: jest.fn(),
-			resetItemModel: jest.fn()
+			resetItemModel: jest.fn(),
 		};
 		FirebaseWrapper.updateItem = jest.fn();
-		const { getByText, container } = render(<ListItemForm {...formProps}/>);
+		const { getByText, container } = render(<ListItemForm {...formProps} />);
 		fireEvent.change(container.querySelector('#item-form-name'), { target: { value: 'Updated Name' } });
 		fireEvent.change(container.querySelector('#item-form-price'), { target: { value: '$100' } });
 		fireEvent.change(container.querySelector('#item-form-saved'), { target: { value: '$15' } });

@@ -9,15 +9,15 @@ function ConfirmModal(props) {
 	const modalProps = {
 		id: 'confirm-modal',
 		className: 'confirm-modal',
-		open: props.open
+		open: props.open,
 	};
 	const declineButtonProps = {
 		variant: props.buttonVariant,
-		color: props.buttonLabels.decline.color
+		color: props.buttonLabels.decline.color,
 	};
 	const confirmButtonProps = {
 		variant: props.buttonVariant,
-		color: props.buttonLabels.confirm.color
+		color: props.buttonLabels.confirm.color,
 	};
 	if (props.handleClose) {
 		modalProps.onClick = props.handleClose(false);
@@ -26,8 +26,8 @@ function ConfirmModal(props) {
 	}
 	return (
 		<Modal {...modalProps}>
-			<Paper className='item-form-paper-title'>
-				<Typography variant='body1'>
+			<Paper className="item-form-paper-title">
+				<Typography variant="body1">
 					{props.message}
 				</Typography>
 				<ButtonGroup fullWidth>

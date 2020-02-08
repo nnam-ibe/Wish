@@ -1,58 +1,58 @@
 export const addTaxesDefault = {
 	checked: false,
-	value: 'addTaxes'
+	value: 'addTaxes',
 };
 
 export const emailDefault = {
 	error: false,
 	helperText: '',
-	value: ''
+	value: '',
 };
 
 export const incrementDefault = {
 	error: false,
 	helperText: '',
-	value: '200'
+	value: '200',
 };
 
 export const nameDefault = {
 	error: false,
 	helperText: '',
-	value: ''
+	value: '',
 };
 
 export const passwordDefault = {
 	error: false,
 	helperText: '',
-	value: ''
+	value: '',
 };
 
 export const priceDefault = {
 	error: false,
 	helperText: '',
-	value: ''
+	value: '',
 };
 
 export const savedDefault = {
 	error: false,
 	helperText: '',
-	value: ''
+	value: '',
 };
 
 export const usernameDefault = {
 	error: false,
 	helperText: '',
-	value: ''
+	value: '',
 };
 
 export const stringDefault = {
 	error: false,
 	helperText: '',
-	value: ''
+	value: '',
 };
 
 export const salesTaxDefault = {
 	error: false,
 	helperText: '',
-	value: 13
-}
+	value: 13,
+};

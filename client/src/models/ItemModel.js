@@ -1,4 +1,4 @@
-import Big from'big.js';
+import Big from 'big.js';
 import * as NumberFormatter from '../utils/NumberFormatter';
 
 export default class ItemModel {
@@ -12,7 +12,7 @@ export default class ItemModel {
 		this.id = options.id;
 
 		const taxValue = options.tax ? options.tax : 0;
-		this.taxMultipler = 1 + (taxValue/100);
+		this.taxMultipler = 1 + (taxValue / 100);
 		return this.updateProgress();
 	}
 
@@ -108,14 +108,14 @@ export default class ItemModel {
 	}
 
 	setSaved(val) {
-		this.saved =  NumberFormatter.getBig(val);
+		this.saved = NumberFormatter.getBig(val);
 		return this.updateProgress();
 	}
 
 	setTax(val) {
 		const taxValue = NumberFormatter.getNumber(val);
 		this.tax = taxValue;
-		this.taxMultipler = 1 + (taxValue/100);
+		this.taxMultipler = 1 + (taxValue / 100);
 		return this.updateProgress();
 	}
 
@@ -127,8 +127,8 @@ export default class ItemModel {
 			price: NumberFormatter.getNumber(this.price),
 			saved: NumberFormatter.getNumber(this.saved),
 			tax: this.tax,
-			id: this.id
-		}
+			id: this.id,
+		};
 	}
 
 	toString() {

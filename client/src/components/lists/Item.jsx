@@ -32,11 +32,11 @@ function Item(props) {
 	}
 
 	return (
-		<div className='item-margin item-div'>
-			<Paper className='auth-paper'>
-				<div className='display-flex text-align-left ml-36'>
-					<div className='flex-grow-1 item-name'>
-						<Typography variant='h6'>{model.getName()}</Typography>
+		<div className="item-margin item-div">
+			<Paper className="auth-paper">
+				<div className="display-flex text-align-left ml-36">
+					<div className="flex-grow-1 item-name">
+						<Typography variant="h6">{model.getName()}</Typography>
 					</div>
 					<div>
 						<IconButton onClick={() => props.editItem(model.getId())}>
@@ -49,31 +49,31 @@ function Item(props) {
 						<TableBody>
 							<TableRow>
 								<TableCell>
-									<IconButton onClick={decrementSaved} data-testid='item-decrement-button'>
-										<RemoveIcon/>
+									<IconButton onClick={decrementSaved} data-testid="item-decrement-button">
+										<RemoveIcon />
 									</IconButton>
 								</TableCell>
 								<TableCell>
 									<div>
-										<Typography variant='caption'>Saved</Typography>
-										<Typography data-testid='item-saved-value' variant='subtitle2'>{`$${model.getSaved()}`}</Typography>
+										<Typography variant="caption">Saved</Typography>
+										<Typography data-testid="item-saved-value" variant="subtitle2">{`$${model.getSaved()}`}</Typography>
 									</div>
 								</TableCell>
 								<TableCell>
 									<div>
-										<Typography variant='caption'>Difference</Typography>
-										<Typography data-testid='item-difference-value' variant='subtitle2'>{`$${model.getDifference()}`}</Typography>
+										<Typography variant="caption">Difference</Typography>
+										<Typography data-testid="item-difference-value" variant="subtitle2">{`$${model.getDifference()}`}</Typography>
 									</div>
 								</TableCell>
 								<TableCell>
 									<div>
-										<Typography variant='caption'>Price</Typography>
-										<Typography data-testid='item-price-value' variant='subtitle2'>{`$${model.getPriceWithTax()}`}</Typography>
+										<Typography variant="caption">Price</Typography>
+										<Typography data-testid="item-price-value" variant="subtitle2">{`$${model.getPriceWithTax()}`}</Typography>
 									</div>
 								</TableCell>
 								<TableCell>
-									<IconButton onClick={incrementSaved} data-testid='item-increment-button'>
-										<AddIcon/>
+									<IconButton onClick={incrementSaved} data-testid="item-increment-button">
+										<AddIcon />
 									</IconButton>
 								</TableCell>
 							</TableRow>
@@ -81,7 +81,7 @@ function Item(props) {
 					</Table>
 				</div>
 			</Paper>
-			<LinearProgress data-testid='item-progress-bar' variant='determinate' value={model.getProgress()} />
+			<LinearProgress data-testid="item-progress-bar" variant="determinate" value={model.getProgress()} />
 		</div>
 	);
 }
