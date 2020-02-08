@@ -38,7 +38,7 @@ function App(props) {
 			const prefs = snapshot.data();
 			setUserPrefs(prefs);
 			if (uid !== prevUID) {
-				navigateToRoute(`/lists/${userPrefs.defaultList}`);
+				navigateToRoute(`/lists/${prefs.defaultList}`);
 			}
 		});
 	});

@@ -89,6 +89,7 @@ function Settings() {
 		}
 
 		const settings = {
+			uid: userContext.uid,
 			addTaxes: addTaxesField.checked,
 			defaultIncrement: defaultIncrementField.value,
 			defaultList: defaultListField.value,
